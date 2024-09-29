@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Oleo+Script&display=swap');
+
+/* Banner */
+.slides_container {
+    margin: auto;
+    padding-bottom: 100px;
+}
+
+/* Section */
+.nutrition {
+    padding-bottom: 100px;
+}
+
+
+/* Section */
+.recettes {
+    padding-bottom: 100px;
+}
+
+.container_products_notes {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(144, 238, 144, 0.526);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 100;   
+}
+
+.container_recipes_notes {
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgba(144, 238, 144, 0.526);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: fixed;
+    z-index: 100;   
+}
+
+/* MOBILE VERSION */
+
+@media only screen and (max-width: 850px) {
+
+    .slides_container {
+        margin: initial;
+        margin-bottom: inherit;
+        margin-top: initial;
+        padding-top: 50px;
+    }
+
+    .nutrition {
+        overflow-x: scroll;
+        padding-bottom: 50px;
+    }
+
+    /*
+    .nutrition::-webkit-scrollbar {
+        display: none; 
+    }
+    */
+    
+
+    .recettes {
+        margin-top: 50px;
+        margin-bottom: 0px;
+        overflow-x: scroll;
+        padding-bottom: 50px;
+    }
+
+    /*
+    .recettes::-webkit-scrollbar {
+        display: none;
+    }
+    */
+    
+}

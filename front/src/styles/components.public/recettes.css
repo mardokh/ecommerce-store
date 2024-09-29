@@ -1,0 +1,218 @@
+
+.recipe_global_container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+
+.recipes_parent_container {
+    width: 100%;
+    margin: 0 auto; 
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.pics_container_sub {
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+}
+
+.pics_englob {
+    text-align: left;
+    font-size: 18px;
+    color: green;
+    font-family:'Oleo Script';
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.pics_container {
+    height: 300px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    display: flex;
+    position: relative;
+}
+
+.info_container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 50px;
+    width: 100%;
+    padding: 10px;
+}
+
+.recette_name {
+    padding-left: 15px;
+    color: black;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.recettes_interactions {
+    width: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.recettes_note::before {
+    content: "|";
+    margin-right: 20px;
+}
+
+.fa-star {
+    font-size: 15px;
+}
+
+.fa-bookmark {
+    color: rgba(0, 128, 0, 0.452);
+}
+
+.favRecipe {
+    color: gold;
+}
+
+.recette_section_vide {
+    width: 100%;
+    height: 300px;
+    background-color: rgba(244, 244, 244, 0.717);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.recette_section_vide p {
+    width: 200px;
+    height: 50px;
+    border: 1px solid gray;
+    border-style: dashed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Calibri';
+    letter-spacing: 1px;
+    color: gray;
+}
+
+.recette_rating_star_container { 
+    display: flex;
+    width: 110px;
+    font-size: 22px;
+}
+
+
+.recette_rating_star_enable {
+    width: 24px;
+    height: 24px;
+}
+
+.recette_rating_star_enable polygon {
+    fill: gold;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.recette_rating_star_disable {
+    width: 24px;
+    height: 24px;
+}
+
+.recette_rating_star_disable polygon { 
+    fill: white;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.recettes_tout_voir {
+    height: 60px;
+    line-height: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 25px;
+}
+
+.recettes_tout_voir p:nth-child(2) {
+    font-size: 1rem;
+    color: #498703;
+}
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+
+    .recipe_global_container {
+        flex-wrap: nowrap;
+        width: 800px;
+    }
+
+    .pics_englob {
+        text-align: left;
+        font-size: 18px;
+        color: green;
+        font-family:'Oleo Script';
+        box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+        width: 300px;
+    }
+    
+    .pics_container {
+        height: 200px;
+        background-size: cover;
+        background-repeat: no-repeat;
+        background-position: center;
+        display: flex;
+        position: relative;
+    }
+
+    .info_container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 50px;
+    }
+
+    .recette_name {
+        font-size: 15px;
+    }
+
+    .recette_rating_star_enable {
+        width: 18px;
+        height: 18px;
+    }
+
+    .recette_rating_star_disable {
+        width: 18px;
+        height: 18px;
+    }
+
+
+    .fa-bookmark {
+        color: rgba(0, 128, 0, 0.452);
+        font-size: 15px;
+    }
+
+    .recettes_tout_voir {
+        padding-left: 10px;
+        font-size: 20px;
+    }
+
+    .recipes_parent_container {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+}
+
+@media only screen and (max-width: 1400px) {
+
+    .pics_container_sub {
+        width: 24%;
+    }
+
+}

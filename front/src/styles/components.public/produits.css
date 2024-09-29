@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Oleo+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Marck+Script&family=Yanone+Kaffeesatz:wght@500&display=swap');
+
+.produits_global_container {
+    width: 90%;
+    margin: 0 auto;
+}
+
+.produits_parent_container {
+    width: 100%;
+    margin: 0 auto; 
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.produits_img_englob {
+    width: 230px;
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 20px;
+}
+
+.produits_img_container {
+    height: 220px;
+    width: 100%;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.produit_info {
+    height: 120px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 10px;
+    justify-content: space-between;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
+}
+
+.produits_name {
+    width: 100%;
+    text-align: left;
+    font-family: 'Yanone Kaffeesatz', sans-serif;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.produits_note {
+    color: green;
+}
+
+.produits_note::before {
+    content: "|";
+    margin-right: 10px;
+}
+
+.prix_notes {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.add_cart {
+    height: 30px;
+    width: 100%;
+    background-color: #498703;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    border: none;
+    border-radius: 30px;
+}
+
+.add_cart:hover {
+    background-color: rgba(0, 128, 0, 0.835);
+}
+
+.fa-heart {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 25px;
+    color: rgba(0, 128, 0, 0.452);
+}
+
+.favorite {
+    color: rgb(228, 60, 60);
+}
+
+.fa-star {
+    color: white;
+    text-shadow: -1px 0 green, 0 1px green, 1px 0 green, 0 -1px green;
+}
+
+.produits_section_vide {
+    width: 100%;
+    height: 300px;
+    background-color: rgba(244, 244, 244, 0.717);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.produits_section_vide p {
+    width: 200px;
+    height: 50px;
+    border: 1px solid gray;
+    border-style: dashed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Calibri';
+    letter-spacing: 1px;
+    color: gray;
+}
+
+.product_rating_star_container { 
+    display: flex;
+    width: 110px;
+}
+
+
+.product_rating_star_enable {
+    width: 24px;
+    height: 24px;
+}
+
+.product_rating_star_enable polygon {
+    fill: gold;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.product_rating_star_disable {
+    width: 24px;
+    height: 24px;
+}
+
+.product_rating_star_disable polygon {
+    fill: white;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+.produits_tout_voir { 
+    height: 60px;
+    line-height: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 25px;
+}
+
+.produits_tout_voir p:nth-child(2) {
+    font-size: 1rem;
+    color: #498703;
+}
+
+.produits_favorite_icon_container {
+    width: 100%;
+    height: 50px;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+/* MOBILE VESRION */
+
+@media only screen and (max-width: 850px) {
+
+    .produits_img_container {
+        height: 160px;
+        width: 100%;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: top;
+    }
+
+    .produit_info {
+        width: 100%;
+        height: 110px;
+    }
+
+    .produits_name {
+        width: 100%;
+        text-align: left;
+        font-family: 'Yanone Kaffeesatz', sans-serif;
+        font-size: 15px;
+        letter-spacing: 1px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    
+    .fa-heart {
+        position: absolute;
+        top: 15px;
+        right: 10px;
+        font-size: 15px;
+        color: rgba(0, 128, 0, 0.452);
+    }
+    
+    .prix_notes {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        font-size: 10px;
+    }
+
+    .prix_notes p {
+        width: 150px;
+        font-size: 15px;
+    }
+
+    .product_rating_star_enable {
+        width: 15px;
+        height: 15px;
+    }
+    
+    .product_rating_star_disable {
+        width: 15px;
+        height: 15px;
+    }
+
+    .produits_parent_container {
+        justify-content: space-between;
+        flex-wrap: nowrap;
+        width: 800px;
+        margin-bottom: 0px;
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .produits_global_container {
+        margin: initial;
+    }
+
+    .produits_tout_voir {
+        padding-left: 10px;
+        font-size: 20px;
+    }
+
+    .product_rating_star_container { 
+        justify-content: center;
+    }
+    
+}
+
+@media only screen and (max-width: 1400px) {
+
+    .produits_img_englob {
+        width: 18%;
+    }
+    
+
+}

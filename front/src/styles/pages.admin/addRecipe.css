@@ -1,0 +1,201 @@
+.add_recipe_global_container {
+    width: 100%;
+    height: 700px; 
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: relative;
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+.add_recipe_image {
+    height: 470px;
+    width: 400px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 1px solid  rgb(164, 164, 164);
+}
+
+.add_recipe_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items:flex-end;
+    width: 600px;
+    height: 500px;
+    text-align: left;
+}
+
+.add_recipe_item {
+    display: flex;
+    flex-direction: column;
+}
+
+.add_recipe_item input {
+    height: 30px;
+    width: 550px;
+    font-size: 15px;
+}
+
+.add_recipe_item textarea {
+    height: 120px;
+    width: 550px;
+    resize: none;
+    font-size: 15px;
+}
+
+.add_recipe_item input[type="file"] {
+    border: 1px solid gainsboro;
+    padding: 10px;
+    height: 45px;
+}
+
+.add_recipe_item label {
+    margin-bottom: 10px;
+}
+
+.btn_new_recipe_add {
+    width: 400px;
+    height: 50px;
+    font-size: 15px;
+    background-color: rgb(228, 228, 243);
+    border: 1px solid gray;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#add_recipe_close_icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    cursor: pointer;
+    color: green;
+}
+
+#add_recipe_close_icon:hover {
+    color: rgba(0, 128, 0, 0.713);
+}
+
+.add_recipe_form_container {
+    width: 100%;
+    height: 550px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.add_recipe_form_global_container {
+    height: 900px;
+    display: flex;
+    flex-direction: column;
+}
+
+.add_recipe_principale_image_container {
+    height: 500px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.add_recipe_btn_container {
+    margin-top: 10px;
+}
+
+.add_recipe_btn_container button {
+    height: 40px;
+    width: 200px;
+    float: right;
+    background-color:  rgb(229, 229, 244);
+    font-weight: bolder;
+    color: #5f8e00;
+}
+
+.add_recipe_btn_container button:hover {
+    background-color: rgb(206, 205, 205);
+}
+
+.add_recipe_global_container input, 
+.add_recipe_global_container textarea {
+    border-radius: 20px;
+    padding: 15px;
+    border: 1px solid rgb(164, 164, 164);
+}
+
+.add_recipe_load_success_global_container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.186);
+    z-index: 1;
+    position: fixed;
+}
+
+.add_recipe_load_success_container {
+    width: 350px;
+    height: 300px;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 2px 1px;
+}
+
+
+.add_recipe_success_container {
+    height: 80px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    color: green;
+    font-size: large;
+    font-family: 'Calibri';    
+}
+
+/* -----
+SVG success icons - svgicons.sparkk.fr
+----- */
+
+.add_recipe_success_icon {
+    width: 2em;
+    height: 2em;
+}
+  
+.add_recipe_success_icon path,
+.add_recipe_success_icon polygon,
+.add_recipe_success_icon rect {
+    fill: #4691f6;
+}
+  
+.add_recipe_success_icon circle {
+    stroke: #4691f6;
+    stroke-width: 1;
+}
+
+/* -----
+SVG img icons - svgicons.sparkk.fr
+----- */
+
+.add_recipe_img_icon {
+    width: 2.5em;
+    height: 2.5em;
+}
+  
+.add_recipe_img_icon path,
+.add_recipe_img_icon polygon,
+.add_recipe_img_icon rect {
+    fill: rgb(164, 164, 164);
+}
+  
+.add_recipe_img_icon circle {
+    stroke: rgb(164, 164, 164);
+    stroke-width: 1;
+}

@@ -1,0 +1,54 @@
+.favorites_Recipes_main_container {
+    width: 100%;
+    background-color:  #F5F5F5;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.favorites_Recipes_container {
+    display: flex;
+    align-items: center;
+    width: 250px;
+    height: 250px;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    margin: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.fa-trash {
+    margin-left: 150px;
+}
+
+.favorites_Recipes_image {
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.favorites_Recipes_close_icon_container {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+#favorites_Recipes_close_icon {
+    visibility: hidden;
+    font-size: 22px;
+    opacity: 0;
+    transition: visibility 0s, opacity 0.3s linear;
+}
+
+.favorites_Recipes_container:hover #favorites_Recipes_close_icon {
+    visibility: visible;
+    opacity: 1;
+}

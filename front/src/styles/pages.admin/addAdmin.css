@@ -1,0 +1,21 @@
+.addAdmin_form_container {
+    height: 350px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: white;
+}
+
+.addAdmin_input_container input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.addAdmin_submit_btn {
+    background-color: #74ad02;
+    color: white;
+}

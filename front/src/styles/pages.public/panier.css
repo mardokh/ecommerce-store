@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Oleo+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Marck+Script&family=Yanone+Kaffeesatz:wght@500&display=swap');
+
+.shopping_product_global {
+  display: flex;
+  width: 90%;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
+  background-color: rgba(244, 244, 244, 0.717);
+  margin: 0 auto;
+  padding: 100px 20px;
+}
+
+.shopping_product_container {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+    justify-content: space-between;
+    padding: 15px;
+    width: 100%;
+    height: 240px;
+    margin-bottom: 10px;
+}
+
+.shopping_product_content_items {
+  width: 700px;
+  display: block;
+  flex-direction: column;
+}
+
+.shopping_product_img {
+  width: 180px;
+  height: 200px;
+  margin-right: 35px;
+  background-position: center;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
+.shopping_product_item {
+  display: flex;
+  padding: 8px;
+  width: 420px;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.shopping_product_item p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.main_container {
+  margin-top: 150px;
+}
+
+.quantity_input {
+  width: 70px; 
+}
+
+.quantity_container input[type='number']::-webkit-inner-spin-button,
+.quantity_container input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity_container {
+  display: flex;
+  justify-content: space-between;
+  width: 119px;
+}
+
+.btn_up_down {
+  display: flex;
+  justify-content: space-between;
+  width: 45px;
+  padding: 1px;
+}
+
+.btn_up_down button {
+  height: 20px;
+  width: 20px;
+  border: 2px solid gray;
+  background-color: gainsboro;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn_up_down button:active {
+  background-color: gray;
+}
+
+.btn_confirm_quantity {
+  margin: 10px;
+  background-color: gainsboro;
+  padding: 5px;
+  border: 1px solid;
+  cursor: pointer;
+}
+
+.btn_confirm_quantity:active {
+  background-color: gray;
+}
+
+.shopping_remove_icon_contenaire {
+  display: flex;
+  align-items: center;
+}
+
+.shopping_no_product_add {
+  width: 90%;
+  height: 200px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color:antiquewhite;
+  margin-bottom: 100px;
+}
+
+/*
+.our_products_global_container {
+  width: 1400px;
+  margin: 0 auto;
+  margin-bottom: 200px;
+  background-color: white;
+  background-color: rgba(0, 128, 0, 0.099);
+  margin-top: 350px;
+}
+
+.our_products_global_container h1 {
+  text-align: left;
+  margin-bottom: 10px;
+  font-size: 20px;
+  color: green;
+  font-family: "Petit Formal Script", cursive;
+  padding: 15px;
+}
+*/
+
+.shopping_continue_back {
+  width: 220px;
+  height: 50px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: green;
+  color: white;
+  cursor: pointer;
+  padding: 10px;
+}
+
+.shopping_continue_back:hover {
+  background-color: rgba(0, 128, 0, 0.764);
+}
+
+.shopping_total_price_and_commande {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 200px;
+}
+
+
+.shopping_total_price {
+  width: 300px;
+  height: 50px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+}
+
+.shopping_commande {
+  width: 300px;
+  height: 50px;
+  margin: 0 auto;
+  background-color: rgb(14, 140, 134);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+.shopping_commande:hover {
+  cursor: pointer;
+  background-color: rgb(4, 87, 83);
+}
+
+.product_item_name {
+  color: gray;
+  font-size: 24px;
+  font-family:'Oleo Script';
+}
+
+.shopping_fav_icon_container {
+  position: relative;
+}
+
+.shopping_img_and_details_container {
+  display: flex;
+  width: 100%;
+}
+
+.shopping_fav_and_delete_container {
+  display: flex;
+  justify-content: space-between;
+  width: 380px;
+  font-size: 15px;
+  font-weight: bold;
+  margin-top: 30px;
+}
+
+.shopping_remove_icon_contenaire {
+  width: 120px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.shopping_fav_icon_container {
+  width: 170px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shopping_delete_icon {
+  height: 18px;
+  width: 18px;
+  cursor: pointer;
+}
+
+.shopping_title_container {
+  width: 90%;
+  margin: 0 auto;
+}
+
+.shopping_title_container p {
+  text-align: left;
+  font-family: "Oleo Script Swash Caps", system-ui;
+  font-weight: 400;
+  font-style: normal;
+  font-size: 35px;
+  color: green;
+}
+
+.shopping_prices_container {
+  height: 100px;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+.shopping_back_home {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+  width: 300px;
+  background-color: rgba(0, 128, 0, 0.685);
+  padding: 5px;
+  margin: 100px auto;
+  background-color: rgba(0, 128, 0, 0.685);
+  padding: 10px;
+  text-align: right;
+  color: white;
+  cursor: pointer;
+}
+
+.shopping_back_home:hover {
+  background-color: rgba(0, 128, 0, 0.77);
+}
+
+.shopping_total_price_and_commande_global_container {
+  position: relative;
+}
+
+.shopping_total_price_and_commande_container {
+  flex-direction: column; 
+  align-items: center;
+  justify-content: space-evenly; 
+  background-color: white;
+  box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
+  width: 400px;
+  height: 300px;
+}
+
+.shopping_total_price_and_commande_container_fixed {
+  position: sticky;
+  top: 0;
+  right: 0;
+}
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.shopping_back_menu_svg-icon {
+  width: 2em;
+  height: 2em;
+}
+
+.shopping_back_menu_svg-icon path,
+.shopping_back_menu_svg-icon polygon,
+.shopping_back_menu_svg-icon rect {
+  fill: white;
+}
+
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+  .shopping_total_price_and_commande_container {
+    width: 700px;
+  }
+}

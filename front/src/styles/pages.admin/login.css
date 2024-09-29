@@ -1,0 +1,25 @@
+.loginAdmin_form_container {
+    height: 350px;
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    background-color: white;
+}
+
+.loginAdmin_input_container input {
+    width: 100%;
+    height: 50px;
+    border: 1px solid gainsboro;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.loginAdmin_submit_btn {
+    background-color: #74ad02;
+    color: white;
+}
+
+.loginAdmin_forget_pass {
+    font-size: 14px;
+}

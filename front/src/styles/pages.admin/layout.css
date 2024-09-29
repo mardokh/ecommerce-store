@@ -1,0 +1,67 @@
+.admin_layout_global {
+    width: 100%;
+    height: 800px;
+}
+
+.admin_layout {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    background-color: white;
+}
+
+.admin_layout_header {
+    width: 100%;
+}
+
+.admin_sub_container {
+    width: 88%;
+    display: flex;
+    flex-direction: column;
+}
+
+.product_manage_add_product_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.575);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+    position: fixed;
+}
+
+.recipe_manage_add_recipe_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    z-index: 1;
+    position: fixed;
+}
+
+.product_manage_edit_product_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    backdrop-filter: blur(2px);
+    z-index: 1;
+    position: fixed;
+}
+
+.recipe_manage_edit_recipe_container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    z-index: 1;
+    position: fixed;
+}

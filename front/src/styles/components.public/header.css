@@ -1,0 +1,380 @@
+.header_global_parent {
+    height: 150px;
+    display: flex;
+    align-items: center;
+}
+
+header {
+    width: 100%;
+    padding-left: 30px;
+    padding-right: 30px;
+}
+
+header nav ul {
+    display: flex;
+    justify-content: space-between;
+    list-style-type: none;
+    align-items: center;
+    padding-inline-start: 0;
+    gap: 15px;
+}
+
+header nav ul li a {
+    text-decoration: none;
+    color: black;
+}
+
+.fa-bag-shopping {
+    font-size: 25px;
+}
+
+.search_barre {
+    position: relative;
+    width: 600px;
+    margin: 5px;
+}
+
+.search_barre input {
+    width: 100%;
+    height: 40px;
+    padding: 10px;
+    border: 1px solid rgb(196, 195, 195);
+    box-shadow: 0px 1px 1px 0.1px gray;
+}
+
+.search_barre input::placeholder {
+    color: rgb(99, 97, 97);
+}
+
+.fa-magnifying-glass {
+    position: absolute;
+    margin-left: -35px;
+    margin-top: 10px;
+    cursor: pointer;
+    color:  gray;
+    font-size: 20px;
+}
+
+.under_list p:hover a {
+    color: white;
+}
+
+.logo {
+    height: 80px;
+    width: 120px;
+}
+
+.panier span {
+    margin-left: 10px;
+}
+
+.angles {
+    width: 350px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home a {
+    margin: 5px;
+}
+
+.produits a {
+    margin: 5px;
+}
+.services a {
+    margin: 5px;
+}
+
+.favorites_products_icon {
+    position: relative;
+}
+
+.favorites_products_count {
+    position: absolute;
+    background-color: black;
+    padding: 1.5px;
+    border-radius: 50%;
+    font-family: monospace;
+    top: -17px;
+    right: -7px;
+    color: white;
+}
+
+.serachBar_result_container {
+    width: 600px;
+    max-height: 500px;
+    box-shadow: 0px 5px 5px -1px;
+    position: absolute;
+    z-index: 1;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    overflow-y: scroll;
+}
+
+.searchBar_item_image {
+    width: 150px;
+    height: 100px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+.searchBar_item_container {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.searchBar_item_container:hover {
+    background-color: rgb(244, 244, 255);
+}
+
+.shopping_cart_icon_container {
+    position: relative;
+}
+
+.shopping_cart_icon_count {
+    position: absolute;
+    background-color: black;
+    padding: 1.5px;
+    border-radius: 50%;
+    font-family: monospace;
+    top: -18px;
+    right: -5px;
+    color: white;
+}
+
+.user_inscription_form_windows_global_container {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    top: 0;
+    position: fixed;
+    z-index:2;
+    backdrop-filter: blur(2px);
+}
+
+.user_inscription_form_windows_container {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 1px;
+    border-radius: 10px;
+
+}
+
+#user_inscription_form_close_icon {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: rgba(0, 128, 0, 0.595);
+
+}
+
+#user_connection_form_close_icon {
+    font-size: 25px;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+    color: rgba(0, 128, 0, 0.475);
+}
+
+#user_inscription_form_close_icon:hover, #user_connection_form_close_icon:hover {
+    color: rgb(0, 128, 0);
+}
+
+.user_account_icon_container {
+    position: relative;
+}
+
+.user_options_container {
+    width: 250px;
+    height: 150px;
+    background-color: white;
+    box-shadow: 0px 0px 3px 1px;
+    position: absolute;
+    top: 34px;
+    right: 0;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-evenly;
+    border-radius: 10px;
+}
+
+.user_options_container button {
+    width: 150px;
+    height: 30px;
+    background-color: #7cba00;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.user_options_container button:hover {
+    background-color: green;
+}
+
+.user_connection_form_windows_global_container {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    top: 0;
+    position: fixed;
+    z-index:2;
+    backdrop-filter: blur(2px);
+}
+
+.user_connection_form_windows_container {
+    position: relative;
+    background-color: white;
+    padding: 20px;
+    box-shadow: 0px 0px 3px 1px;
+    border-radius: 10px;
+}
+
+#cornerAccount_btn_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+#cornerAccount_btn_container button {
+    width: 100px;
+    height: 40px;
+    border-radius: 10px;
+    background-color: white;
+    color: black;
+    border: 1px solid gainsboro;
+    cursor: pointer;
+}
+
+#cornerAccount_btn_container button:hover {
+    border: 1px solid green;
+}
+
+.cornerAccount_account_container {
+    width: 210px;
+}
+
+.header_features_icons_container {
+    width: 150px;
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.header_burger_menu_container {
+    display: none;
+}
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon-header {
+    width: 2em;
+    height: 2em;
+  }
+  
+  .svg-icon-header path,
+  .svg-icon-header polygon,
+  .svg-icon-header rect {
+    fill: green;
+  }
+  
+  .svg-icon-header circle {
+    stroke: green;
+    stroke-width: 1;
+  }
+
+/* MOBILE VERSION */
+
+@media only screen and (max-width: 850px) {
+
+    .angles {
+        display: none;
+    }
+
+    .user_account_icon_container {
+        display: none;
+    }
+
+    header nav ul {
+        position: relative;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .search_barre {
+        order: 5;
+        margin: initial;
+        width: 100%;
+    }
+
+    .search_barre input {
+        height: 50px;
+    }
+
+    .header_features_icons_container {
+        position: absolute;
+        right: 0px;
+        bottom: 70px;
+        width: 70px;
+    }
+
+    .logo {
+        height: 70px;
+        width: 95px;
+    }
+
+    .header_burger_menu_container {
+        width: 30px;
+        height: 20px;
+        position: absolute;
+        left: 0px;
+        bottom: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .header_burger_menu_item {
+        width: 100%;
+        height: 4px;
+        background-color: #268703;
+        border-radius: 20px;
+    }
+    
+    .svg-icon-header {
+        width: 1.5em;
+        height: 1.5em;
+    }
+
+    .serachBar_result_container {
+        width: 100%;
+    }
+
+    .favorites_products_icon a svg {
+        width: 25px;
+    }
+
+    .shopping_cart_icon_container a svg {
+        width: 25px;
+    }
+
+
+} 

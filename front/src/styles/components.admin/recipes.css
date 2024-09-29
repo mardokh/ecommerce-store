@@ -1,0 +1,102 @@
+.recipe_manage_global_container {
+    padding: 10px;
+    height: 800px;
+    width: 100%;
+    margin-top: 80px;
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+}
+
+.recipe_manage_sub_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe_manage_table_container {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    margin: 0px auto;
+    background-color: white;
+}
+
+.recipe_manage_table_container th {
+    padding: 10px;
+    background-color: rgb(241, 241, 251);
+}
+
+.recipe_manage_table_container td {
+    background-color: rgb(241, 241, 251);
+}
+
+
+.recipe_manage_img_container {
+    width: 100px;
+    height: 100px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.recipe_manage_btn_edit {
+    display: block;
+    cursor: pointer;
+    margin: 0 auto;
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.recipe_manage_btn_delete {
+    display: block;
+    cursor: pointer;
+    margin: 0 auto;
+    width: 100px;
+    background-color: rgb(180, 59, 59);
+    color: white;
+}
+
+
+a {
+    text-decoration: none;
+}
+
+
+#fa_caret_left {
+    cursor: pointer;
+}
+
+#fa_caret_right {
+    cursor: pointer;
+}
+
+.items-center {
+    margin-top: 0 auto;
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+}
+
+.pagination-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-button.current-page {
+    background-color: #28a745; /* Green background color for current page */
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-bar {
+    justify-content: center;
+}

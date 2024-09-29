@@ -1,0 +1,319 @@
+
+/* PRODUCTS DETAILS SECTION */
+
+.details_parent_container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    margin: 150px auto;
+    padding: 50px;
+    background-color: rgba(244, 244, 244, 0.717);
+}
+
+.details_img_container {
+    height: 600px;
+    width: 60%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
+}
+
+#details_right_arrow {
+    right: 10px;
+    rotate: 90deg;   
+}
+
+#details_left_arrow {
+    left: 10px;
+    rotate: -90deg;    
+}
+
+#details_right_arrow, #details_left_arrow {
+    position: absolute;
+    top: 50%;
+    font-size: 25px;
+    cursor: pointer;
+    color: rgba(128, 128, 128, 0.777);
+}
+
+
+#details_right_arrow:hover, #details_left_arrow:hover {
+    color: gray;
+} 
+
+.details_shopping_add_btn {
+    padding: 15px;
+    width: 250px;
+    height: 50px;
+    background-color: lightseagreen;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    cursor: pointer;
+}
+
+.details_info_container {
+    height: 600px;
+    width: 100%;
+    display: flex;
+    text-align: left;
+    justify-content: space-around;
+}
+
+.details_side_img_sub_container {
+    width: 400px;
+    height: 600px;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    overflow-y: scroll;
+}
+
+.details_side_img {
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+
+.details_sideImg_img {
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+.details_sideImg_img_active {
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    border: 1px solid green;
+}
+
+.details_sideImg_img_container {
+    display: flex;
+    width: 400px;
+}
+
+
+.details_price {
+    padding: 15px;
+    width: 90%;
+    border: 1px solid lightseagreen;
+    border-radius: 10px;
+    text-align: left;
+}
+
+.details_name {
+    font-size: 25px;
+    font-family:'Oleo Script';
+    color: rgb(78, 77, 77);
+    text-align: left;
+}
+
+.right_arrow_disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+  
+.details_product_details {
+    width: 300px;
+    line-height: 30px;
+    text-align: justify;
+}
+
+.details_reviews_name {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.details_product_details_global_container {
+    width: 90%;
+    margin: 50px auto;
+    margin-bottom: 150px;
+}
+
+.details_product_details_parent_container {
+    width: 70%;
+    text-align: left;
+    line-height: 30px;
+    font-size: 15px;
+}
+
+.details_comment_form {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    top: 0;
+    position: fixed;
+    z-index:1;
+}
+
+.details_comment_and_notes_container {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 20px auto;
+    align-items: center;
+    background-color: rgba(244, 244, 244, 0.717);
+    padding: 15px;
+}
+
+.details_comment_and_notes_sub_container {
+    width: 100%;
+}
+
+.details_shopping_add_favorite_container {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    margin-top: 10px;
+}
+
+.details_quantity_container {
+    width: 190px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.details_quantity_container input{
+    width: 100px;
+    height: 50px;
+}
+
+.details_quantity_container button{
+    height: 30px;
+    width: 30px;
+}
+
+.details_info_sub_container {
+    padding: 10px;
+    width: 40%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+}
+
+.details_img_info_global_container {
+    width: 1000px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+/* COMMENTS LINE/BTN SECTION */
+
+.details_line_between_products_comments { 
+    height: 1px;
+    width: 90%;
+    margin: 0 auto;
+    background-color: gainsboro;
+}
+
+.details_comments_write_reviews_button_global_container {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.details_comments_write_reviews_button_parent_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+
+.details_comments_title {
+    text-align: left;
+    font-size: 15px;
+    margin-top: 10px;
+    color: gray;
+}
+
+.details_write_reviews_btn {
+    height: 40px;
+    margin-top: 15px;
+    border-radius: 5px;
+    background-color: rgb(141, 211, 141);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.details_shopping_favorite_svg_icon {
+    width: 2em;
+    height: 2em;
+  }
+  
+  .details_shopping_favorite_svg_icon path,
+  .details_shopping_favorite_svg_icon polygon,
+  .details_shopping_favorite_svg_icon rect {
+    fill: white
+  }
+  
+  .details_shopping_favorite_svg_icon circle {
+    stroke: white;
+    stroke-width: 1;
+  }
+
+
+.details_product_rating_star_enable_posted {
+    width: 15px;
+    height: 15px;
+}
+
+.details_product_rating_star_enable_posted polygon {
+    fill: green;
+    stroke: gray;
+    stroke-width: 1;
+}
+
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+
+    .details_sideImg_img_container {
+        width: 100%;
+    }
+
+    .details_side_img_sub_container {
+      width: 100%;
+      height: 250px;
+    }
+
+    .details_parent_container {
+        flex-wrap: wrap;
+    }
+
+}

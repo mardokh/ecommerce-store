@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Marck+Script&display=swap');
+
+* {
+    box-sizing: border-box
+}
+
+.image_slides {
+  height: 400px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.image_slides p {
+  width: 70%;
+  font-size: 3rem;
+  font-family: "Dancing Script", cursive;
+}
+
+.citation_container {
+  top: 150px;
+  left: 300px;
+  padding: 10px;
+
+}
+
+.citation {
+  color:  #268703;
+  padding: 10px;
+  font-size: 3rem;
+  margin-bottom: 10px;
+  font-family: 'Marck Script', cursive;
+  background-color: white;
+}
+
+.citation::after {
+  content: "";
+  height: 5px;
+  width: 100px;
+  background-color: green;
+}
+
+
+/* MOBILE VERSION */
+
+@media only screen and (max-width: 850px) {
+
+  .image_slides {
+    height: 200px;
+  }
+
+  .image_slides p {
+    font-size: 1.5rem;
+  }
+
+}

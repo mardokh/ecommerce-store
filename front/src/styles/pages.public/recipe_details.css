@@ -1,0 +1,490 @@
+@import url('https://fonts.googleapis.com/css2?family=Kaushan+Script&family=Oleo+Script&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bad+Script&family=Marck+Script&family=Yanone+Kaffeesatz:wght@500&display=swap');
+
+/* PRODUCTS DETAILS SECTION */
+
+.details_recipe_img_container {
+    height: 500px;
+    width: 800px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/*
+.recipe_details_btn {
+    padding: 15px;
+    width: 150px;
+}
+*/
+
+.details_recipe_info_container {
+    height: 400px;
+    width: 400px;
+}
+
+.details_recipe_info_sub_container {
+    width: 310px;
+    height: 320px;
+    position: relative;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+
+.details_recipe_parent_container {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin: 150px auto;
+    background-color: rgba(244, 244, 244, 0.717);
+    padding-top: 50px;
+    padding-bottom: 50px;
+}
+
+/*
+.details_img_container {
+    height: 600px;
+    width: 500px;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    position: relative;
+    background-color: white;
+}
+*/
+
+/*
+#details_right_arrow {
+    right: 10px;
+    rotate: 90deg;   
+}
+*/
+
+/*
+#details_left_arrow {
+    left: 10px;
+    rotate: -90deg;    
+}
+*/
+
+/*
+#details_right_arrow, #details_left_arrow {
+    position: absolute;
+    top: 50%;
+    font-size: 25px;
+    cursor: pointer;
+    color: rgba(128, 128, 128, 0.777);
+}
+*/
+
+/*
+#details_right_arrow:hover, #details_left_arrow:hover {
+    color: gray;
+} 
+*/
+
+.details_recipe_shopping_add_btn {
+    padding: 15px;
+    width: 220px;
+    height: 50px;
+    background-color: rgb(82, 187, 82);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    bottom: -10px;
+}
+
+/*
+.details_info_container {
+    height: 500px;
+    width: 400px;
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    justify-content: space-between;
+}
+*/
+
+/*
+.details_side_img_sub_container {
+    width: 250px;
+    height: 600px;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+    display: flex;
+    align-items: flex-start;
+    background-color: white;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    overflow-y: scroll;
+}
+*/
+
+/*
+.details_side_img {
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+}
+*/
+
+/*
+.details_sideImg_img {
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+*/
+
+/*
+.details_sideImg_img_active {
+    width: 200px;
+    height: 200px;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    border: 1px solid green;
+}
+*/
+
+/*
+.details_sideImg_img_container {
+    display: flex;
+    justify-content: space-evenly;
+    width: 900px;
+    margin-left: 30px;
+}
+*/
+
+/*
+.details_price {
+    padding: 15px;
+    width: 300px;
+    border: 1px solid gainsboro;
+    border-radius: 10px;
+}
+*/
+
+/*
+.details_name {
+    font-size: 25px;
+    font-family:'Oleo Script';
+    color: green;
+}
+*/
+
+/*
+.right_arrow_disabled {
+    opacity: 0.5;
+    pointer-events: none;
+}
+*/
+
+/*
+.details_product_details {
+    width: 300px;
+    line-height: 30px;
+    text-align: justify;
+}
+*/
+
+/*
+.details_reviews_container {
+    width: 90%;
+    margin: 50px auto;
+    text-align: left;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
+*/
+
+/*
+.details_reviews_name {
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+*/
+
+.details_recipe_details_global_container {
+    width: 90%;
+    margin: 50px auto;
+    margin-bottom: 150px;
+}
+
+.details_recipe_details_parent_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    text-align: left;
+    line-height: 30px;
+    font-size: 15px;
+    background-color: rgba(244, 244, 244, 0.717);
+    padding: 30px;
+}
+
+.details_recipe_details_parent_container p {
+    width: 400px;
+    line-height: 40px;
+}
+
+/*
+.details_comment_form {
+    width: 100vw;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 128, 0, 0.433);
+    top: 0;
+    position: fixed;
+    z-index:1;
+}
+*/
+
+/*
+.details_comment_and_notes_container {
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    margin: 20px auto;
+    align-items: center;
+    background-color: rgba(244, 244, 244, 0.717);
+    padding: 15px;
+}
+*/
+
+/*
+.details_comment_and_notes_sub_container {
+    width: 100%;
+}
+*/
+
+.recipe_details_sub_info_time_item {
+    width: 250px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.recipe_details_sub_info_time_item p:nth-of-type(2) {
+    color: gray;
+}
+
+.recipe_details_name {
+    font-family:'Oleo Script';
+    font-size: 30px;
+    color: green;
+    width: 380px;
+    text-align: left;
+    margin-bottom: 30px;
+}
+
+.recipe_details_info_time_container {
+    line-height: 50px;
+    height: 150px;
+    width: 250px;
+}
+
+.recipe_details_info_time_item { 
+    width: 300px;
+    display: flex;
+    align-items: center;
+    text-align: left;
+    margin: 10px;
+    border-bottom: 1px solid gray;
+}
+
+.details_recipe_details_ingredients_container {
+    width: 600px;
+    padding: 30px;
+    border: 1px solid lightskyblue;
+    border-radius: 10px;
+    font-family: "Playwrite NL", cursive;
+    line-height: 50px;
+}
+
+.details_recipe_details_ingredients_container p {
+    font-weight: 800;
+    font-size: 20px;
+    color: lightseagreen;
+    margin-bottom: 40px;
+    text-decoration: underline;
+}
+
+.details_recipe_details_ingredients_container pre {
+    font-family: "Lobster Two", sans-serif;
+    font-size: 20px;
+    color: rgb(78, 77, 77);
+}
+
+.details_recipe_details_etapes_container {
+    width: 600px;
+    padding: 30px;
+    border: 1px solid lightseagreen;
+    border-radius: 10px;
+    font-family: "Playwrite NL", cursive;
+    line-height: 50px;
+}
+
+.details_recipe_details_etapes_container h1 {
+    font-weight: 800;
+    font-size: 20px;
+    color: lightseagreen;
+    margin-bottom: 40px;
+    text-decoration: underline;
+}
+
+.details_recipe_details_etapes_container p {
+    font-family: "Lobster Two", sans-serif;
+    font-size: 20px;
+    color: rgb(78, 77, 77);
+    width: 100%;
+}
+
+/*
+.details_shopping_add_btn {
+    padding: 15px;
+    width: 300px;
+    height: 50px;
+    background-color: rgb(82, 187, 82);recipe_details_info_time_item
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    cursor: pointer;
+}
+*/
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon-recipe_details {
+  width: 1.5em;
+  height: 1.5em;
+}
+
+.svg-icon-recipe_details path,
+.svg-icon-recipe_details polygon,
+.svg-icon-recipe_details rect {
+  fill: white;
+}
+
+.svg-icon-recipe_details circle {
+  stroke: white;
+  stroke-width: 1;
+}
+
+/* COMMENTS LINE/BTN SECTION */
+
+.details_line_between_recipes_comments { 
+    height: 1px;
+    width: 90%;
+    margin: 0 auto;
+    background-color: gainsboro;
+}
+
+.details_recipe_comments_write_reviews_button_global_container {
+    width: 90%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.details_recipe_comments_write_reviews_button_parent_container {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+}
+
+
+.details_recipe_comments_title {
+    text-align: left;
+    font-size: 15px;
+    margin-top: 10px;
+    color: gray;
+}
+
+.details_recipe_write_reviews_btn {
+    height: 40px;
+    margin-top: 15px;
+    border-radius: 5px;
+    background-color: rgb(141, 211, 141);
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+}
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.reipe_time_svg_icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+  
+  .reipe_time_svg_icon path,
+  .reipe_time_svg_icon polygon,
+  .reipe_time_svg_icon rect {
+    fill: #4691f6;
+  }
+  
+
+  /* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.reipe_time_cooking_svg_icon {
+    width: 1.5em;
+    height: 1.5em;
+  }
+  
+  .reipe_time_cooking_svg_icon path,
+  .reipe_time_cooking_svg_icon polygon,
+  .reipe_time_cooking_svg_icon rect {
+    fill: #4691f6;
+  }
+
+
+
+  /* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.reipe_time_total_svg_icon {
+    width: 1.8em;
+    height: 1.8m;
+  }
+  
+  .reipe_time_total_svg_icon path,
+  .reipe_time_total_svg_icon polygon,
+  .reipe_time_total_svg_icon rect {
+    fill: #4691f6;
+  }
+
