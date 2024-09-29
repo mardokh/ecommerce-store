@@ -1,0 +1,8 @@
+# modules
+/node_modules
+
+# eslint cache
+.eslintcache
+
+# env variables
+.env
