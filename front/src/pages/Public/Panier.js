@@ -4,11 +4,12 @@ import { Link } from "react-router-dom"
 import { shoppingSerive } from '../../_services/shoppingCart.service'
 import '../../styles/pages.public/panier.css'
 //import OurProducts from '../../components/public/our_products'
-import Cookies from 'js-cookie'
-import MyContext from '../../_utils/contexts'
 import { favoriteProductService } from '../../_services/favoriteProduct.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-
+import { useDispatch } from 'react-redux'
+import { updatefavsCarts } from '../../redux/reducers/favCartSlice'
+import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
+import { useSelector } from 'react-redux';
 
 
 // MAIN FUNCTION //
@@ -19,10 +20,6 @@ const Panier = () => {
     const [isLoad, setISload] = useState(false)
     const [refConfirm, setRefConfirm] = useState()
     const [refNotfound, setRefNotfound] = useState(false)
-    const { updateShoppingCartCount } = useContext(MyContext)
-    const { updateFavoritesProductsCount } = useContext(MyContext)
-    const { shoppingCartCount } = useContext(MyContext)
-    const [shoppingCarts, setShoppingCarts] = useState(0)
     const [fixingScroll, setFixingScroll] = useState(false)
     const [shoppingProductGlobal, setShoppingProductGlobal] = useState({
         display: 'flex',
@@ -33,6 +30,12 @@ const Panier = () => {
         margin: '0 auto',
         padding: '100px 20px',
     })
+
+    
+    // Redux set
+    const favCartcount = useSelector((state) => state.favCartCount.count)
+    const dispatch = useDispatch()
+    
 
     
     // REFERENCE //
@@ -87,27 +90,6 @@ const Panier = () => {
     }
 
 
-    // GET FAVORITES FUNCTION //
-    const getShopCount = async () => {
-
-        try {
-            // Get cookies from browser
-            const ShoppingCartCookies = Cookies.get('client_id_shopping_carts')
-
-            if (ShoppingCartCookies) {
-
-                // Api call for get shopping carts
-                const shopping_carts = await shoppingSerive.shoppingCount()
-
-                setShoppingCarts(shopping_carts.data.data.length)
-            }
-        }
-        catch (err) {
-            console.error(err)
-        }
-    }
-
-
     // GET ALL PRODUCTS AND COUNT IN SHOPPING CART //
     useEffect(() => {
 
@@ -115,18 +97,9 @@ const Panier = () => {
 
             // Get all shopping carts
             getShopping()
-
-            // Get shopping carts count
-            getShopCount()
         }
         return () => refuseEffect.current = true
     }, [])
-
-
-    // UPDATE STATE //
-    useEffect(() => {
-        getShopCount()
-    }, [shoppingCartCount])
 
 
     // INCREASE PRODUCTS QUANTITY HANDLE //
@@ -210,24 +183,25 @@ const Panier = () => {
 
 
     // DELETE AN SHOPPING CART //
-    const deleteCarts = async (productId) => {
+    const deleteCarts = async (productId) => {   
 
         try {
             // api call for delete product
-            await shoppingSerive.shoppingSomesDelete(productId)
+            await shoppingSerive.shoppingSomesDelete(productId) 
 
             // api call for get product
-            const product = await shoppingSerive.shoppingGet()
+            const cartCount = await shoppingSerive.shoppingCount()
+
+            console.log(cartCount.data.data.length)
 
             // Update context
-            updateShoppingCartCount(product.data.data.length)
+            dispatch(updatefavsCarts({count: cartCount.data.data.length}))
             
             // Update state
             getShopping()
         }
         catch (err) {
             if (err.response && err.response.status === 404) {
-                updateShoppingCartCount(0)
                 getShopping()
             }
         }
@@ -248,7 +222,7 @@ const Panier = () => {
                 const favorites_products_add = await favoriteProductService.favoriteProductAdd({ id: productId })
 
                 // Update state context
-                updateFavoritesProductsCount(favorites_products_add.data.data.length)
+                dispatch(updateFavsProducts({count: favorites_products_add.data.data.length}))
 
                 // Change icon color
                 heartIcon.style.fill = 'lightseagreen'
@@ -261,7 +235,7 @@ const Panier = () => {
                 const favorites_products_del = await favoriteProductService.favoriteProductCount()
 
                 // Update context
-                updateFavoritesProductsCount(favorites_products_del.data.data.length)
+                dispatch(updateFavsProducts({count: favorites_products_del.data.data.length}))
 
                 // Change icon color
                 heartIcon.style.fill = 'rgb(0, 0, 0)'
@@ -316,7 +290,7 @@ const Panier = () => {
     return (
         <div className="main_container">
             <div className="shopping_title_container">
-                <p>Votre Panier <span style={{fontSize: '25px'}}>({shoppingCarts})</span></p>
+                <p>Votre Panier <span style={{fontSize: '25px'}}>({favCartcount})</span></p>
             </div>
             <div style={shoppingProductGlobal}>
                 <div className="shopping_product_content_items">

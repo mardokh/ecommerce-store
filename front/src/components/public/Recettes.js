@@ -5,6 +5,10 @@ import { favoriteRecipeService } from '../../_services/favoriteRecipe.service'
 import { Link } from "react-router-dom"
 import Cookies from 'js-cookie'
 import MyContext from '../../_utils/contexts'
+import { useDispatch } from 'react-redux'
+import { updateFavsRecipes } from '../../redux/reducers/favRcpSlice'
+
+
 
 const Recettes = () => {
 
@@ -13,6 +17,9 @@ const Recettes = () => {
     const [isLoad, setISload] = useState(false)
     const [refNotfound, setRefNotfound] = useState(false)
     const { updateFavoritesRecipesCount } = useContext(MyContext)
+
+    // Redux set
+    const dispatch = useDispatch()
     
 
     // REFERENCES //
@@ -111,7 +118,7 @@ const Recettes = () => {
                 const favorites_recipes_add = await favoriteRecipeService.favoriteRecipeAdd({ id: recipeId })
 
                 // Update state context
-                updateFavoritesRecipesCount(favorites_recipes_add.data.data.length)
+                dispatch(updateFavsRecipes({count: favorites_recipes_add.data.data.length}))
 
                 // Change icon color
                 heartIcon.style.color = 'gold'
@@ -123,7 +130,7 @@ const Recettes = () => {
                 const favorites_recipes_del = await favoriteRecipeService.favoriteRecipeCount()
 
                 // Update state context
-                updateFavoritesRecipesCount(favorites_recipes_del.data.data.length)
+                dispatch(updateFavsRecipes({count: favorites_recipes_del.data.data.length}))
 
                 // Change icon color
                 heartIcon.style.color = 'rgba(0, 128, 0, 0.45)'

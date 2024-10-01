@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
 import { favoriteRecipeService } from "../../_services/favoriteRecipe.service"
 import "../../styles/components.public/favorites_recipes.css"
-import MyContext from '../../_utils/contexts'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
+import { useDispatch } from 'react-redux'
+import { updateFavsRecipes } from '../../redux/reducers/favRcpSlice'
 
 
 const FavoritesRecipes = () => {
@@ -10,7 +11,8 @@ const FavoritesRecipes = () => {
     // STATES //
     const [recipes, setRecipes] = useState([])
     const [isLoad, setISload] = useState(false)
-    const { updateFavoritesRecipesCount } = useContext(MyContext)
+
+    const dispatch = useDispatch()
     
 
     // REFERENCE //
@@ -46,7 +48,7 @@ const FavoritesRecipes = () => {
             const favorites_recipes_del = await favoriteRecipeService.favoriteRecipeCount()
 
             // Update state context
-            updateFavoritesRecipesCount(favorites_recipes_del.data.data.length)
+            dispatch(updateFavsRecipes({count: favorites_recipes_del.data.data.length}))
 
             // APi call for get favorites recipes
             const favoriteRecipe = await favoriteRecipeService.favoriteRecipeGetAll()

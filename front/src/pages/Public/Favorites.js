@@ -1,61 +1,26 @@
-import React, { useEffect, useState, useContext } from "react"
+import React from "react"
 import { Link } from "react-router-dom"
 import FavoritesProducts from "../../components/public/FavoritesProducts"
 import FavoritesRecipes from "../../components/public/favoritesRecipes"
 import "../../styles/pages.public/favorites.css"
-import { favoriteProductService } from "../../_services/favoriteProduct.service"
-import { favoriteRecipeService } from "../../_services/favoriteRecipe.service"
-import MyContext from '../../_utils/contexts'
+import { useSelector } from 'react-redux';
 
 
 const Favorites = () => {
 
-    // STATES //
-    const [favProductsCount, setFavProductsCount] = useState(0)
-    const [favRecipesCount, setFavRecipesCount] = useState(0)
-
-
-    // CONTEXT //
-    const { favoritesProductsCount } = useContext(MyContext)
-    const { favoritesRecipesCount } = useContext(MyContext)
-
-
-    // GET FAVORITES PRODUCTS RECIPES COUNTS FUNCTION //
-    const getFavCount = async () => {
-        try {
-            // Get favorites products
-            const prodFavCount = await favoriteProductService.favoriteProductCount()
-
-            // Update state
-            setFavProductsCount(prodFavCount.data.data.length)
-
-            // Get favorites products
-            const recipFavCount = await favoriteRecipeService.favoriteRecipeCount()
-
-            // Update state
-            setFavRecipesCount(recipFavCount.data.data.length)
-
-        }
-        catch (err) {
-            console.error('Error : ', err)
-        }
-    }
-
-
-    // GET FAVORITES ON LOAD //
-    useEffect(() => {
-        getFavCount()
-    }, [favoritesProductsCount, favoritesRecipesCount])
-    
+    // REDUX //
+    const favPrdcount = useSelector((state) => state.favPrdCount.count)
+    const favRcpcount = useSelector((state) => state.favRcpCount.count)
+   
 
     return (
         <div className="favories_global_container">
             <div className="favories_fav_products_container">
-                <p className="favories_title">Mes produits favoris ({favProductsCount})</p>
+                <p className="favories_title">Mes produits favoris ({favPrdcount})</p>
                 <FavoritesProducts />
             </div>
             <div className="favories_fav_recipes_container">
-                <p className="favories_title">Mes recettes favorites({favRecipesCount})</p>
+                <p className="favories_title">Mes recettes favorites({favRcpcount})</p>
                 <FavoritesRecipes />
             </div>
             <Link to="/home">

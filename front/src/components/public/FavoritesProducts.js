@@ -1,8 +1,9 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
 import { favoriteProductService } from "../../_services/favoriteProduct.service"
 import "../../styles/components.public/favorites_products.css"
-import MyContext from '../../_utils/contexts'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
+import { useDispatch } from 'react-redux'
+import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
 
 
 const FavoritesProducts = () => {
@@ -12,8 +13,8 @@ const FavoritesProducts = () => {
     const [isLoad, setISload] = useState(false)
 
 
-    // CONTEXTS //
-    const { updateFavoritesProductsCount } = useContext(MyContext)
+    // REDUX //
+    const dispatch = useDispatch()
      
 
     // REFERENCE //
@@ -49,8 +50,8 @@ const FavoritesProducts = () => {
             // Api call for get all favorites products
             const favorites_products_del = await favoriteProductService.favoriteProductCount()
 
-            // Update state context
-            updateFavoritesProductsCount(favorites_products_del.data.data.length)
+            // Update favorites count
+            dispatch(updateFavsProducts({count: favorites_products_del.data.data.length}))
 
             // APi call for get favorites products
             const favoriteProduct = await favoriteProductService.favoriteProductGetAll()

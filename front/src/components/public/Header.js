@@ -1,39 +1,30 @@
-import React, {useEffect, useState, useContext, useRef} from 'react'
+import React, {useEffect, useState, useRef} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import '../../styles/components.public/header.css'
 import logo from '../../images/logo.png'
-import heart from '../../images/heart.png'
-import { favoriteProductService } from '../../_services/favoriteProduct.service'
-import { favoriteRecipeService } from '../../_services/favoriteRecipe.service'
 import Cookies from 'js-cookie'
-import MyContext from '../../_utils/contexts'
 import { searchBarService } from '../../_services/searchBar.service'
-import { shoppingSerive } from '../../_services/shoppingCart.service'
 import { UserService } from '../../_services/user.service'
 import CornerAccount from '../../pages/User/cornerAccount'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-
+import { useSelector } from 'react-redux'
 
 
 const Header = () => {
 
-    // CONTEXT //
-    const { favoritesProductsCount } = useContext(MyContext)
-    const { favoritesRecipesCount } = useContext(MyContext)
-    const { shoppingCartCount } = useContext(MyContext)
-
-
     // STATES //
-    const [favoritesProducts, setFavoriteProducts] = useState(0)
-    const [favoritesRecipes, setFavoriteRecipes] = useState(0)
-    const [shoppingCarts, setShoppingCarts] = useState(0)
-    const [useEffectFlag, setUseEffectFlag] = useState(false)
     const [research, setResearch] = useState()
     const [searchActive, setSearchActive] = useState(false)
     const [userOptionsDisp, setuserOptionsDisp] = useState(false)
-    //const [accountLogin, setAccountLogin] = useState(false)
     const [isLoad, setISload] = useState(false)
     const [isLogout, setIsLogout] = useState(true)
+
+
+    // REDUX //
+    const favPrdcount = useSelector((state) => state.favPrdCount.count)
+    const favRcpcount = useSelector((state) => state.favRcpCount.count)
+    const favCartcount = useSelector((state) => state.favCartCount.count)
+    
 
 
     // REFERENCES //
@@ -44,64 +35,8 @@ const Header = () => {
     const navigate = useNavigate()
 
 
-    // GET FAVORITES FUNCTION //
-    const getFavEndShop = async () => {
-
-        try {
-            // Get cookies from browser
-            const FavoritesProductsCookie = Cookies.get('client_id_favorites_products')
-            const FavoritesRecipesCookie = Cookies.get('client_id_favorites_recipes')
-            const ShoppingCartCookies = Cookies.get('client_id_shopping_carts')
-
-            if (FavoritesProductsCookie) {
-
-                // Api call for get favorites products
-                const favoties_products = await favoriteProductService.favoriteProductCount()
-
-                // Update state
-                setFavoriteProducts(favoties_products.data.data.length)
-            }
-
-            if (FavoritesRecipesCookie) {
-                // Api call for get favorites recipes
-                const favorites_recipes = await favoriteRecipeService.favoriteRecipeCount()
-
-                // Update state
-                setFavoriteRecipes(favorites_recipes.data.data.length)
-            }
-
-            if (ShoppingCartCookies) {
-
-                // Api call for get shopping carts
-                const shopping_carts = await shoppingSerive.shoppingCount()
-
-                setShoppingCarts(shopping_carts.data.data.length)
-            }
-        }
-        catch (err) {
-            console.error(err)
-        }
-    }
-
-
-    // API CALL FOR GET FAVORITE //
-    useEffect(() => {
-        if (!useEffectFlag) {
-            getFavEndShop()
-        }
-        return () => setUseEffectFlag(true)
-    }, [])
-
-
-    // UPDATE STATE //
-    useEffect(() => {
-        getFavEndShop()
-    }, [favoritesProducts, favoritesRecipes, favoritesProductsCount, favoritesRecipesCount, shoppingCarts, shoppingCartCount])
-
-
     // SERACH BAR HANDLE //
     const searchGet = (searchTerm) => {
-        
         if (searchTerm.trim() !== "") {
             searchBarService.searchBar(searchTerm)
                 .then(res => {
@@ -150,9 +85,7 @@ const Header = () => {
 
     // SET CORNER ACCOUNT CONNECTED FUNCTION
     const cornerAccountConnected = async () => {
-
         try {
-
             // Check login cookie
             if (loginUserId) {
 
@@ -161,7 +94,6 @@ const Header = () => {
                  // Check token validity
                 const res = await UserService.isLogged()
                 
-
                 // Set loader
                 setISload(true)
             }
@@ -184,8 +116,6 @@ const Header = () => {
             setuserOptionsDisp(false)
         }
     }
-
-
     useEffect(() => {
         document.addEventListener("click", handleClickOutside);
 
@@ -201,7 +131,7 @@ const Header = () => {
         navigate(`/user/account/${loginUserId}`)
     }
 
-
+    
     // LOGOUT //
     const userLogout = () => {
         UserService.logout()
@@ -261,7 +191,7 @@ const Header = () => {
                                         </g>
                                     </svg>
                                 </Link>
-                                <span style={{display: shoppingCarts === 0 ? 'none' : 'initial'}} className='shopping_cart_icon_count'>{shoppingCarts}</span>
+                                <span style={{display: favCartcount === 0 ? 'none' : 'initial'}} className='shopping_cart_icon_count'>{favCartcount}</span>
                             </div>
                             <div className='favorites_products_icon'>
                                 <Link to="/favorites">
@@ -269,7 +199,7 @@ const Header = () => {
                                         <path fill-rule="evenodd" clip-rule="evenodd" d="M0 7.5C0 3.35786 3.35786 0 7.5 0C11.6421 0 15 3.35786 15 7.5C15 11.6421 11.6421 15 7.5 15C3.35786 15 0 11.6421 0 7.5ZM4.14635 5.14648C4.8939 4.39893 6.10591 4.39893 6.85346 5.14648L7.49991 5.79292L8.14635 5.14648C8.8939 4.39893 10.1059 4.39893 10.8535 5.14648C11.601 5.89402 11.601 7.10603 10.8535 7.85358L7.49991 11.2071L4.14635 7.85358C3.39881 7.10604 3.39881 5.89402 4.14635 5.14648Z" fill="#000000"/>
                                     </svg>
                                 </Link> 
-                                <span style={{display: (favoritesProducts + favoritesRecipes === 0) ? 'none' : 'initial'}} className='favorites_products_count'>{favoritesProducts + favoritesRecipes}</span>
+                                <span style={{display: (favPrdcount + favRcpcount === 0) ? 'none' : 'initial'}} className='favorites_products_count'>{favPrdcount + favRcpcount}</span>
                             </div>
                             <div className='user_account_icon_container' ref={userOptionsRef}>
                                 <svg width="35px" height="35px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" onClick={userOptions}>
