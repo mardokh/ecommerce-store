@@ -1,20 +1,22 @@
-import React, { useEffect, useState, useContext, useRef } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { Link } from "react-router-dom"
 import "../../styles/components.public/productsReviews.css"
-import { productsNotesCommentsService } from "../../_services/productsNotesComments.service" 
+import { productsReviewsService } from "../../_services/productsReviews.service"
 import Cookies from 'js-cookie'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import MyContext from "../../_utils/contexts"
 import { UserService } from "../../_services/user.service"
-
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
+import { updateHavePrdComment } from '../../redux/reducers/havePrdCommentSlice'
 
 
 const ProductsReviews = ({ productId }) => {
 
-
     // STATES //
     const [isLoad, setISload] = useState(false)
     const [rating, setRating] = useState(0)
+    const [prodId, setProdId] = useState(0)
     const [commentClone, setComment] = useState("")
     const [reviewData, setReviewData] = useState([])
     const [reviewNoteFoundMessage, setReviewNoteFoundMessage] = useState("")
@@ -23,10 +25,11 @@ const ProductsReviews = ({ productId }) => {
     const [commentEdit, setCommentEdit] = useState(false)
     const [editCommentId, setEditCommentId] = useState(null) // New state to track the comment being edited
     const [submitLoader, setSubmitLoader] = useState(false)
+    
 
-
-    // CONTEXTS //
-    const { productReviewsOnDisplay, updateProductReviewsOnDisplay, updateUserHaveProductComment } = useContext(MyContext)
+    // REDUX //
+    const dispatch = useDispatch()
+    const prdReveiwdisplay = useSelector((state) => state.prdReveiwDisplay.status)
 
 
     // GET LOGIN COOKIE //
@@ -53,7 +56,7 @@ const ProductsReviews = ({ productId }) => {
             };
 
             // Send form to endPoint
-            await productsNotesCommentsService.addProductsNotesComments(newReview)
+            await productsReviewsService.addProductReview(newReview)
 
             // Reset form fields
             setRating(0)
@@ -62,7 +65,7 @@ const ProductsReviews = ({ productId }) => {
             getCommentsNotes()
 
             // Close component
-            updateProductReviewsOnDisplay(false)
+            dispatch(updatePrdReveiwDisplay({status: false}))
 
             // Set loader
             setSubmitLoader(true)
@@ -82,12 +85,13 @@ const ProductsReviews = ({ productId }) => {
             // Create a new review object
             const newReview = {
                 user_id: user_id,
+                product_id: prodId,
                 note: rating,
                 comment: commentClone
             }
 
             // Send form to endPoint
-            await productsNotesCommentsService.updateProductsNotesComments(newReview)
+            await productsReviewsService.updateProductReview(newReview)
 
             // Reset form fields
             setRating(0)
@@ -97,7 +101,7 @@ const ProductsReviews = ({ productId }) => {
             getCommentsNotes()
 
             // Close component
-            updateProductReviewsOnDisplay(false)
+            dispatch(updatePrdReveiwDisplay({status: false}))
 
         } catch (err) {
             console.error('Error', err)
@@ -147,11 +151,11 @@ const ProductsReviews = ({ productId }) => {
     const getCommentsNotes = async () => {
         try {
             // Get all comments
-            const res = await productsNotesCommentsService.getProductsNotesComments(productId);
+            const res = await productsReviewsService.getProductReview(productId);
     
             // Update state
             const formattedData = res.data.data.map(item => {
-                const comments = item.productsNotesComments.map(subItem => ({
+                const comments = item.productsReviews.map(subItem => ({
                     id: subItem.id,
                     user_name: `${subItem.user_profil.firstName} ${subItem.user_profil.lastName}`,
                     user_id: subItem.user_id,
@@ -193,9 +197,9 @@ const ProductsReviews = ({ productId }) => {
         const checkUserComment = () => {
             try {
                 if (reviewData.some(item => item.comments.some(comment => comment.user_id == user_id))) {
-                    updateUserHaveProductComment(true)
+                    dispatch(updateHavePrdComment({status: true}))
                 } else {
-                    updateUserHaveProductComment(false)
+                    dispatch(updateHavePrdComment({status: false}))
                 }
             } catch (err) {
                 console.error('checkUserComment Error : ', err)
@@ -221,7 +225,7 @@ const ProductsReviews = ({ productId }) => {
     const deleteReview = async (id) => {
         try {
             // Delete review from the server
-            await productsNotesCommentsService.deleteProductsNotesComments(id)
+            await productsReviewsService.deleteProductReview(id)
 
             // Remove the review from the state
             setReviewData(prevReviewData => prevReviewData.filter(review => review.id !== id))
@@ -237,7 +241,7 @@ const ProductsReviews = ({ productId }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (parentNodeRef.current && !parentNodeRef.current.contains(event.target)) {
-                updateProductReviewsOnDisplay(false)
+                dispatch(updatePrdReveiwDisplay({status: false}))
             }
         }
 
@@ -245,17 +249,18 @@ const ProductsReviews = ({ productId }) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
         }
-    }, [updateProductReviewsOnDisplay])
+    }, [prdReveiwdisplay])
 
 
     // COMMENT EDIT HANDLING //
-    const editReview = (commentId, commentText, commentRating) => {
+    const editReview = (commentId, commentText, commentRating, product_id) => {
         setCommentEdit(true)
         setEditCommentId(commentId) // Set the comment being edited
         setComment(commentText) // Initialize the comment state with the current comment
         setRating(commentRating) // Initialize the rating state with the current rating
-        updateProductReviewsOnDisplay(true)
-    };
+        setProdId(product_id)
+        dispatch(updatePrdReveiwDisplay({status: true}))
+    }
     
 
     const renderStars = (rating) => {
@@ -296,6 +301,7 @@ const ProductsReviews = ({ productId }) => {
         return <CustomLoader />
     }
 
+    
     return (
         <div>
             <div className="details_comment_and_notes_totale">
@@ -327,7 +333,7 @@ const ProductsReviews = ({ productId }) => {
                     </div>
                 ))}
             </div>
-            {productReviewsOnDisplay &&
+            {prdReveiwdisplay &&
                 <section className="details_comment_and_notes_global_container">
                     <div className="details_comment_and_notes_parent_container" ref={parentNodeRef}>
                         {submitLoader ?
@@ -436,7 +442,7 @@ const ProductsReviews = ({ productId }) => {
                                         </div>
                                         {comment.user_id == user_id &&
                                             <div className="details_reviews_icons_container">
-                                                <svg className="details_reviews_icon" viewBox="0 0 20 20" onClick={() => editReview(comment.id, comment.comment, comment.note)}>
+                                                <svg className="details_reviews_icon" viewBox="0 0 20 20" onClick={() => editReview(comment.id, comment.comment, comment.note, comment.product_id)}>
                                                     <path d="M18.303,4.742l-1.454-1.455c-0.171-0.171-0.475-0.171-0.646,0l-3.061,3.064H2.019c-0.251,0-0.457,0.205-0.457,0.456v9.578c0,0.251,0.206,0.456,0.457,0.456h13.683c0.252,0,0.457-0.205,0.457-0.456V7.533l2.144-2.146C18.481,5.208,18.483,4.917,18.303,4.742 M15.258,15.929H2.476V7.263h9.754L9.695,9.792c-0.057,0.057-0.101,0.13-0.119,0.212L9.18,11.36h-3.98c-0.251,0-0.457,0.205-0.457,0.456c0,0.253,0.205,0.456,0.457,0.456h4.336c0.023,0,0.899,0.02,1.498-0.127c0.312-0.077,0.55-0.137,0.55-0.137c0.08-0.018,0.155-0.059,0.212-0.118l3.463-3.443V15.929z M11.241,11.156l-1.078,0.267l0.267-1.076l6.097-6.091l0.808,0.808L11.241,11.156z"></path>
                                                 </svg>
                                                 <svg className="details_reviews_icon" viewBox="0 0 20 20" onClick={() => deleteReview(comment.id)}>

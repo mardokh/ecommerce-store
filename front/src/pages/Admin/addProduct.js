@@ -1,7 +1,7 @@
 // MODULES IMPORTS //
 import React, {useState, useRef, useEffect, memo} from 'react'
 import '../../styles/pages.admin/addProduct.css'
-import { productService } from '../../_services/product.service'
+import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 const AddImage = require('../../images/AddImage.jpg')
 

@@ -1,49 +1,27 @@
-import React, {useContext} from "react"
+import React from "react"
 import SlideShow from '../../components/public/SlideShow'
-import Produits from '../../components/public/Produits'
-import Recettes from '../../components/public/Recettes'
-//import ProductNotes from '../../components/public/productNotes'
-import RecipeNotes from '../../components/public/recipeNotes'
+import Produits from '../../components/public/Products'
+import Recettes from '../../components/public/Recipes'
 import '../../styles/pages.public/layout.css'
-import MyContext from "../../_utils/contexts"
 
 
 const Home = () => {
-
-    // STATES //
-    const { productsNotesDisplay } = useContext(MyContext)
-    const { recipesNotesDisplay } = useContext(MyContext)
-
-
+    
     // RENDERING //
     return (
     <div>
 
-        {/* Banner produits */}
+        {/* Banner section */}
         <div className="slides_container">
             <SlideShow />
         </div>
 
-        {/* Products notes */}
-        {productsNotesDisplay &&
-        <div className="container_products_notes">
-            {/*ProductNotes }*/}
-        </div>
-        }
-
-        {/* Recipes notes */}
-        {recipesNotesDisplay &&
-        <div className="container_recipes_notes">
-            <RecipeNotes />
-        </div>
-        }
-
-        {/* Section produits */}
+        {/* Products section */}
         <section className="nutrition">
             <Produits />
         </section>
 
-        {/* Section recettes */}
+        {/* Recipes section */}
         <section className="recettes">
             <Recettes />
         </section>

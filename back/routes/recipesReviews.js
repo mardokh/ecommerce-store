@@ -1,6 +1,6 @@
 //  MODULES IMPORTS //
 const express = require('express')
-const controller = require('../controllers/productsNotesComments')
+const controller = require('../controllers/recipesReviews')
 //const checkTokenMIddleware = require('../jsonwebtoken/check_jwt_endPoints')
 
 
@@ -10,16 +10,16 @@ let router = express.Router()
 
 
 // GET ALL REVEIWS //
-router.get('', controller.getProductsNotesComments)
+router.get('', controller.getRecipesReviews)
 
 // ADD REVEIW //
-router.put('/add', controller.addProductsNotesComments)
+router.put('/add', controller.addRecipesReviews)
 
 // UPDATE REVEIW //
-router.patch('/update', controller.updateProductsNotesComments)
+router.patch('/update', controller.updateRecipesReviews)
 
 // DELETE REVIWE
-router.delete('/delete/:id', controller.deleteProductsNotesComments)
+router.delete('/delete/:id', controller.deleteRecipesReviews)
 
 
 

@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useContext } from "react"
-import { favoriteProductService } from "../../_services/favoriteProduct.service"
+import React, { useEffect, useRef, useState } from "react"
+import { favoriteProductService } from "../../_services/favoritesProducts.service"
 import "../../styles/components.public/favorites_products.css"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useDispatch } from 'react-redux'

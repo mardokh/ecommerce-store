@@ -1,7 +1,7 @@
-import React, { useEffect, useState, useRef, useContext } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import '../../styles/components.public/recettes.css'
-import { recipeService } from '../../_services/recipe.service'
-import { favoriteRecipeService } from '../../_services/favoriteRecipe.service'
+import { recipeService } from '../../_services/recipes.service'
+import { favoriteRecipeService } from '../../_services/favoritesRecipes.service'
 import { Link } from "react-router-dom"
 import Cookies from 'js-cookie'
 import MyContext from '../../_utils/contexts'
@@ -16,8 +16,8 @@ const Recettes = () => {
     const [recipes, setRecipes] = useState([])
     const [isLoad, setISload] = useState(false)
     const [refNotfound, setRefNotfound] = useState(false)
-    const { updateFavoritesRecipesCount } = useContext(MyContext)
 
+    
     // Redux set
     const dispatch = useDispatch()
     

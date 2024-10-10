@@ -1,13 +1,15 @@
-import React, { useEffect, useState, useRef, useContext } from "react"
+import React, { useEffect, useState, useRef } from "react"
 import { useParams } from "react-router-dom"
-import { productService } from "../../_services/product.service"
+import { productService } from "../../_services/products.service"
 import "../../styles/pages.public/product_details.css"
 //import ProductNotes from "../../components/public/productNotes"
-//import { productsNotesCommentsService } from "../../_services/productsNotesComments.service"
+//import { productsReviewsService } from "../../_services/productsReviews.service"
 import ProductsReviews from "../../components/public/ProductsReviews"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-//import { productsNotesCommentsService } from "../../_services/productsNotesComments.service"
-import MyContext from "../../_utils/contexts"
+//import { productsReviewsService } from "../../_services/productsReviews.service"
+import { useDispatch } from 'react-redux'
+import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
+import { useSelector } from 'react-redux'
 
 
 const ProductDetails = () => {
@@ -22,9 +24,9 @@ const ProductDetails = () => {
     const [nextImageActive, setNextImageActive] = useState(false)
 
 
-    // CONTEXTS //
-    const { updateProductReviewsOnDisplay } = useContext(MyContext)
-    const { userHaveProductComment } = useContext(MyContext)
+    // REDUX //
+    const havePrdComment = useSelector((state) => state.havePrdComment.status)
+    const dispatch = useDispatch()
 
 
     // GET ID PARAMS
@@ -87,7 +89,7 @@ const ProductDetails = () => {
 
     // REVIWES FORM HANDLER //
     const dispRviewsForm = () => {
-        updateProductReviewsOnDisplay(true)
+        dispatch(updatePrdReveiwDisplay({status: true}))
     }
     
 
@@ -185,7 +187,7 @@ const ProductDetails = () => {
             <div className="details_comments_write_reviews_button_global_container">
                 <div className="details_comments_write_reviews_button_parent_container">
                     <h1 className="details_comments_title">commentaires & notes</h1>
-                    {!userHaveProductComment &&
+                    {!havePrdComment &&
                         <button className="details_write_reviews_btn" onClick={dispRviewsForm}>laisser un avis & une note</button>
                     }
                 </div>

@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from "react"
 import { useNavigate, Link} from "react-router-dom"
-import { productService } from '../../_services/product.service'
+import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import '../../styles/components.public/our_products.css'
 

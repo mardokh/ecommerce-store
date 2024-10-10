@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
 import { useParams } from "react-router-dom"
-import { recipeService } from "../../_services/recipe.service"
+import { recipeService } from "../../_services/recipes.service"
 import "../../styles/pages.public/recipe_details.css"
 import RecipesReviews from "../../components/public/RecipesReviews"
 import CustomLoader from '../../_utils/customeLoader/customLoader'

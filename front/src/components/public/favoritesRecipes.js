@@ -1,5 +1,5 @@
-import React, { useEffect, useRef, useState, useContext } from "react"
-import { favoriteRecipeService } from "../../_services/favoriteRecipe.service"
+import React, { useEffect, useRef, useState } from "react"
+import { favoriteRecipeService } from "../../_services/favoritesRecipes.service"
 import "../../styles/components.public/favorites_recipes.css"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useDispatch } from 'react-redux'
@@ -47,7 +47,7 @@ const FavoritesRecipes = () => {
             // Api call for get all favorites recipes
             const favorites_recipes_del = await favoriteRecipeService.favoriteRecipeCount()
 
-            // Update state context
+            // Update favorites count
             dispatch(updateFavsRecipes({count: favorites_recipes_del.data.data.length}))
 
             // APi call for get favorites recipes

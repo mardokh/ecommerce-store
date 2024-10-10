@@ -4,7 +4,7 @@ const Product = DB.product
 const productImages = DB.productImages
 const fs = require('fs')
 const path = require('path')
-const ProductsNotesComments = DB.productsNotesComments
+const productsReviews = DB.productsReviews
 const productsNotesLevels = DB.productsNotesLevels
 
 
@@ -286,7 +286,7 @@ exports.deleteProduct = async (req, res) => {
         await Product.destroy({ where: { id: productId }, force: true })
 
         // Delete associated reviews
-        await ProductsNotesComments.destroy({ where: {product_id: productId}, force: true })
+        await productsReviews.destroy({ where: {product_id: productId}, force: true })
 
         // Delete associated reviews levels
         await productsNotesLevels.destroy({ where: {product_id: productId}, force: true })

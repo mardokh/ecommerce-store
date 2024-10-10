@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom'
-import { productService } from '../../_services/product.service';
+import { productService } from '../../_services/products.service';
 import Pagination from '../../pagination/Pagination';
 import '../../styles/components.admin/product.css';
 import CustomLoader from '../../_utils/customeLoader/customLoader'

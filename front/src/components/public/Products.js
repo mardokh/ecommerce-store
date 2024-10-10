@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState, useContext } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import '../../styles/components.public/produits.css'
-import { productService } from '../../_services/product.service'
+import { productService } from '../../_services/products.service'
 import { shoppingSerive } from '../../_services/shoppingCart.service'
 import { useNavigate, Link } from 'react-router-dom'
-import { favoriteProductService } from '../../_services/favoriteProduct.service'
+import { favoriteProductService } from '../../_services/favoritesProducts.service'
 //import MyContext from '../../_utils/contexts'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useDispatch } from 'react-redux'
@@ -20,11 +20,6 @@ const Produits = () => {
 
     // Redux set
     const dispatch = useDispatch()
-
-    /*
-    const { updateFavoritesProductsCount } = useContext(MyContext)
-    const { updateShoppingCartCount } = useContext(MyContext)
-    */
 
     // Navigate
     const navigate = useNavigate() 

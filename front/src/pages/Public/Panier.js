@@ -1,10 +1,10 @@
 // MODULES //
-import React, { useEffect, useRef, useState, useContext } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { Link } from "react-router-dom"
 import { shoppingSerive } from '../../_services/shoppingCart.service'
 import '../../styles/pages.public/panier.css'
 //import OurProducts from '../../components/public/our_products'
-import { favoriteProductService } from '../../_services/favoriteProduct.service'
+import { favoriteProductService } from '../../_services/favoritesProducts.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useDispatch } from 'react-redux'
 import { updatefavsCarts } from '../../redux/reducers/favCartSlice'

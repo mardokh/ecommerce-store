@@ -5,7 +5,7 @@ const {DataTypes} = require('sequelize')
 // DEFINE MODEL //
 module.exports = (sequelize) => {
 
-    return recipesNotesComments = sequelize.define('recipesNotesComments', {
+    return recipesReviews = sequelize.define('recipesReviews', {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,

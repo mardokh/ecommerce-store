@@ -1,13 +1,13 @@
 import React from 'react'
 
 
-const Produits = () => {
+const Recipes = () => {
 
      return (
         <div>
-            Produits
+            Recettes
         </div>
      )
 }
 
-export default Produits
+export default Recipes

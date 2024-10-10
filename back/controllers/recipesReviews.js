@@ -1,19 +1,19 @@
 // MODULES IMPORTS //
 const DB = require('../db.config')
-const ProductsNotesComments = DB.productsNotesComments
-const Product = DB.product
+const RecipesReviews = DB.recipesReviews
+const Recipe = DB.recipe
 const Users = DB.users
 const sequelize = DB.sequelize
-const productsNotesLevels = DB.productsNotesLevels
+const recipesNotesLevels = DB.recipesNotesLevels
 
 
 // RECALCULATE REVIEWS//
 const recalculateReviews = async () => {
 
-    // Calculate notes and insert into products tables
-    const result = await ProductsNotesComments.findAll({
+    // Calculate notes and insert into recipes tables
+    const result = await RecipesReviews.findAll({
         attributes: [
-            'product_id',
+            'recipe_id',
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 1 THEN 1 ELSE 0 END')), 'note_count_for_1'],
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 2 THEN 1 ELSE 0 END')), 'note_count_for_2'],
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 3 THEN 1 ELSE 0 END')), 'note_count_for_3'],
@@ -21,7 +21,7 @@ const recalculateReviews = async () => {
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 5 THEN 1 ELSE 0 END')), 'note_count_for_5'],
         ],
         where: {},
-        group: ['product_id'],
+        group: ['recipe_id'],
     })
 
     const noteResult = result.map(async (row) => {
@@ -39,21 +39,21 @@ const recalculateReviews = async () => {
             4 * row.dataValues.note_count_for_4 +
             5 * row.dataValues.note_count_for_5) / total_notes_count
     
-        // Update product note in the products table
-        await Product.update({ note: total_notes }, { where: { id: row.product_id } })
+        // Update recipe note in the recipes table
+        await Recipe.update({ note: total_notes }, { where: { id: row.recipe_id } })
     
-        // Update product review levels
-        await productsNotesLevels.update({
+        // Update recipe review levels
+        await recipesNotesLevels.update({
             level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
             level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
             level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
             level_4: (row.dataValues.note_count_for_4 / total_notes_count) * 100, 
             level_5: (row.dataValues.note_count_for_5 / total_notes_count) * 100,
             totale_note: total_notes
-        }, {where: {product_id: row.product_id}})
+        }, {where: {recipe_id: row.recipe_id}})
     
         return {
-            product_id: row.product_id,
+            recipe_id: row.recipe_id,
             total_notes: total_notes,
         }
     })
@@ -65,38 +65,38 @@ const recalculateReviews = async () => {
 
 
 // ADD REVIEWS //
-exports.addProductsNotesComments = async (req, res) => {
+exports.addRecipesReviews = async (req, res) => {
 
     try {
 
-        // Extract product id & note
-        const {user_id, product_id, comment, note} = req.body
+        // Extract recipe id & note
+        const {user_id, recipe_id, comment, note} = req.body
 
         // Check inputs 
-        if (!user_id || !product_id || !comment || !note) {
+        if (!user_id || !recipe_id || !comment || !note) {
             return res.status(400).json({message: 'Missing inputs in request body !'})
         }
 
-        // check if the client has already rated this product
-        const productNoted = await ProductsNotesComments.findAll({where: {user_id: user_id, product_id: product_id}})
+        // check if the client has already rated this recipe
+        const recipeNoted = await RecipesReviews.findAll({where: {user_id: user_id, recipe_id: recipe_id}})
 
-        if (productNoted.length !== 0) {
+        if (recipeNoted.length !== 0) {
             return res.status(409).json({message: 'Vous avez deja commenter ce porduit'})
         }
         else {
-            // Create product note
-            await ProductsNotesComments.create({
+            // Create recipe note
+            await RecipesReviews.create({
             user_id: user_id,
-            product_id: product_id,
+            recipe_id: recipe_id,
             comment: comment,
             note: note
             })
         }
 
-        // Calculate notes and insert into products tables
-        const result = await ProductsNotesComments.findAll({
+        // Calculate notes and insert into recipes tables
+        const result = await RecipesReviews.findAll({
             attributes: [
-                'product_id',
+                'recipe_id',
                 [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 1 THEN 1 ELSE 0 END')), 'note_count_for_1'],
                 [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 2 THEN 1 ELSE 0 END')), 'note_count_for_2'],
                 [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 3 THEN 1 ELSE 0 END')), 'note_count_for_3'],
@@ -104,7 +104,7 @@ exports.addProductsNotesComments = async (req, res) => {
                 [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 5 THEN 1 ELSE 0 END')), 'note_count_for_5'],
             ],
             where: {},
-            group: ['product_id'],
+            group: ['recipe_id'],
         })
 
         const noteResult = result.map(async (row) => {
@@ -122,17 +122,17 @@ exports.addProductsNotesComments = async (req, res) => {
                 4 * row.dataValues.note_count_for_4 +
                 5 * row.dataValues.note_count_for_5) / total_notes_count
         
-            // Update product note in the products table
-            await Product.update({ note: total_notes }, { where: { id: row.product_id } })
+            // Update recipe note in the recipes table
+            await Recipe.update({ note: total_notes }, { where: { id: row.recipe_id } })
 
             // Check if reveiws levels exist
-            const reviwesLevels = await productsNotesLevels.findOne({where: {product_id: product_id}})
+            const reviwesLevels = await recipesNotesLevels.findOne({where: {recipe_id: recipe_id}})
         
-            // Create or update product review levels
+            // Create or update recipe review levels
             if (reviwesLevels === null) {
-                await productsNotesLevels.create({
+                await recipesNotesLevels.create({
                     user_id: user_id,
-                    product_id: row.product_id,
+                    recipe_id: row.recipe_id,
                     level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
                     level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
                     level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
@@ -142,18 +142,18 @@ exports.addProductsNotesComments = async (req, res) => {
                 })
             }
             else {
-                await productsNotesLevels.update({
+                await recipesNotesLevels.update({
                     level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
                     level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
                     level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
                     level_4: (row.dataValues.note_count_for_4 / total_notes_count) * 100, 
                     level_5: (row.dataValues.note_count_for_5 / total_notes_count) * 100,
                     totale_note: total_notes
-                }, {where: {product_id: row.product_id}})
+                }, {where: {recipe_id: row.recipe_id}})
             }
         
             return {
-                product_id: row.product_id,
+                recipe_id: row.recipe_id,
                 total_notes: total_notes,
             }
         })
@@ -172,15 +172,15 @@ exports.addProductsNotesComments = async (req, res) => {
 
 
 // GET ALL REVIEWS //
-exports.getProductsNotesComments = async (req, res) => {
+exports.getRecipesReviews = async (req, res) => {
 
     try {
-        // Extract product id
-        const product_id = req.query.productId
+        // Extract recipe id
+        const recipe_id = req.query.recipeId
 
         // Get comments & notes
-        const productsNotesComments = await ProductsNotesComments.findAll({
-            where: { product_id: product_id },
+        const recipesReviews = await RecipesReviews.findAll({
+            where: { recipe_id: recipe_id },
             include: [
                 { 
                     model: Users, 
@@ -191,15 +191,15 @@ exports.getProductsNotesComments = async (req, res) => {
         })
 
         // Check if comments exists
-        if (!productsNotesComments.length > 0) {
+        if (!recipesReviews.length > 0) {
             return res.status(404).json({ message: "aucun commentaire" })
         }
 
         // Get reveiws levels
-        const ProductsNotesLevels = await productsNotesLevels.findAll({where: { product_id: product_id}})
+        const RecipesNotesLevels = await recipesNotesLevels.findAll({where: { recipe_id: recipe_id}})
 
         // Sucessfully response
-        return res.json({ data: [{productsNotesComments, ProductsNotesLevels}] })
+        return res.json({ data: [{recipesReviews, RecipesNotesLevels}] })
 
     }
     catch (err) {
@@ -209,10 +209,10 @@ exports.getProductsNotesComments = async (req, res) => {
 
 
 // UPDATE REVIEW //
-exports.updateProductsNotesComments = async (req, res) => {
+exports.updateRecipesReviews = async (req, res) => {
 
     try {
-        // Extract product id & note
+        // Extract recipe id & note
         const {user_id, comment, note} = req.body
 
         // Check inputs 
@@ -221,7 +221,7 @@ exports.updateProductsNotesComments = async (req, res) => {
         }
 
         // Update review
-        await ProductsNotesComments.update(req.body, {where: {user_id: user_id}})
+        await RecipesReviews.update(req.body, {where: {user_id: user_id}})
 
         // Recalculate reviews
         await recalculateReviews()
@@ -237,7 +237,7 @@ exports.updateProductsNotesComments = async (req, res) => {
 
 
 // DELETE REVIEWS //
-exports.deleteProductsNotesComments = async (req, res) => {
+exports.deleteRecipesReviews = async (req, res) => {
 
     try {
         // Extract reviews id
@@ -249,7 +249,7 @@ exports.deleteProductsNotesComments = async (req, res) => {
         }
 
         // Get reveiws
-        const reveiws = await ProductsNotesComments.findOne({where: {id: reviewId}})
+        const reveiws = await RecipesReviews.findOne({where: {id: reviewId}})
 
         // Check if reviews exist
         if (reveiws === null) {
@@ -257,7 +257,7 @@ exports.deleteProductsNotesComments = async (req, res) => {
         }
 
         // Delete reviwes
-        await ProductsNotesComments.destroy({where: {id: reviewId}, force: true})
+        await RecipesReviews.destroy({where: {id: reviewId}, force: true})
 
         // Recalculate reviews
         await recalculateReviews()

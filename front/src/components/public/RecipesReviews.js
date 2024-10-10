@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from "react"
 import { Link } from "react-router-dom"
 import "../../styles/components.public/recipeReviews.css"
-import { recipesNotesCommentsService } from "../../_services/recipesNotesComments.service"
+import { recipesReviewsService } from "../../_services/recipesReviews.service"
 import Cookies from 'js-cookie'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import MyContext from "../../_utils/contexts"
@@ -52,7 +52,7 @@ const RecipesReviews = ({ recipeId }) => {
             };
 
             // Send form to endPoint
-            await recipesNotesCommentsService.addRecipesNotesComments(newReview)
+            await recipesReviewsService.addRecipesReviews(newReview)
 
             // Reset form fields
             setRating(0)
@@ -86,7 +86,7 @@ const RecipesReviews = ({ recipeId }) => {
             }
 
             // Send form to endPoint
-            await recipesNotesCommentsService.updateRecipesNotesComments(newReview)
+            await recipesReviewsService.updateRecipesReviews(newReview)
 
             // Reset form fields
             setRating(0)
@@ -146,11 +146,11 @@ const RecipesReviews = ({ recipeId }) => {
     const getCommentsNotes = async () => {
         try {
             // Get all comments
-            const res = await recipesNotesCommentsService.getRecipesNotesComments(recipeId);
+            const res = await recipesReviewsService.getRecipesReviews(recipeId);
     
             // Update state
             const formattedData = res.data.data.map(item => {
-                const comments = item.recipesNotesComments.map(subItem => ({
+                const comments = item.recipesReviews.map(subItem => ({
                     id: subItem.id,
                     user_name: `${subItem.user_profil.firstName} ${subItem.user_profil.lastName}`,
                     user_id: subItem.user_id,
@@ -220,7 +220,7 @@ const RecipesReviews = ({ recipeId }) => {
     const deleteReview = async (id) => {
         try {
             // Delete review from the server
-            await recipesNotesCommentsService.deleteRecipesNotesComments(id)
+            await recipesReviewsService.deleteRecipesReviews(id)
 
             // Remove the review from the state
             setReviewData(prevReviewData => prevReviewData.filter(review => review.id !== id))

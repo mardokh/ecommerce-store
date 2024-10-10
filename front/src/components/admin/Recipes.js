@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { recipeService } from '../../_services/recipe.service'
+import { recipeService } from '../../_services/recipes.service'
 import Pagination from '../../pagination/Pagination'
 import "../../styles/components.admin/recipes.css"
 import CustomLoader from '../../_utils/customeLoader/customLoader'

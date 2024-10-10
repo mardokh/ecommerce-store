@@ -22,9 +22,9 @@ db.recipe = require('./models/recipe')(sequelize)
 db.favoriteRecipe = require('./models/favoriteRecipe')(sequelize)
 db.admin = require('./models/admin')(sequelize)
 db.users = require('./models/users')(sequelize)
-db.productsNotesComments = require('./models/productsNotesComments')(sequelize)
+db.productsReviews = require('./models/productsReviews')(sequelize)
 db.productsNotesLevels = require('./models/productsNotesLevels')(sequelize)
-db.recipesNotesComments = require('./models/recipesNotesComments')(sequelize)
+db.recipesReviews = require('./models/recipesReviews')(sequelize)
 db.recipesNotesLevels = require('./models/recipesNotesLevels')(sequelize)
 
 
@@ -44,13 +44,13 @@ db.product.hasMany(productImages, { foreignKey: 'productId', as: 'product_images
 db.favoriteRecipe.belongsTo(recipe, { foreignKey: 'recipe_id', as: 'favorite_recipe', onDelete: 'CASCADE' })
 db.recipe.hasOne(favoriteRecipe, { foreignKey: 'recipe_id', onDelete: 'SET NULL' })
 
-// tables associations : productsNotesComments - users
-db.productsNotesComments.belongsTo(users, { foreignKey: 'user_id', as: 'user_profil', onDelete: 'CASCADE' })
-db.users.hasOne(productsNotesComments, { foreignKey: 'user_id', onDelete: 'SET NULL'})
+// tables associations : productsReviews - users
+db.productsReviews.belongsTo(users, { foreignKey: 'user_id', as: 'user_profil', onDelete: 'CASCADE' })
+db.users.hasOne(productsReviews, { foreignKey: 'user_id', onDelete: 'SET NULL'})
 
-// tables associations : recipesNotesComments - users
-db.recipesNotesComments.belongsTo(users, { foreignKey: 'user_id', as: 'user_profil', onDelete: 'CASCADE' })
-db.users.hasOne(recipesNotesComments, { foreignKey: 'user_id', onDelete: 'SET NULL'})
+// tables associations : recipesReviews - users
+db.recipesReviews.belongsTo(users, { foreignKey: 'user_id', as: 'user_profil', onDelete: 'CASCADE' })
+db.users.hasOne(recipesReviews, { foreignKey: 'user_id', onDelete: 'SET NULL'})
 
 // synchronizate models
 db.sequelize.sync({ alter: true, force: false })

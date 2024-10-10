@@ -1,6 +1,6 @@
 import React, { useRef, useState } from "react"
 import "../../styles/pages.admin/addRecipe.css"
-import { recipeService } from '../../_services/recipe.service'
+import { recipeService } from '../../_services/recipes.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 const AddImage = require('../../images/AddImage.jpg')
 

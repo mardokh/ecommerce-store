@@ -156,10 +156,10 @@ const Header = () => {
                                 <Link to="/home">Acceuil</Link>
                             </li>
                             <li className="produits">
-                                <Link to="/produits">Produits</Link>
+                                <Link to="/products">Produits</Link>
                             </li>
                             <li className="services">
-                                <Link to="/services">Recettes</Link>
+                                <Link to="/recipes">Recettes</Link>
                             </li>
                             <li className="services">
                                 <Link to="/services">Services</Link>
