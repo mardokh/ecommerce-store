@@ -19,7 +19,7 @@ router.put('/add', controller.addProductReview)
 router.patch('/update', controller.updateProductReview)
 
 // DELETE REVIWE
-router.delete('/delete/:id', controller.deleteProductReview)
+router.delete('/delete/:reviewId/:userId/:productId', controller.deleteProductReview)
 
 
 

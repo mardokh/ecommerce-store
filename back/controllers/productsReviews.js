@@ -24,6 +24,12 @@ const calculateReviews = async (user_id, product_id) => {
         group: ['product_id'],
     })
 
+    // Set note to 0 if no reviews exist
+    if (!result) {
+        await Product.update({ note: 0 }, { where: { id: product_id } })
+        return res.status(204).json({message: "commentaire supprimer avec succes"})
+    }
+
     // add up all ratings levels sum
     const total_notes_count =
         Number(result.dataValues.note_count_for_1) +
@@ -180,11 +186,13 @@ exports.deleteProductReview = async (req, res) => {
 
     try {
         // Extract reviews id
-        const reviewId = parseInt(req.params.id)
+        const reviewId = parseInt(req.params.reviewId)
+        const user_id = parseInt(req.params.userId)
+        const product_id = parseInt(req.params.productId)
 
         // Check reviews id
-        if (!reviewId) {
-            return res.json({message: 'Missing or incorrect id !'})
+        if (!reviewId || !user_id || !product_id) {
+            return res.json({message: 'Missing or incorrect params !'})
         }
 
         // Get reveiws
@@ -199,7 +207,7 @@ exports.deleteProductReview = async (req, res) => {
         await ProductsReviews.destroy({where: {id: reviewId}, force: true})
 
         // Recalculate reviews
-        //await recalculateReviews()
+        await calculateReviews(user_id, product_id)
 
         // Sucessfully responses
         return res.status(204).json({message: "commentaire supprimer avec succes"})
