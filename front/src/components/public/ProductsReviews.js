@@ -112,9 +112,11 @@ const ProductsReviews = ({ productId }) => {
     // GET REVIEWS ERRORS HANDLING //
     const handleError = (err) => {
         if (err.response && err.response.status === 404) {
+            setReviewData([])
             setReviewNoteFoundMessage(err.response.data.message)
             setISload(true)
-        } else {
+        }
+        else {
             console.log('Error:', err)
         }
     }
@@ -151,7 +153,7 @@ const ProductsReviews = ({ productId }) => {
     const getCommentsNotes = async () => {
         try {
             // Get all comments
-            const res = await productsReviewsService.getProductReview(productId);
+            const res = await productsReviewsService.getProductReview(productId)
     
             // Update state
             const formattedData = res.data.data.map(item => {
@@ -164,7 +166,7 @@ const ProductsReviews = ({ productId }) => {
                     comment: subItem.comment,
                 }));
     
-                const levels = item.ProductsNotesLevels[0] || {};
+                const levels = item.ProductsNotesLevels[0] || {}
     
                 return {
                     comments,
@@ -174,8 +176,8 @@ const ProductsReviews = ({ productId }) => {
                     level_3: levels.level_3 || 0,
                     level_4: levels.level_4 || 0,
                     level_5: levels.level_5 || 0,
-                };
-            });
+                }
+            })
     
             setReviewData(formattedData)
             setISload(true)
@@ -225,12 +227,11 @@ const ProductsReviews = ({ productId }) => {
     const deleteReview = async (reviewId, userId, productId) => {
         try {
             // Delete review from the server
-            await productsReviewsService.deleteProductReview(reviewId, userId, productId)
+            const productsReviews = await productsReviewsService.deleteProductReview(reviewId, userId, productId)
 
-            // Remove the review from the state
-            setReviewData(prevReviewData => prevReviewData.filter(review => review.id !== reviewId))
-
-            getCommentsNotes()
+            if (productsReviews.status && productsReviews.status === 204) {
+                await getCommentsNotes()
+            }
 
         } catch (err) {
             console.error('deleteReview Error:', err)
@@ -457,11 +458,13 @@ const ProductsReviews = ({ productId }) => {
                             )}
                         </div>
                     )
-                    : (
+                    : 
+                    (
                         <div className="details_reviews_no_comment">
                             <p>{reviewNoteFoundMessage}</p>
                         </div>
-                    )}
+                    )
+                }
             </section>
         </div>
     );

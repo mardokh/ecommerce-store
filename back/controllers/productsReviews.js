@@ -26,8 +26,7 @@ const calculateReviews = async (user_id, product_id) => {
 
     // Set note to 0 if no reviews exist
     if (!result) {
-        await Product.update({ note: 0 }, { where: { id: product_id } })
-        return res.status(204).json({message: "commentaire supprimer avec succes"})
+        return await Product.update({ note: 0 }, { where: { id: product_id } })
     }
 
     // add up all ratings levels sum
@@ -210,8 +209,7 @@ exports.deleteProductReview = async (req, res) => {
         await calculateReviews(user_id, product_id)
 
         // Sucessfully responses
-        return res.status(204).json({message: "commentaire supprimer avec succes"})
-
+        return res.status(204).send()
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
