@@ -301,9 +301,6 @@ const ProductsReviews = ({ productId }) => {
     if (!isLoad) {
         return <CustomLoader />
     }
-
-    console.log(reviewData)
-
     
     return (
         <div>

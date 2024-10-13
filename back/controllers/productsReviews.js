@@ -165,7 +165,7 @@ exports.updateProductReview = async (req, res) => {
         }
 
         // Update review
-        await ProductsReviews.update(req.body, {where: {user_id: user_id}})
+        await ProductsReviews.update(req.body, {where: {product_id: product_id, user_id: user_id}})
 
         // Recalculate reviews
         await calculateReviews(user_id, product_id)
