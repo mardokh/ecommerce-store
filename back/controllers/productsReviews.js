@@ -26,7 +26,9 @@ const calculateReviews = async (user_id, product_id) => {
 
     // Set note to 0 if no reviews exist
     if (!result) {
-        return await Product.update({ note: 0 }, { where: { id: product_id } })
+        await Product.update({ note: 0 }, { where: { id: product_id } }),
+        await productsNotesLevels.destroy({where: {product_id: product_id}, force: true})
+        return
     }
 
     // add up all ratings levels sum

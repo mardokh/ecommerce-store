@@ -194,6 +194,7 @@ header nav ul li a {
 
 .user_account_icon_container {
     position: relative;
+    cursor: pointer;
 }
 
 .user_options_container {
@@ -202,7 +203,7 @@ header nav ul li a {
     background-color: white;
     box-shadow: 0px 0px 3px 1px;
     position: absolute;
-    top: 34px;
+    top: 45px;
     right: 0;
     z-index: 1;
     display: flex;
