@@ -8,10 +8,10 @@ const recipesNotesLevels = DB.recipesNotesLevels
 
 
 // RECALCULATE REVIEWS//
-const recalculateReviews = async () => {
+const calculateReviews = async (user_id, recipe_id) => {
 
-    // Calculate notes and insert into recipes tables
-    const result = await RecipesReviews.findAll({
+    // Get ratings occurrences sum for each rating level
+    const result = await RecipesReviews.findOne({
         attributes: [
             'recipe_id',
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 1 THEN 1 ELSE 0 END')), 'note_count_for_1'],
@@ -20,47 +20,65 @@ const recalculateReviews = async () => {
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 4 THEN 1 ELSE 0 END')), 'note_count_for_4'],
             [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 5 THEN 1 ELSE 0 END')), 'note_count_for_5'],
         ],
-        where: {},
+        where: { recipe_id: recipe_id},
         group: ['recipe_id'],
     })
 
-    const noteResult = result.map(async (row) => {
-        const total_notes_count = 
-            Number(row.dataValues.note_count_for_1) +
-            Number(row.dataValues.note_count_for_2) +
-            Number(row.dataValues.note_count_for_3) +
-            Number(row.dataValues.note_count_for_4) +
-            Number(row.dataValues.note_count_for_5)
-    
-        const total_notes =
-           (1 * row.dataValues.note_count_for_1 +
-            2 * row.dataValues.note_count_for_2 +
-            3 * row.dataValues.note_count_for_3 +
-            4 * row.dataValues.note_count_for_4 +
-            5 * row.dataValues.note_count_for_5) / total_notes_count
-    
-        // Update recipe note in the recipes table
-        await Recipe.update({ note: total_notes }, { where: { id: row.recipe_id } })
-    
-        // Update recipe review levels
-        await recipesNotesLevels.update({
-            level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
-            level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
-            level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
-            level_4: (row.dataValues.note_count_for_4 / total_notes_count) * 100, 
-            level_5: (row.dataValues.note_count_for_5 / total_notes_count) * 100,
-            totale_note: total_notes
-        }, {where: {recipe_id: row.recipe_id}})
-    
-        return {
-            recipe_id: row.recipe_id,
-            total_notes: total_notes,
-        }
-    })
-    
-    // Wait for all the updates to complete
-    await Promise.all(noteResult)
+    // Set note to 0 if no reviews exist
+    if (!result) {
+        await Recipe.update({ note: 0 }, { where: { id: recipe_id } }),
+        await recipesNotesLevels.destroy({where: {recipe_id: recipe_id}, force: true})
+        return
+    }
 
+    // add up all ratings levels sum
+    const total_notes_count = 
+        Number(result.dataValues.note_count_for_1) +
+        Number(result.dataValues.note_count_for_2) +
+        Number(result.dataValues.note_count_for_3) +
+        Number(result.dataValues.note_count_for_4) +
+        Number(result.dataValues.note_count_for_5)
+
+    // multiply each rating level by number of occurrences    
+    const total_notes =
+       (1 * result.dataValues.note_count_for_1 +
+        2 * result.dataValues.note_count_for_2 +
+        3 * result.dataValues.note_count_for_3 +
+        4 * result.dataValues.note_count_for_4 +
+        5 * result.dataValues.note_count_for_5) / total_notes_count
+
+    // Update recipe note in the recipes table
+    await Recipe.update({ note: total_notes }, { where: { id: recipe_id } })
+
+    // Check if review rating levels exist
+    const reviewLevels = await recipesNotesLevels.findOne({ where: { recipe_id: recipe_id } })
+
+    if (!reviewLevels) {
+        // Create new review levels
+        await recipesNotesLevels.create({
+            user_id,
+            recipe_id,
+            level_1: (result.dataValues.note_count_for_1 / total_notes_count) * 100,
+            level_2: (result.dataValues.note_count_for_2 / total_notes_count) * 100,
+            level_3: (result.dataValues.note_count_for_3 / total_notes_count) * 100,
+            level_4: (result.dataValues.note_count_for_4 / total_notes_count) * 100,
+            level_5: (result.dataValues.note_count_for_5 / total_notes_count) * 100,
+            totale_note: total_notes,
+        })
+    } else {
+        // Update existing review levels
+        await recipesNotesLevels.update(
+            {
+                level_1: (result.dataValues.note_count_for_1 / total_notes_count) * 100,
+                level_2: (result.dataValues.note_count_for_2 / total_notes_count) * 100,
+                level_3: (result.dataValues.note_count_for_3 / total_notes_count) * 100,
+                level_4: (result.dataValues.note_count_for_4 / total_notes_count) * 100,
+                level_5: (result.dataValues.note_count_for_5 / total_notes_count) * 100,
+                totale_note: total_notes,
+            },
+            { where: { recipe_id: recipe_id } }
+        )
+    }
 }
 
 
@@ -78,92 +96,20 @@ exports.addRecipesReviews = async (req, res) => {
         }
 
         // check if the client has already rated this recipe
-        const recipeNoted = await RecipesReviews.findAll({where: {user_id: user_id, recipe_id: recipe_id}})
+        const recipeNoted = await RecipesReviews.findOne({where: { user_id: user_id, recipe_id: recipe_id }})
 
-        if (recipeNoted.length !== 0) {
-            return res.status(409).json({message: 'Vous avez deja commenter ce porduit'})
-        }
-        else {
-            // Create recipe note
-            await RecipesReviews.create({
-            user_id: user_id,
-            recipe_id: recipe_id,
-            comment: comment,
-            note: note
-            })
+        if (recipeNoted) {
+            return res.status(409).json({ message: 'You have already commented on this recipes' })
         }
 
-        // Calculate notes and insert into recipes tables
-        const result = await RecipesReviews.findAll({
-            attributes: [
-                'recipe_id',
-                [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 1 THEN 1 ELSE 0 END')), 'note_count_for_1'],
-                [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 2 THEN 1 ELSE 0 END')), 'note_count_for_2'],
-                [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 3 THEN 1 ELSE 0 END')), 'note_count_for_3'],
-                [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 4 THEN 1 ELSE 0 END')), 'note_count_for_4'],
-                [sequelize.fn('SUM', sequelize.literal('CASE WHEN `note` = 5 THEN 1 ELSE 0 END')), 'note_count_for_5'],
-            ],
-            where: {},
-            group: ['recipe_id'],
-        })
+        // Create recipe review
+        await RecipesReviews.create({user_id, recipe_id, comment, note})
 
-        const noteResult = result.map(async (row) => {
-            const total_notes_count = 
-                Number(row.dataValues.note_count_for_1) +
-                Number(row.dataValues.note_count_for_2) +
-                Number(row.dataValues.note_count_for_3) +
-                Number(row.dataValues.note_count_for_4) +
-                Number(row.dataValues.note_count_for_5)
+        // Calculate review
+        await calculateReviews(user_id, recipe_id)
         
-            const total_notes =
-               (1 * row.dataValues.note_count_for_1 +
-                2 * row.dataValues.note_count_for_2 +
-                3 * row.dataValues.note_count_for_3 +
-                4 * row.dataValues.note_count_for_4 +
-                5 * row.dataValues.note_count_for_5) / total_notes_count
-        
-            // Update recipe note in the recipes table
-            await Recipe.update({ note: total_notes }, { where: { id: row.recipe_id } })
-
-            // Check if reveiws levels exist
-            const reviwesLevels = await recipesNotesLevels.findOne({where: {recipe_id: recipe_id}})
-        
-            // Create or update recipe review levels
-            if (reviwesLevels === null) {
-                await recipesNotesLevels.create({
-                    user_id: user_id,
-                    recipe_id: row.recipe_id,
-                    level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
-                    level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
-                    level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
-                    level_4: (row.dataValues.note_count_for_4 / total_notes_count) * 100, 
-                    level_5: (row.dataValues.note_count_for_5 / total_notes_count) * 100,
-                    totale_note: total_notes
-                })
-            }
-            else {
-                await recipesNotesLevels.update({
-                    level_1: (row.dataValues.note_count_for_1 / total_notes_count) * 100, 
-                    level_2: (row.dataValues.note_count_for_2 / total_notes_count) * 100, 
-                    level_3: (row.dataValues.note_count_for_3 / total_notes_count) * 100, 
-                    level_4: (row.dataValues.note_count_for_4 / total_notes_count) * 100, 
-                    level_5: (row.dataValues.note_count_for_5 / total_notes_count) * 100,
-                    totale_note: total_notes
-                }, {where: {recipe_id: row.recipe_id}})
-            }
-        
-            return {
-                recipe_id: row.recipe_id,
-                total_notes: total_notes,
-            }
-        })
-        
-        // Wait for all the updates to complete
-        await Promise.all(noteResult)
-
         // Send successfully
-        return res.status(201).json({ message: "commentaire ajouter avec succes"})
-
+        return res.status(201).json({ message: 'Review added successfully' })
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
@@ -196,11 +142,10 @@ exports.getRecipesReviews = async (req, res) => {
         }
 
         // Get reveiws levels
-        const RecipesNotesLevels = await recipesNotesLevels.findAll({where: { recipe_id: recipe_id}})
+        const RecipesNotesLevels = await recipesNotesLevels.findAll({where: { recipe_id: recipe_id }})
 
         // Sucessfully response
         return res.json({ data: [{recipesReviews, RecipesNotesLevels}] })
-
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
@@ -213,7 +158,9 @@ exports.updateRecipesReviews = async (req, res) => {
 
     try {
         // Extract recipe id & note
-        const {user_id, comment, note} = req.body
+        const {user_id, recipe_id, comment, note} = req.body
+
+        console.log(req.body)
 
         // Check inputs 
         if (!user_id || !comment || !note) {
@@ -221,14 +168,13 @@ exports.updateRecipesReviews = async (req, res) => {
         }
 
         // Update review
-        await RecipesReviews.update(req.body, {where: {user_id: user_id}})
+        await RecipesReviews.update(req.body, {where: {recipe_id: recipe_id, user_id: user_id}})
 
-        // Recalculate reviews
-        await recalculateReviews()
+        // Calculate review
+        await calculateReviews(user_id, recipe_id)
 
         // Sucessfully response
         return res.json({message: 'avis modifier avec succées'})
-        
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
@@ -241,7 +187,9 @@ exports.deleteRecipesReviews = async (req, res) => {
 
     try {
         // Extract reviews id
-        const reviewId = parseInt(req.params.id)
+        const reviewId = parseInt(req.params.reviewId)
+        const user_id = parseInt(req.params.userId)
+        const recipe_id = parseInt(req.params.recipeId)
 
         // Check reviews id
         if (!reviewId) {
@@ -259,12 +207,11 @@ exports.deleteRecipesReviews = async (req, res) => {
         // Delete reviwes
         await RecipesReviews.destroy({where: {id: reviewId}, force: true})
 
-        // Recalculate reviews
-        await recalculateReviews()
+        // Calculate review
+        await calculateReviews(user_id, recipe_id)
 
         // Sucessfully responses
-        return res.status(204).json({message: "commentaire supprimer avec succes"})
-
+        return res.status(204).send()
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })

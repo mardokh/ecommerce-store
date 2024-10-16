@@ -95,9 +95,8 @@ exports.addProductReview = async (req, res) => {
         }
 
         // Check if the user already reviewed this product
-        const productNoted = await ProductsReviews.findOne({
-            where: { user_id: user_id, product_id: product_id },
-        })
+        const productNoted = await ProductsReviews.findOne({where: { user_id: user_id, product_id: product_id }})
+
         if (productNoted) {
             return res.status(409).json({ message: 'You have already commented on this product' })
         }
@@ -142,11 +141,10 @@ exports.getProductReview = async (req, res) => {
         }
 
         // Get reveiws levels
-        const ProductsNotesLevels = await productsNotesLevels.findAll({where: { product_id: product_id}})
+        const ProductsNotesLevels = await productsNotesLevels.findAll({where: { product_id: product_id }})
 
         // Sucessfully response
         return res.json({ data: [{productsReviews, ProductsNotesLevels}] })
-
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
@@ -173,8 +171,7 @@ exports.updateProductReview = async (req, res) => {
         await calculateReviews(user_id, product_id)
 
         // Sucessfully response
-        return res.json({message: 'avis modifier avec succées'})
-        
+        return res.json({message: 'avis modifier avec succées'})   
     }
     catch (err) {
         return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })

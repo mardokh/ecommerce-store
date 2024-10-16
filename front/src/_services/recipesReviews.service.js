@@ -18,8 +18,8 @@ let updateRecipesReviews = (newReview) => {
 }
 
 // DELETE REVIEW //
-let deleteRecipesReviews = (recipeId) => {
-    return Axios.delete('/reviews/recipes/delete/'+recipeId)
+let deleteRecipesReviews = (reviewId, userId, recipeId) => {
+    return Axios.delete(`/reviews/recipes/delete/${reviewId}/${userId}/${recipeId}`)
 }
 
 

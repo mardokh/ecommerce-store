@@ -227,9 +227,9 @@ const ProductsReviews = ({ productId }) => {
     const deleteReview = async (reviewId, userId, productId) => {
         try {
             // Delete review from the server
-            const productsReviews = await productsReviewsService.deleteProductReview(reviewId, userId, productId)
+            const productsReview = await productsReviewsService.deleteProductReview(reviewId, userId, productId)
 
-            if (productsReviews.status && productsReviews.status === 204) {
+            if (productsReview.status && productsReview.status === 204) {
                 await getCommentsNotes()
             }
 
