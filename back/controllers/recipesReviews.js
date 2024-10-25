@@ -160,8 +160,6 @@ exports.updateRecipesReviews = async (req, res) => {
         // Extract recipe id & note
         const {user_id, recipe_id, comment, note} = req.body
 
-        console.log(req.body)
-
         // Check inputs 
         if (!user_id || !comment || !note) {
             return res.status(400).json({message: 'Missing inputs in request body !'})

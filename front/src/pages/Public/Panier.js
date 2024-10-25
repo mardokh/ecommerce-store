@@ -9,7 +9,7 @@ import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useDispatch } from 'react-redux'
 import { updatefavsCarts } from '../../redux/reducers/favCartSlice'
 import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
-import { useSelector } from 'react-redux';
+import { useSelector } from 'react-redux'
 
 
 // MAIN FUNCTION //

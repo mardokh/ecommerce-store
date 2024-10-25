@@ -1,40 +1,51 @@
 
 /* PRODUCTS DETAILS SECTION */
 
+.details_global_container {
+    margin-top: 120px;
+}
+
 .details_parent_container {
     width: 100%;
     display: flex;
     align-items: center;
-    margin: 150px auto;
+    justify-content: space-evenly;
+    margin: 20px auto;
     padding: 50px;
     background-color: rgba(244, 244, 244, 0.717);
 }
 
 .details_img_container {
-    height: 600px;
-    width: 60%;
+    height: 500px;
+    width: 100%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
-    border: 1px solid gainsboro;
     border-radius: 10px;
     position: relative;
     background-color: white;
 }
 
+.details_img_rows_container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 600px;
+    width: 80%;
+    border: 1px solid gainsboro;
+    background-color: white;
+    padding: 10px;
+}
+
 #details_right_arrow {
-    right: 10px;
     rotate: 90deg;   
 }
 
 #details_left_arrow {
-    left: 10px;
     rotate: -90deg;    
 }
 
 #details_right_arrow, #details_left_arrow {
-    position: absolute;
-    top: 50%;
     font-size: 25px;
     cursor: pointer;
     color: rgba(128, 128, 128, 0.777);
@@ -69,7 +80,7 @@
 }
 
 .details_side_img_sub_container {
-    width: 400px;
+    width: 100%;
     height: 600px;
     border: 1px solid gainsboro;
     border-radius: 10px;
@@ -82,15 +93,23 @@
 }
 
 .details_side_img {
-    width: 400px;
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: white;
 }
 
+.details_sideImg_image_parent_container {
+    width: 60%;
+    display: flex;
+    justify-content: space-between;
+    
+}
+
+
 .details_sideImg_img {
-    width: 200px;
+    width: 90%;
     height: 200px;
     background-size: contain;
     background-position: center;
@@ -99,7 +118,7 @@
 }
 
 .details_sideImg_img_active {
-    width: 200px;
+    width: 90%;
     height: 200px;
     background-size: contain;
     background-position: center;
@@ -108,9 +127,11 @@
     border: 1px solid green;
 }
 
+
 .details_sideImg_img_container {
     display: flex;
-    width: 400px;
+    width: 30%;
+    margin-right: 10px;
 }
 
 
@@ -120,6 +141,8 @@
     border: 1px solid lightseagreen;
     border-radius: 10px;
     text-align: left;
+    font-size: large;
+    font-weight: bold;
 }
 
 .details_name {
@@ -145,17 +168,12 @@
     font-weight: bold;
 }
 
-.details_product_details_global_container {
-    width: 90%;
-    margin: 50px auto;
-    margin-bottom: 150px;
-}
-
 .details_product_details_parent_container {
-    width: 70%;
+    width: 100%;
     text-align: left;
     line-height: 30px;
     font-size: 15px;
+    text-align: justify;
 }
 
 .details_comment_form {
@@ -215,14 +233,8 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+    gap: 40px;
 }
-
-.details_img_info_global_container {
-    width: 1000px;
-    display: flex;
-    justify-content: space-between;
-}
-
 
 /* COMMENTS LINE/BTN SECTION */
 
@@ -298,6 +310,28 @@ SVG Icons - svgicons.sparkk.fr
     stroke-width: 1;
 }
 
+.details_home_back {
+    font-size: 18px;
+    text-align: left;
+}
+
+.details_back_home {
+    display: flex;
+    align-items: center;
+    width: 280px;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: right;
+    color: green;
+    cursor: pointer;
+    float: inline-start;
+}
+
+.details_back_home a {
+    color: green;
+}
+
 
 /* MEDIA QUERY */
 
@@ -309,11 +343,68 @@ SVG Icons - svgicons.sparkk.fr
 
     .details_side_img_sub_container {
       width: 100%;
-      height: 250px;
+      height: 100px;
+      padding: 10px;
+      overflow-x: scroll;
+      border: none;
     }
 
     .details_parent_container {
         flex-wrap: wrap;
+        padding: 20px;
+        background-color: white;
+        gap: 50px;
+    }
+
+    .details_img_container {
+        height: 250px;
+        width: 100%;
+        border: none;
+    }
+    
+    .details_info_sub_container {
+        padding: 0;
+        width: 100%;
+        justify-content: space-between;
+        gap: 25px;
+    }
+
+    .details_price {
+        width: 100%;
+    }
+
+    .details_shopping_add_favorite_container {
+        width: 100%;
+    }
+    
+    .details_side_img {
+        flex-direction: row;
+    }
+
+    .details_sideImg_img, .details_sideImg_img_active{
+        width: 70px;
+        height: 70px;
+    }
+    
+    .details_sideImg_image_parent_container {
+        flex-direction: column;
+        width: 100%;
+        border: 1px solid gainsboro;
+        padding: 10px;
+    }
+
+    .details_img_rows_container {
+        width: 100%;
+        height: 250px;
+        border: none;
+        order: -1;
+    }
+    
+    .details_back_home {
+        width: 100%;
+        margin-left: 10px;
+        margin-bottom: 0;
+        border-radius: 20px;
     }
 
 }

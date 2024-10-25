@@ -313,19 +313,15 @@ const ProductsReviews = ({ productId }) => {
                             <>
                                 {[1, 2, 3, 4, 5].map(level => (
                                     <div className="details_comment_and_notes_percentage_item_container" key={level}>
-                                        <p>{level}</p>
+                                        <p className="details_comment_and_notes_level">{level}</p>
                                         <div className="details_comment_and_notes_percentage_item_sub_container">
-                                            <div
+                                            <div className="details_comment_and_notes_percentage_item_bar"
                                                 style={{
-                                                    height: '10px',
-                                                    borderRadius: '15px',
                                                     width: `${item[`level_${level}`]}%`,
-                                                    backgroundColor: 'green',
-                                                    zIndex: 1,
                                                 }}
                                             ></div>
                                         </div>
-                                        <p>{item[`level_${level}`]} %</p>
+                                        <p className="details_comment_and_notes_percentage_level">{item[`level_${level}`]} %</p>
                                     </div>
                                 ))}
                             </>
@@ -339,7 +335,7 @@ const ProductsReviews = ({ productId }) => {
                         {submitLoader ?
                             <CustomLoader />
                             :
-                            <div>
+                            <div className="details_comment_and_notes_sub_parent_container">
                                 {userConnected && !commentEdit ?
                                     <div className="details_comment_and_notes_container">
                                         <div className="details_comment_and_notes_sub_container">

@@ -30,7 +30,7 @@ module.exports = (sequelize) => {
             defaultValue: ''
         },
         note: {
-            type: DataTypes.INTEGER,
+            type: DataTypes.DECIMAL(10, 1),
             defaultValue: 0
         }
     }, {paranoid: true})

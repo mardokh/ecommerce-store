@@ -33,16 +33,19 @@
 }
 
 .details_comments_container {
-    width: 90%;
+    display: flex;
+    justify-content: center;
+    width: 100%;
 }
 
 .details_form_container {
-    float: left;
     height: 400px;
     width: 100%;
     display: flex;
     flex-direction: column; 
     justify-content: space-evenly;
+    margin: 10px;
+    padding: 10px;
 }
 
 .details_reviews_item {
@@ -53,7 +56,6 @@
     padding: 10px;
     font-size: 14px;
     margin-bottom: 50px;
-    margin-left: 10px;
     display: flex;
     justify-content: space-between;
     position: relative; /* Added to make sure hover effect works */
@@ -131,7 +133,8 @@
 }
 
 .details_comment_and_notes_totale_sub_container {
-    width: 400px;
+    position: relative;
+    width: 480px;
     height: 250px;
     display: flex;
     flex-direction: column;
@@ -254,6 +257,20 @@
     justify-content: flex-start;
 }
 
+.details_comment_and_notes_percentage_item_bar {
+    height: 10px;
+    border-radius: 15px;
+    background-color: green;
+    z-index: 1;    
+}
+
+.details_comment_and_notes_percentage_level {
+    position: absolute;
+    right: 0;
+}
+
+
+
 /* -----
 SVG Icons - svgicons.sparkk.fr
 ----- */
@@ -283,4 +300,45 @@ SVG Icons - svgicons.sparkk.fr
 .details_form_not_connected_container {
     font-size: 13px;
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
+}
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+
+    .details_rating_container {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .details_comment_and_notes_parent_container {
+        width: 90%;
+        margin: 15px;
+    }
+
+    .details_comment_and_notes_sub_parent_container {
+        width: 100%;
+    }
+
+    .details_comment_and_notes_container {
+        width: 100%;
+    }
+
+    .details_comment_and_notes_percentage_item_container {
+        width: 80%;
+    }
+
+    .details_comment_and_notes_percentage_item_bar {
+        height: 8px;
+    }
+
+    .details_comment_and_notes_percentage_item_sub_container {
+        height: 8px;
+        width: 85%;
+    }
+
+    .details_comment_and_notes_totale_sub_container {
+        width: 80%;
+    }
+
 }
