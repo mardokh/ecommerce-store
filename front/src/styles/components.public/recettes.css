@@ -4,7 +4,6 @@
     margin: 0 auto;
 }
 
-
 .recipes_parent_container {
     width: 100%;
     margin: 0 auto; 
@@ -48,15 +47,15 @@
 }
 
 .recette_name {
-    padding-left: 15px;
     color: black;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    text-align: left;
+    width: 100%;
 }
 
 .recettes_interactions {
-    width: 200px;
     display: flex;
     align-items: center;
     justify-content: space-around;
@@ -138,7 +137,7 @@
     font-size: 25px;
 }
 
-.recettes_tout_voir p:nth-child(2) {
+.recettes_tout_voir a p {
     font-size: 1rem;
     color: #498703;
 }
@@ -171,14 +170,12 @@
     }
 
     .info_container {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 50px;
+        flex-direction: column;
+        height: 70px;
     }
 
     .recette_name {
-        font-size: 15px;
+        font-size: 14px;
     }
 
     .recette_rating_star_enable {

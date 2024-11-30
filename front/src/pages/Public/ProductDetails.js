@@ -103,8 +103,18 @@ const ProductDetails = () => {
         <div className="details_global_container">
 
             <div className="details_back_home">
-                <Link to="/home"><p>home /</p></Link>
-                <Link to="/products"><p>products /</p></Link>
+                <Link to="/home">
+                    <p>home</p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 4l8 8-8 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </Link>
+                <Link to="/products">
+                    <p>products</p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 4l8 8-8 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </Link>
                 <p>details</p>
             </div>
 

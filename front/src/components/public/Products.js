@@ -161,7 +161,9 @@ const Produits = () => {
         <div className="produits_global_container">
             <div className='produits_tout_voir'>
                 <p>Nos Produits</p>
-                <p>Tout voir  &gt;&gt;</p>
+                <Link to="/products">
+                    <p>Tout voir  &gt;&gt;</p>
+                </Link>
             </div>
             <div className="produits_parent_container">
                 {!refNotfound ?
@@ -196,3 +198,10 @@ const Produits = () => {
 
 // MODULES EXPORTS
 export default Produits
+
+  
+  
+  
+    
+
+

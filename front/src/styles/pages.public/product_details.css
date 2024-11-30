@@ -11,6 +11,7 @@
     align-items: center;
     justify-content: space-evenly;
     margin: 20px auto;
+    margin-bottom: 100px;
     padding: 50px;
     background-color: rgba(244, 244, 244, 0.717);
 }
@@ -318,7 +319,7 @@ SVG Icons - svgicons.sparkk.fr
 .details_back_home {
     display: flex;
     align-items: center;
-    width: 280px;
+    justify-content: space-between;
     margin: 0 auto;
     margin-bottom: 20px;
     padding: 10px;
@@ -329,9 +330,15 @@ SVG Icons - svgicons.sparkk.fr
 }
 
 .details_back_home a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     color: green;
 }
 
+.details_back_home a svg {
+    margin: 7px;
+}
 
 /* MEDIA QUERY */
 
@@ -401,7 +408,6 @@ SVG Icons - svgicons.sparkk.fr
     }
     
     .details_back_home {
-        width: 100%;
         margin-left: 10px;
         margin-bottom: 0;
         border-radius: 20px;

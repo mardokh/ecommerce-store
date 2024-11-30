@@ -184,7 +184,9 @@ const Recettes = () => {
         <div className="recipe_global_container">
             <div className='recettes_tout_voir'>
                 <p>Nos Recettes</p>
-                <p>Tout voir  &gt;&gt;</p>
+                <Link to="/recipes">
+                    <p>Tout voir  &gt;&gt;</p>
+                </Link>
             </div>
             <div className="recipes_parent_container">
                 {!refNotfound ?

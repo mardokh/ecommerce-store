@@ -52,7 +52,7 @@
 }
 
 .main_container {
-  margin-top: 150px;
+  margin-top: 50px;
 }
 
 .quantity_input {
@@ -71,28 +71,6 @@
   width: 119px;
 }
 
-.btn_up_down {
-  display: flex;
-  justify-content: space-between;
-  width: 45px;
-  padding: 1px;
-}
-
-.btn_up_down button {
-  height: 20px;
-  width: 20px;
-  border: 2px solid gray;
-  background-color: gainsboro;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.btn_up_down button:active {
-  background-color: gray;
-}
-
 .btn_confirm_quantity {
   margin: 10px;
   background-color: gainsboro;
@@ -106,7 +84,9 @@
 }
 
 .shopping_remove_icon_contenaire {
+  width: 80px;
   display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 
@@ -198,10 +178,6 @@
   font-family:'Oleo Script';
 }
 
-.shopping_fav_icon_container {
-  position: relative;
-}
-
 .shopping_img_and_details_container {
   display: flex;
   width: 100%;
@@ -216,17 +192,8 @@
   margin-top: 30px;
 }
 
-.shopping_remove_icon_contenaire {
-  width: 120px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 15px;
-  font-weight: bold;
-}
-
 .shopping_fav_icon_container {
-  width: 170px;
+  width: 65px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -236,20 +203,6 @@
   height: 18px;
   width: 18px;
   cursor: pointer;
-}
-
-.shopping_title_container {
-  width: 90%;
-  margin: 0 auto;
-}
-
-.shopping_title_container p {
-  text-align: left;
-  font-family: "Oleo Script Swash Caps", system-ui;
-  font-weight: 400;
-  font-style: normal;
-  font-size: 35px;
-  color: green;
 }
 
 .shopping_prices_container {
@@ -313,6 +266,31 @@ SVG Icons - svgicons.sparkk.fr
   fill: white;
 }
 
+.shopping_details_back_home {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 0 auto;
+  margin-bottom: 20px;
+  padding: 10px;
+  text-align: right;
+  color: green;
+  cursor: pointer;
+  float: inline-start;
+}
+
+.shopping_details_back_home a {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: green;
+}
+
+.shopping_details_back_home a svg {
+  margin: 7px;
+}
+
+
 
 /* MEDIA QUERY */
 
@@ -332,20 +310,12 @@ SVG Icons - svgicons.sparkk.fr
   }
 
   .shopping_fav_and_delete_container {
-    justify-content: space-between;
+    justify-content: space-around;
     width: 100%;
-  }
-
-  .shopping_fav_icon_container {
-    width: 130px;
   }
 
   .shopping_fav_icon_container p {
     font-size: 12px;
-  }
-
-  .shopping_remove_icon_contenaire {
-    width: 90px;
   }
 
   .shopping_remove_icon_contenaire p {
@@ -378,5 +348,16 @@ SVG Icons - svgicons.sparkk.fr
     height: 200px;
     margin-right: 35px;
   }
+
+  .shopping_details_back_home {
+    margin-left: 10px;
+    margin-bottom: 0;
+    border-radius: 20px;
+  }
+
+  .shopping_product_content_items {
+    width: 100%;
+  }
+
 
 }
