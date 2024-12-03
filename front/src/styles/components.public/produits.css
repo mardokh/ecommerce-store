@@ -156,19 +156,6 @@
     stroke-width: 1;
 }
 
-.produits_tout_voir { 
-    height: 60px;
-    line-height: 30px;
-    text-align: left;
-    margin-bottom: 30px;
-    font-size: 25px;
-}
-
-.produits_tout_voir a p {
-    font-size: 1rem;
-    color: #498703;
-}
-
 .produits_favorite_icon_container {
     width: 100%;
     height: 50px;
@@ -205,11 +192,9 @@
     }
     
     .fa-heart {
-        position: absolute;
         top: 15px;
         right: 10px;
         font-size: 15px;
-        color: rgba(0, 128, 0, 0.452);
     }
     
     .prix_notes {
@@ -245,11 +230,6 @@
 
     .produits_global_container {
         margin: initial;
-    }
-
-    .produits_tout_voir {
-        padding-left: 10px;
-        font-size: 20px;
     }
 
     .product_rating_star_container { 

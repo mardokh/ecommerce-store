@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState, useContext } from "react"
-import { useParams } from "react-router-dom"
+import { useParams, Link } from "react-router-dom"
 import { recipeService } from "../../_services/recipes.service"
 import "../../styles/pages.public/recipe_details.css"
 import RecipesReviews from "../../components/public/RecipesReviews"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import MyContext from "../../_utils/contexts"
+
 
 
 const RecipeDetails = () => {
@@ -54,7 +55,23 @@ const RecipeDetails = () => {
 
 
     return (
-        <div className="details_global_container">
+        <div className="details_recipe_global_container">
+
+            <div className="details_recipe_back_home">
+                <Link to="/home">
+                    <p>home</p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 4l8 8-8 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </Link>
+                <Link to="/products">
+                    <p>products</p>
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 4l8 8-8 8" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </Link>
+                <p>details</p>
+            </div>
             
             <section className="details_recipe_parent_container">
             <div className="details_recipe_img_container" style={{backgroundImage: `url('http://${process.env.REACT_APP_REMOTE_ADDR}:${process.env.REACT_APP_SERVER_PORT}/uploads/${recipe.image}')`}}></div>
@@ -131,19 +148,17 @@ const RecipeDetails = () => {
                 </div>
             </div>
             <section className="details_recipe_details_global_container">
-                <div className="details_recipe_details_parent_container">
-                    <div className="details_recipe_details_ingredients_container">
-                        <p>Ingrediens</p>
-                        <pre>
-                            {recipe.ingredients}
-                        </pre>
-                    </div>
-                    <div className="details_recipe_details_etapes_container">
-                        <h1>Methode</h1>
-                        <p>
-                            {recipe.directions}
-                        </p>
-                    </div>
+                <div className="details_recipe_details_container">
+                    <h1>Ingrediens</h1>
+                    <p>
+                        {recipe.ingredients}
+                    </p>
+                </div>
+                <div className="details_recipe_details_container">
+                    <h1>Methode</h1>
+                    <p>
+                        {recipe.directions}
+                    </p>
                 </div>
             </section>
             <div className="details_line_between_recipes_comments"></div>

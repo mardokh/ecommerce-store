@@ -3,9 +3,13 @@
 
 /* PRODUCTS DETAILS SECTION */
 
+.details_recipe_global_container {
+    margin-top: 50px;
+}
+
 .details_recipe_img_container {
     height: 500px;
-    width: 800px;
+    width: 50%;
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -19,8 +23,7 @@
 */
 
 .details_recipe_info_container {
-    height: 400px;
-    width: 400px;
+    width: 30%;
 }
 
 .details_recipe_info_sub_container {
@@ -229,20 +232,15 @@
     width: 90%;
     margin: 50px auto;
     margin-bottom: 150px;
-}
-
-.details_recipe_details_parent_container {
-    width: 100%;
     display: flex;
     justify-content: space-evenly;
+    align-items: center;
     text-align: left;
     line-height: 30px;
     font-size: 15px;
-    background-color: rgba(244, 244, 244, 0.717);
-    padding: 30px;
 }
 
-.details_recipe_details_parent_container p {
+.details_recipe_details_global_container p {
     width: 400px;
     line-height: 40px;
 }
@@ -315,51 +313,28 @@
     border-bottom: 1px solid gray;
 }
 
-.details_recipe_details_ingredients_container {
-    width: 600px;
-    padding: 30px;
-    border: 1px solid lightskyblue;
-    border-radius: 10px;
-    font-family: "Playwrite NL", cursive;
-    line-height: 50px;
-}
-
-.details_recipe_details_ingredients_container p {
-    font-weight: 800;
-    font-size: 20px;
-    color: lightseagreen;
-    margin-bottom: 40px;
-    text-decoration: underline;
-}
-
-.details_recipe_details_ingredients_container pre {
-    font-family: "Lobster Two", sans-serif;
-    font-size: 20px;
-    color: rgb(78, 77, 77);
-}
-
-.details_recipe_details_etapes_container {
-    width: 600px;
-    padding: 30px;
-    border: 1px solid lightseagreen;
-    border-radius: 10px;
-    font-family: "Playwrite NL", cursive;
-    line-height: 50px;
-}
-
-.details_recipe_details_etapes_container h1 {
-    font-weight: 800;
-    font-size: 20px;
-    color: lightseagreen;
-    margin-bottom: 40px;
-    text-decoration: underline;
-}
-
-.details_recipe_details_etapes_container p {
-    font-family: "Lobster Two", sans-serif;
-    font-size: 20px;
-    color: rgb(78, 77, 77);
+.details_recipe_details_container {
     width: 100%;
+    padding: 30px;
+    border-radius: 10px;
+    font-family: "Playwrite NL", cursive;
+    line-height: 50px;
+    margin: 10px;
+}
+
+.details_recipe_details_container h1 {
+    font-weight: 800;
+    font-size: 20px;
+    color: gray;
+    margin-bottom: 40px;
+    text-decoration: underline;
+}
+
+.details_recipe_details_container p {
+    width: 100%;
+    font-family: "Lobster Two", sans-serif;
+    font-size: 20px;
+    color: rgb(78, 77, 77);
 }
 
 /*
@@ -405,6 +380,7 @@ SVG Icons - svgicons.sparkk.fr
     height: 1px;
     width: 90%;
     margin: 0 auto;
+    margin-top: 50px;
     background-color: gainsboro;
 }
 
@@ -486,5 +462,69 @@ SVG Icons - svgicons.sparkk.fr
   .reipe_time_total_svg_icon polygon,
   .reipe_time_total_svg_icon rect {
     fill: #4691f6;
-  }
+}
 
+.details_recipe_back_home {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 auto;
+    margin-bottom: 20px;
+    padding: 10px;
+    text-align: right;
+    color: green;
+    cursor: pointer;
+    float: inline-start;
+}
+
+.details_recipe_back_home a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: green;
+}
+
+.details_recipe_back_home a svg {
+    margin: 7px;
+}
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+
+    .details_recipe_parent_container {
+        margin: 0px auto;
+        padding: 0;
+        flex-direction: column;
+        background-color: white;
+    }
+
+    .details_recipe_info_container {
+        width: 100%;
+    }
+
+    .details_recipe_img_container {
+        height: 250px;
+        width: 100%;
+    }
+    
+    .recipe_details_name {
+        font-size: 25px;
+        width: 100%;
+    }
+
+    .details_recipe_back_home {
+        margin-left: 10px;
+        margin-bottom: 0;
+        border-radius: 20px;
+        padding-left: 10px;
+        padding-right: 0;
+        padding-bottom: 0;
+        padding-top: 0;
+    }
+
+    .details_recipe_details_global_container {
+        flex-direction: column;
+
+    }
+}

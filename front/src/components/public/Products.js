@@ -159,12 +159,7 @@ const Produits = () => {
     // Rendering
     return (
         <div className="produits_global_container">
-            <div className='produits_tout_voir'>
-                <p>Nos Produits</p>
-                <Link to="/products">
-                    <p>Tout voir  &gt;&gt;</p>
-                </Link>
-            </div>
+            
             <div className="produits_parent_container">
                 {!refNotfound ?
                     products.map(product => (

@@ -182,12 +182,6 @@ const Recettes = () => {
 
     return (
         <div className="recipe_global_container">
-            <div className='recettes_tout_voir'>
-                <p>Nos Recettes</p>
-                <Link to="/recipes">
-                    <p>Tout voir  &gt;&gt;</p>
-                </Link>
-            </div>
             <div className="recipes_parent_container">
                 {!refNotfound ?
                 recipes.map(recipe => (

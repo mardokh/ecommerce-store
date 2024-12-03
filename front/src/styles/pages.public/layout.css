@@ -9,12 +9,13 @@
 /* Section */
 .nutrition {
     padding-bottom: 100px;
+    scrollbar-color: rgba(0, 128, 0, 0.282) rgba(0, 128, 0, 0.282);
 }
-
 
 /* Section */
 .recettes {
     padding-bottom: 100px;
+    scrollbar-color: rgba(0, 128, 0, 0.282) rgba(0, 128, 0, 0.282);
 }
 
 .container_products_notes {
@@ -43,6 +44,33 @@
     z-index: 100;   
 }
 
+.produits_tout_voir { 
+    height: 60px;
+    line-height: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 25px;
+}
+
+.produits_tout_voir a p {
+    font-size: 1rem;
+    color: #498703;
+}
+
+.recettes_tout_voir {
+    height: 60px;
+    line-height: 30px;
+    text-align: left;
+    margin-bottom: 30px;
+    font-size: 25px;
+}
+
+.recettes_tout_voir a p {
+    font-size: 1rem;
+    color: #498703;
+}
+
+
 /* MOBILE VERSION */
 
 @media only screen and (max-width: 850px) {
@@ -52,11 +80,14 @@
         margin-bottom: inherit;
         margin-top: initial;
         padding-top: 50px;
+        padding-bottom: 50px;
     }
 
     .nutrition {
         overflow-x: scroll;
         padding-bottom: 50px;
+        scrollbar-width: none; /* For Firefox */
+        -ms-overflow-style: none; /* For Internet Explorer and Edge */
     }
 
     /*
@@ -65,12 +96,12 @@
     }
     */
     
-
     .recettes {
-        margin-top: 50px;
         margin-bottom: 0px;
         overflow-x: scroll;
         padding-bottom: 50px;
+        scrollbar-width: none; /* For Firefox */
+        -ms-overflow-style: none; /* For Internet Explorer and Edge */
     }
 
     /*
@@ -78,5 +109,15 @@
         display: none;
     }
     */
+
+    .produits_tout_voir {
+        padding-left: 10px;
+        font-size: 20px;
+    }
+
+    .recettes_tout_voir {
+        padding-left: 10px;
+        font-size: 20px;
+    }
     
 }

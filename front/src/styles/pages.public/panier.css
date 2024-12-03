@@ -98,8 +98,6 @@
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  background-color:antiquewhite;
-  margin-bottom: 100px;
 }
 
 /*
@@ -214,17 +212,16 @@
 
 .shopping_back_home {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
   align-items: center;
-  width: 300px;
-  background-color: rgba(0, 128, 0, 0.685);
-  padding: 5px;
-  margin: 100px auto;
+  width: 150px;
+  height: 30px;
   background-color: rgba(0, 128, 0, 0.685);
   padding: 10px;
   text-align: right;
   color: white;
   cursor: pointer;
+  border-radius: 20px;
 }
 
 .shopping_back_home:hover {
@@ -256,8 +253,8 @@ SVG Icons - svgicons.sparkk.fr
 ----- */
 
 .shopping_back_menu_svg-icon {
-  width: 2em;
-  height: 2em;
+  width: 1em;
+  height: 1em;
 }
 
 .shopping_back_menu_svg-icon path,
@@ -288,6 +285,23 @@ SVG Icons - svgicons.sparkk.fr
 
 .shopping_details_back_home a svg {
   margin: 7px;
+}
+
+
+.svg-icon {
+  width: 4em;
+  height: 4em;
+}
+
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+  fill: gainsboro;
+}
+
+.svg-icon circle {
+  stroke: gainsboro;
+  stroke-width: 1;
 }
 
 

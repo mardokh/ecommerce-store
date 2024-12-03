@@ -129,18 +129,6 @@
     stroke-width: 1;
 }
 
-.recettes_tout_voir {
-    height: 60px;
-    line-height: 30px;
-    text-align: left;
-    margin-bottom: 30px;
-    font-size: 25px;
-}
-
-.recettes_tout_voir a p {
-    font-size: 1rem;
-    color: #498703;
-}
 
 /* MEDIA QUERY */
 
@@ -188,15 +176,8 @@
         height: 18px;
     }
 
-
     .fa-bookmark {
-        color: rgba(0, 128, 0, 0.452);
         font-size: 15px;
-    }
-
-    .recettes_tout_voir {
-        padding-left: 10px;
-        font-size: 20px;
     }
 
     .recipes_parent_container {

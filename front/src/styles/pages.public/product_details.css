@@ -340,6 +340,19 @@ SVG Icons - svgicons.sparkk.fr
     margin: 7px;
 }
 
+.svg-icon {
+    width: 2em;
+    height: 2em;
+}
+  
+.svg-icon path,
+.svg-icon polygon,
+.svg-icon rect {
+    fill: gainsboro;
+}
+
+  
+
 /* MEDIA QUERY */
 
 @media only screen and (max-width: 850px) {
