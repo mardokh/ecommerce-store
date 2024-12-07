@@ -304,7 +304,7 @@
     width: 250px;
 }
 
-.recipe_details_info_time_item { 
+.recipe_details_info_time_item {
     width: 300px;
     display: flex;
     align-items: center;
@@ -487,6 +487,7 @@ SVG Icons - svgicons.sparkk.fr
 .details_recipe_back_home a svg {
     margin: 7px;
 }
+
 
 /* MEDIA QUERY */
 

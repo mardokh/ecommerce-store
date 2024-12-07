@@ -311,17 +311,13 @@ const RecipesReviews = ({ recipeId }) => {
                                     <div className="details_recipe_comment_and_notes_percentage_item_container" key={level}>
                                         <p>{level}</p>
                                         <div className="details_recipe_comment_and_notes_percentage_item_sub_container">
-                                            <div
+                                            <div className="details_recipe_comment_and_notes_percentage_item_bar"
                                                 style={{
-                                                    height: '10px',
-                                                    borderRadius: '15px',
                                                     width: `${item[`level_${level}`]}%`,
-                                                    backgroundColor: 'green',
-                                                    zIndex: 1,
                                                 }}
                                             ></div>
                                         </div>
-                                        <p>{item[`level_${level}`]} %</p>
+                                        <p className="details_recipe_comment_and_notes_percentage_level">{item[`level_${level}`]} %</p>
                                     </div>
                                 ))}
                             </>
@@ -403,7 +399,15 @@ const RecipesReviews = ({ recipeId }) => {
                                         </div>
                                         :
                                         <div className="details_recipe_form_not_connected_container">
-                                            <p>Veuillez vous <Link to="/login_inscription/main/connexion">connecter</Link> ou vous <Link to="/login_inscription/main/connexion">inscrire</Link> pour laisser votre avis</p>
+                                            <p>Veuillez vous connecter ou vous inscrire pour laisser votre avis</p>
+                                            <div className="details_recipe_form_not_connected_button_container">
+                                                <Link to="/sing_in">
+                                                    <button>Se connecter</button>
+                                                </Link>
+                                                <Link to="/sing_up">
+                                                    <button>Cree un compte</button>
+                                                </Link>
+                                            </div>
                                         </div>
                                 }
                             </div>

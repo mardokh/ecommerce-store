@@ -403,7 +403,7 @@ const ProductsReviews = ({ productId }) => {
                                         </div>
                                         :
                                         <div className="details_form_not_connected_container">
-                                            <p>Veuillez vous <Link to="/login_inscription/main/connexion">connecter</Link> ou vous <Link to="/login_inscription/main/connexion">inscrire</Link> pour laisser votre avis</p>
+                                            <p>Veuillez vous <Link to="/sing_in">connecter</Link> ou vous <Link to="/sing_up">inscrire</Link> pour laisser votre avis</p>
                                         </div>
                                 }
                             </div>

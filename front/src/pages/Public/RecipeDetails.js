@@ -164,9 +164,9 @@ const RecipeDetails = () => {
             <div className="details_line_between_recipes_comments"></div>
             <div className="details_recipe_comments_write_reviews_button_global_container">
                 <div className="details_recipe_comments_write_reviews_button_parent_container">
-                    <h1 className="details_recipe_comments_title">commentaires & notes</h1>
+                    <h1 className="details_recipe_comments_title">avis & notes</h1>
                     {!userHaveRecipeComment &&
-                        <button className="details_write_reviews_btn" onClick={dispRviewsForm}>laisser un avis & une note</button>
+                        <button className="details_recipe_write_reviews_btn" onClick={dispRviewsForm}>laisser un avis</button>
                     }
                 </div>
             </div>

@@ -1,0 +1,88 @@
+.user_connection_form_container {
+    width: 400px;
+    margin: 100px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    border-radius: 10px;
+}
+
+.user_connection_form_title {
+    margin: 30px;
+}
+
+.user_connection_input_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 65px;
+}
+
+.user_connection_input_container input {
+    height: 50px;
+    border-radius: 30px;
+    border: 1px solid gainsboro;
+    padding: 10px;
+}
+
+.user_connection_input_container input[type = 'submit'] {
+    background-color: #498703;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    border-radius: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    width: 200px;
+    height: 40px;
+}
+
+.user_connection_input_container input[type = 'submit']:hover {
+    background-color: green;
+}
+
+.user_connection_failed_container p {
+    color: rgb(203, 46, 46);
+    font-size: 12px;
+}
+
+.user_connection_forget_pass_container {
+    margin-top: 50px;
+    font-size: 15px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.user_connection_inscription {
+    font-size: 13px;
+}
+
+.user_connection_inscription span a {
+    color: green;
+}
+
+.user_connection_input_container_submit_btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+
+    .user_connection_form_container {
+        width: 90%;
+        box-shadow: none;
+        border: 1px solid gainsboro;
+    }
+
+}

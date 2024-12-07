@@ -35,7 +35,7 @@ const UserAuthGuard = ({ children }) => {
 
     // REDIRECTION //
     if (log === false || !userLoged) {
-        return <Navigate to="/login_inscription/main/connexion"/>
+        return <Navigate to="/sing_in"/>
     }
 
     return children

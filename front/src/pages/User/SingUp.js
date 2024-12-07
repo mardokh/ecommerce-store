@@ -1,10 +1,11 @@
 import React, { useState, useRef, useContext } from "react"
-import "../../styles/pages.user/user_inscription.css"
+import "../../styles/pages.user/singUp.css"
 import { UserService } from "../../_services/user.service"
 import MyContext from '../../_utils/contexts'
+import { Link } from "react-router-dom"
 
 
-const UserInscription = () => {
+const SingUp = () => {
 
     // STATE //
     const [credentials, setCredentials] = useState({})
@@ -78,6 +79,7 @@ const UserInscription = () => {
 
     return (
         <div className="user_inscription_form_global_container">
+            <p className="user_inscription_form_title">Cree votre compte</p>
             <form className="user_inscription_form_container" onSubmit={submitForm}>
                 <div className="user_inscription_inputs">
                     <input type="text" name="lastName" ref={lastNameRef} placeholder="Nom" onChange={(e) => inputChange(e.target.name ,e.target.value)}/>
@@ -95,8 +97,9 @@ const UserInscription = () => {
                     <input type="password" name="password" ref={passwordRef} placeholder="Mot de passe" onChange={(e) => inputChange(e.target.name ,e.target.value)}/>
                 </div>
                 <div className="user_inscription_inputs user_inscription_submit_btn">
-                    <input type="submit" value="inscription" />
+                    <input type="submit" value="Soumettre" />
                 </div>
+                <p className="user_inscription_connect">Vous avez deja un compte ? <span><Link to="/sing_in">Se connecter</Link></span></p>
                 {displaySuccessMessage &&
                     <div className="user_inscription_sucess">{successInscription}</div>
                 }
@@ -106,4 +109,4 @@ const UserInscription = () => {
 }
 
 
-export default UserInscription
+export default SingUp

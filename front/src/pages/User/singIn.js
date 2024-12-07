@@ -1,12 +1,13 @@
-import React, { useContext, useState } from "react"
-import "../../styles/pages.user/login.css"
+import React, { useState } from "react"
+import "../../styles/pages.user/singIn.css"
 import { UserService } from "../../_services/user.service"
 import BouncingDotsLoader from "../../_utils/customeLoader/dotsLoader"
 import { useNavigate } from "react-router-dom"
 import Cookies from 'js-cookie'
+import { Link } from "react-router-dom"
 
 
-const Login = () => {
+const SingIn = () => {
 
     // STATE //
     const [credentials, setCredentials] = useState({})
@@ -65,6 +66,7 @@ const Login = () => {
 
     return (
         <div className="user_connection_form_container">
+            <p className="user_connection_form_title">connecter vous</p>
             <form className="user_connection_form" onSubmit={submitFrom}>
                 <div className="user_connection_input_container">
                     <input type="email" name="identifiant" placeholder="votre adresse email" onChange={(e) => inputChange(e.target.name, e.target.value)} />
@@ -82,6 +84,7 @@ const Login = () => {
                 }
                 <div className="user_connection_forget_pass_container">
                     <p>mot de passe oublier ?</p>
+                    <p className="user_connection_inscription">Vous n'avez pas encore de compte ? <span><Link to="/sing_up">S'inscrire</Link></span></p>
                 </div>
             </form>
         </div>
@@ -89,4 +92,4 @@ const Login = () => {
 }
 
 
-export default Login
+export default SingIn

@@ -62,7 +62,7 @@ const Header = () => {
     // REDIRECT TO USER INSCRIPTION //
     const inscriptionFormdisplay = () => {
         setuserOptionsDisp(false)
-        navigate('/login_inscription/main/inscription')
+        navigate('/sing_in')
     }
 
 
@@ -75,7 +75,7 @@ const Header = () => {
     // REDIRECT TO USER CONNECTION //
     const connectionFormDisp = () => {
         setuserOptionsDisp(false)
-        navigate('/login_inscription/main/connexion')
+        navigate('/sing_in')
     }
 
 

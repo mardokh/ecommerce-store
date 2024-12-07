@@ -92,7 +92,6 @@
 }
 
 .user_account_main_informations_text_container {
-    height: 40px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -100,26 +99,18 @@
 }
 
 .user_account_main_informations_text_container p {
+    font-size: 12px;
     text-align: center;
 }
 
-.user_account_main_informations_text_container p:nth-child(1) {
-    font-size: 15px;
-
-}
-
-.user_account_main_informations_text_container p:nth-child(2) {
-    font-size: 12px;
-    font-weight: 300;
-} 
 
 /* -----
 SVG Icons - svgicons.sparkk.fr
 ----- */
 
 .svg-icon-main {
-    width: 2.5em;
-    height: 2.5em;
+    width: 1.5em;
+    height: 1.5em;
 }
   
 .svg-icon-main path,
@@ -175,4 +166,109 @@ SVG Icons Side menu - svgicons.sparkk.fr
 .user_account_side_menu_item_container p {
     text-align: left;
     margin-left: 20px;
+}
+
+
+/* MEDIA QUERY */
+
+@media only screen and (max-width: 850px) {
+    
+    .user_account_global_container {
+        width: 100%;
+    }
+
+    .user_account_main_informations_container {
+        width: 100%;
+        height: 350px;
+        text-align: left;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        padding: 20px;
+    }
+
+    .user_account_main_informations_item_container {
+        width: 80px;
+        height: 80px;
+    }
+
+    .user_account_main_container {
+        width: 75%;
+        height: 350px;
+        margin: 5px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .user_account_side_menu_item_container p {
+        text-align: left;
+        margin-left: 5px;
+        font-size: 12px;
+    }
+
+    .svg-icon-side-menu {
+        width: 1em;
+        height: 1em;
+    }
+      
+    .svg-icon-side-menu path,
+    .svg-icon-side-menu polygon,
+    .svg-icon-side-menu rect {
+        fill: #7cba00;
+    }
+    
+    .svg-icon-side-menu circle {
+        stroke: #7cba00;
+        stroke-width: 1;
+    }
+    
+    .user_account_side_menu_container {
+        width:45%;
+        height: 350px;
+        margin: 5px;   
+    }
+
+    .user_account_side_menu_sub_container {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        flex-direction: column;
+        padding-top: 20px;
+    }
+
+    .user_account_profile_img {
+        width: 130px;
+        height: 130px;
+        background-position: center;
+        background-size: contain;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+    }
+
+    .user_account_notice_container {
+        width: 60%;
+        height: 150px;
+        background-color: white;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+    }
+    
+    .user_account_notice_container p {
+        font-size: 10px;
+    }
+
+    .user_account_head_container {
+        height: 200px;
+        padding: 5px;
+    }
+
+    .user_account_side_menu_main_container {
+        padding: 5px;
+    }
+    
+    
+    
 }
