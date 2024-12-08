@@ -119,7 +119,7 @@ exports.getShoppingCart = async (req, res) => {
             // IF THE CLIENT HASN'T ADDED ANY PRODUCTS
             if (!clientShopping.length > 0) {
                 //return res.json({ data: "vous n'avez ajouté aucun produit" })
-                return res.status(404).json({data: "Vous n'avez jouté aucun article."})
+                return res.status(404).json({data: "Votre panier est vide"})
             }
             else {
                 // Send products and counts to the client
@@ -129,7 +129,7 @@ exports.getShoppingCart = async (req, res) => {
 
         else {
             // IF CLIENT DOESN'T HAVE (client_id) COOKIE
-            return res.status(404).json({ data: "Vous n'avez jouté aucun article" })
+            return res.status(404).json({ data: "Votre panier est vide" })
         }
     } 
     catch (err) {
