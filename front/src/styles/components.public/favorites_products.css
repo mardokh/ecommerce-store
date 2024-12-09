@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     width: 150px;
-    height: 150px;
+    height: 220px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     display: flex;
@@ -27,31 +27,60 @@
 }
 
 .favorites_Products_image {
-    width: 150px;
-    height: 150px;
+    width: 100%;
+    height: 120px;
     background-size: contain;
     background-position: center;
     background-repeat: no-repeat;
 }
 
 .favorites_Products_close_icon_container {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-}
+    width: 100%;
+    height: 30px;
+    display: flex;
+    justify-content: flex-end;
 
-#favorites_Products_close_icon {
-    visibility: hidden;
-    font-size: 22px;
-    opacity: 0;
-    transition: visibility 0s, opacity 0.3s linear;
-}
-
-.favorites_Products_container:hover #favorites_Products_close_icon {
-    visibility: visible;
-    opacity: 1;
 }
 
 .favorites_Products_name {
     font-size: 14px;
+    margin-top: 5px;
 }
+
+.favorites_Products_no_reveiws_container {
+    width: 100%;
+    height: 100px;
+    background-color: ghostwhite;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: gainsboro;
+    padding: 20px;
+}
+
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.favorites_Products_svg_icon {
+    width: 1.3em;
+    height: 1.3em;
+}
+  
+.favorites_Products_svg_icon path,
+.favorites_Products_svg_icon polygon,
+.favorites_Products_svg_icon rect {
+    fill: gray;
+}
+  
+.favorites_Products_svg_icon circle {
+    stroke: #4691f6;
+    stroke-width: 1;
+}
+
+.favorites_Products_svg_icon_fav {
+    margin-right: 8px;
+}  

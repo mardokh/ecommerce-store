@@ -128,7 +128,6 @@
 .details_comment_and_notes_totale {
     margin: 20px auto;
     width: 90%;
-    height: 300px;
     text-align: left;
 }
 
@@ -302,6 +301,7 @@ SVG Icons - svgicons.sparkk.fr
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
+
 /* MEDIA QUERY */
 
 @media only screen and (max-width: 850px) {
@@ -313,7 +313,7 @@ SVG Icons - svgicons.sparkk.fr
     
     .details_comment_and_notes_parent_container {
         width: 90%;
-        margin: 15px;
+        padding: 15px;
     }
 
     .details_comment_and_notes_sub_parent_container {
@@ -340,5 +340,43 @@ SVG Icons - svgicons.sparkk.fr
     .details_comment_and_notes_totale_sub_container {
         width: 80%;
     }
+
+    .details_form_not_connected_container {
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .details_form_not_connected_button_container {
+        height: 120px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        align-items: center
+    }
+
+    .details_form_not_connected_button_container button {
+        width: 180px;
+        height: 50px;
+        border-radius: 30px;
+        border: 1px solid black;
+        background-color: white;
+        color: green;
+        cursor: pointer;
+    }
+
+    .details_reviews_no_comment {
+        width: 100%;
+        height: 50px;
+        padding: 10px;
+        background-color: ghostwhite;
+        font-size: 12px;
+        color: gray;
+        display: flex;
+        align-items: center;
+    }
+    
 
 }
