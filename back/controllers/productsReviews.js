@@ -137,7 +137,7 @@ exports.getProductReview = async (req, res) => {
 
         // Check if comments exists
         if (!productsReviews.length > 0) {
-            return res.status(404).json({ message: "aucun commentaire" })
+            return res.status(404).json({ message: "Aucun avis pour ce produit" })
         }
 
         // Get reveiws levels
