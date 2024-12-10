@@ -198,10 +198,10 @@ header nav ul li a {
 }
 
 .user_options_container {
-    width: 250px;
-    height: 150px;
+    width: 150px;
+    height: 100px;
     background-color: white;
-    box-shadow: 0px 0px 3px 1px;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
     position: absolute;
     top: 45px;
     right: 0;
@@ -210,20 +210,30 @@ header nav ul li a {
     flex-direction: column;
     align-items: center;
     justify-content: space-evenly;
-    border-radius: 10px;
+    border-radius: 5px;
+}
+
+.user_options_sub_container {
+    height: 65px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .user_options_container button {
-    width: 150px;
+    width: 100px;
     height: 30px;
-    background-color: #7cba00;
+    background-color: white;
     color: white;
-    border: none;
+    border: 1px solid black;
     cursor: pointer;
+    border-radius: 30px;
+    color: black;
 }
 
 .user_options_container button:hover {
-    background-color: green;
+    border: 1px solid green;
+    color: green;
 }
 
 .user_connection_form_windows_global_container {

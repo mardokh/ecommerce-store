@@ -193,10 +193,3 @@ const Produits = () => {
 
 // MODULES EXPORTS
 export default Produits
-
-  
-  
-  
-    
-
-

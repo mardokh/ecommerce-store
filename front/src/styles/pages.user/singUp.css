@@ -1,6 +1,7 @@
 .user_inscription_form_global_container { 
     width: 400px;
     margin: 100px auto;
+    margin-bottom: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;

@@ -1,7 +1,7 @@
 .favorites_Recipes_main_container {
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     flex-wrap: wrap;
 }
 
@@ -9,7 +9,7 @@
     display: flex;
     align-items: center;
     width: 150px;
-    height: 200px;
+    height: 180px;
     background-color: white;
     box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
     display: flex;
@@ -20,6 +20,7 @@
     cursor: pointer;
     padding: 10px;
     margin-bottom: 20px;
+    margin-right: 10px;
 }
 
 .fa-trash {
@@ -47,8 +48,16 @@
 }
 
 .favorites_Recipes_name {
-    font-size: 14px;
-    margin-top: 5px;
+    width: 100%;
+}
+
+.favorites_Recipes_name p {
+    width: 100%;
+    text-align: left;
+    font-size: 12px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .favorites_Recipes_no_reveiws_container {
@@ -77,14 +86,10 @@ SVG Icons - svgicons.sparkk.fr
 .favorites_Recipes_svg_icon path,
 .favorites_Recipes_svg_icon polygon,
 .favorites_Recipes_svg_icon rect {
-    fill: gray;
+    fill: rgba(0, 128, 0, 0.452);
 }
   
 .favorites_Recipes_svg_icon circle {
     stroke: #4691f6;
     stroke-width: 1;
 }
-
-.favorites_Products_svg_icon_fav {
-    margin-right: 8px;
-} 

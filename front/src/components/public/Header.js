@@ -62,7 +62,7 @@ const Header = () => {
     // REDIRECT TO USER INSCRIPTION //
     const inscriptionFormdisplay = () => {
         setuserOptionsDisp(false)
-        navigate('/sing_in')
+        navigate('/sing_up')
     }
 
 
@@ -209,7 +209,7 @@ const Header = () => {
                                     {userOptionsDisp &&
                                         <div className='user_options_container'>
                                             { isLogout ? (
-                                                <div>
+                                                <div className='user_options_sub_container'>
                                                     <button onClick={connectionFormDisp}>Se connecter</button>
                                                     <button onClick={inscriptionFormdisplay}>S'inscrire</button>
                                                 </div>
