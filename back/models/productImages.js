@@ -3,7 +3,9 @@ const {DataTypes} = require('sequelize')
 
 
 module.exports = (sequelize) => {
-    return productImages = sequelize.define('productImages', {
+    
+    const productImages = sequelize.define('productImages', {
+        
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
@@ -20,4 +22,19 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING(255),
         }
     })
+
+    // Define association
+    productImages.associate = (models) => {
+        productImages.belongsTo(models.product, {
+            foreignKey: 'productId',
+            onDelete: 'CASCADE' 
+        })
+        models.product.hasMany(productImages, {
+            foreignKey: 'productId',
+            as: 'product_images',
+            onDelete: 'SET NULL' 
+        })
+    }
+
+    return productImages
 }

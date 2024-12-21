@@ -5,7 +5,7 @@ const {DataTypes} = require('sequelize')
 // DEFINE MODEL //
 module.exports = (sequelize) => {
 
-    return recipesReviews = sequelize.define('recipesReviews', {
+    const recipesReviews = sequelize.define('recipesReviews', {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
@@ -28,4 +28,19 @@ module.exports = (sequelize) => {
             type: DataTypes.INTEGER(11)
         }
     })
+
+    // Define association
+    recipesReviews.associate = (models) => {
+        recipesReviews.belongsTo(models.users, {
+            foreignKey: 'user_id', 
+            as: 'user_profil', 
+            onDelete: 'CASCADE'
+        })
+        models.users.hasOne(recipesReviews, {
+            foreignKey: 'user_id', 
+            onDelete: 'SET NULL'
+        })
+    }
+
+    return recipesReviews
 }

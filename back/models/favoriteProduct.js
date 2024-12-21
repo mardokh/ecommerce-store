@@ -4,7 +4,8 @@ const {DataTypes} = require('sequelize')
 
 // DEFINE MODEL //
 module.exports = (sequelize) => {
-    return favoriteProduct = sequelize.define('favoriteProduct', {
+
+    const favoriteProduct = sequelize.define('favoriteProduct', {
         id: {
             type: DataTypes.INTEGER(11),
             primaryKey: true,
@@ -21,4 +22,19 @@ module.exports = (sequelize) => {
             }
         }
     })
+
+    // Define associations
+    favoriteProduct.associate = (models) => {
+        favoriteProduct.belongsTo(models.product, {
+            foreignKey: 'product_id',
+            as: 'favorite_product',
+            onDelete: 'CASCADE'
+        })
+        models.product.hasOne(favoriteProduct, {
+            foreignKey: 'product_id',
+            onDelete: 'SET NULL' // delete this
+        })
+    }
+
+    return favoriteProduct
 }

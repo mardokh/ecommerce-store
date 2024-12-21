@@ -8,7 +8,6 @@ const productsReviews = DB.productsReviews
 const productsNotesLevels = DB.productsNotesLevels
 
 
-
 // GET ALL PRODUCTS //
 exports.getAllProducts = async (req, res) => {
 

@@ -1,0 +1,62 @@
+'use strict';
+
+/** @type {import('sequelize-cli').Migration} */
+
+module.exports = {
+  async up (queryInterface, Sequelize) {
+    await queryInterface.createTable('product', {
+      id: {
+        type: DataTypes.INTEGER(11),
+        allowNull: false,
+        primaryKey: true,
+        autoIncrement: true
+      },
+      name: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+          defaultValue: ''
+      },
+      details: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+          defaultValue: ''
+      },
+      price: {
+          type: DataTypes.DECIMAL(30, 2),
+          allowNull: false,
+      },
+      note: {
+          type: DataTypes.DECIMAL(10, 1),
+          allowNull: true,
+          defaultValue: 0
+      },
+      favprd: {
+          type: DataTypes.INTEGER,
+          allowNull: true,
+          defaultValue: 0
+      },
+      image: {
+          type: DataTypes.STRING(255),
+          allowNull: false,
+          defaultValue: ''
+      },
+      images: {
+          type: DataTypes.STRING(255),
+          allowNull: true,
+          defaultValue: ''
+      },
+      createdAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+      },
+      updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: false,
+      }
+    })
+  },
+
+  async down (queryInterface, Sequelize) {
+    await queryInterface.dropTbale('product')
+  }
+};

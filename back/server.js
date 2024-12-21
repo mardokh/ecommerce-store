@@ -19,7 +19,7 @@ const JwtSession = require('./routes/check_jwt_session')
 
 
 // IMPORT DATABASE CONNECTER //
-const DB = require('./db.config')
+const DB = require('./models')
 
 
 // EXPRESS SERVER INITIALISATION //
@@ -31,7 +31,7 @@ app.use(cookieParser())
 
 // CORS POLICY //
 app.use(cors({
-  origin: `http://${process.env.REMOTE_ADDR}:${process.env.CLIENT_PORT}`,
+  origin: `${process.env.REMOTE_URL}`,
   credentials: true
 }))
 
