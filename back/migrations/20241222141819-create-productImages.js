@@ -3,28 +3,28 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
-  
+
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('favoriteRecipe', {
+    await queryInterface.createTable('productImages', {
       id: {
-        type: DataTypes.INTEGER(11),
+        type: Sequelize.INTEGER(11),
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
       },
-      client_id: {
-          type: DataTypes.STRING(255),
-          allowNull: false,
-      },
-      recipe_id: {
-          type: DataTypes.INTEGER(11),
+      productId: {
+          type: Sequelize.INTEGER(11),
           allowNull: false,
           references: {
-              model: 'recipes',
+              model: 'products',
               key: 'id'
           },
-          onUpdate: 'CASCADE',
-          onDelete: 'SET NULL',
+          onDelete: 'CASCADE',
+          onDelete: 'SET NULL'
+      },
+      images: {
+          type: Sequelize.STRING(255),
+          allowNull: false,
       },
       createdAt: {
         allowNull: false,
@@ -38,7 +38,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('favoriteRecipe')
-    
+    await queryInterface.dropTable('productImages')
   }
 };

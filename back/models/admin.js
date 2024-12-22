@@ -1,18 +1,17 @@
-// MODULES IMPORTATION  //
-const {DataTypes} = require('sequelize')
-
-
 // DEFINE MODEL //
-module.exports = (sequelize) => {
-    return admin = sequelize.define('admin', {
+
+module.exports = (sequelize, DataTypes) => {
+
+    const admin = sequelize.define('admin', {
         id: {
             type: DataTypes.INTEGER(11),
+            allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         identifiant: {
             type: DataTypes.STRING(255),
-            allowNull: false
+            allowNull: false,
         },
         password: {
             type: DataTypes.STRING(64),
@@ -20,6 +19,8 @@ module.exports = (sequelize) => {
             is: /^[0-9a-f]{64}$/i // contrainte on password encoding
         },
     }, {
-        freezeTableName: true, // Disable automatic pluralization
+        freezeTableName: true,
     })
+
+    return admin
 }

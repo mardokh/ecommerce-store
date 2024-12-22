@@ -1,18 +1,17 @@
-// MODULES IMPORTATION  //
-const {DataTypes} = require('sequelize')
-
-
 // DEFINE MODEL //
-module.exports = (sequelize) => {
 
-    return productsNotesLevels = sequelize.define('productsNotesLevels', {
+module.exports = (sequelize, DataTypes) => {
+
+    const productsNotesLevels = sequelize.define('productsNotesLevels', {
         id: {
             type: DataTypes.INTEGER(11),
+            allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         product_id: {
-            type: DataTypes.INTEGER(11)
+            type: DataTypes.INTEGER(11),
+            allowNull: false,
         },
         level_1: {
             type: DataTypes.INTEGER(11)
@@ -33,5 +32,7 @@ module.exports = (sequelize) => {
             type: DataTypes.DECIMAL(10, 1),
             defaultValue: 0
         },
-    })
+    }, {freezeTableName: true})
+
+    return productsNotesLevels
 }

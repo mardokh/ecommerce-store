@@ -7,17 +7,17 @@ module.exports = {
   async up (queryInterface, Sequelize) {
     await queryInterface.createTbale('favoriteProduct', {
       id: {
-        type: DataTypes.INTEGER(11),
+        type: Sequelize.INTEGER(11),
         allowNull: false,
         primaryKey: true,
         autoIncrement: true,
       },
       client_id: {
-          type: DataTypes.STRING(255),
+          type: Sequelize.STRING(255),
           allowNull: false,
       },
       product_id: {
-          type: DataTypes.INTEGER(11),
+          type: Sequelize.INTEGER(11),
           allowNull: false,
           references: {
               model: 'products',

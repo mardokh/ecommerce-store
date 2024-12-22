@@ -1,18 +1,18 @@
-// MODULES IMPORTATION  //
-const {DataTypes} = require('sequelize')
+// DEFINE MODEL //
 
-
-module.exports = (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
     
     const productImages = sequelize.define('productImages', {
         
         id: {
             type: DataTypes.INTEGER(11),
+            allowNull: false,
             primaryKey: true,
             autoIncrement: true
         },
         productId: {
             type: DataTypes.INTEGER(11),
+            allowNull: false,
             references: {
                 model: 'products',
                 key: 'id'
@@ -20,8 +20,9 @@ module.exports = (sequelize) => {
         },
         images: {
             type: DataTypes.STRING(255),
+            allowNull: false,
         }
-    })
+    }, {freezeTableName: true})
 
     // Define association
     productImages.associate = (models) => {
