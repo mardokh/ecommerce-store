@@ -2,7 +2,7 @@ import axios from "axios"
 
 
 const Axios = axios.create({
-    baseURL: `http://${process.env.REACT_APP_REMOTE_ADDR}:${process.env.REACT_APP_SERVER_PORT}`,
+    baseURL: `${process.env.REACT_APP_REMOTE_URL}`,
     withCredentials: true
 })
 

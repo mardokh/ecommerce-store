@@ -170,7 +170,7 @@ const Produits = () => {
                                 </Link>
                             </div>
                             <Link to={`/produit_details/${product.id}`}>
-                                <div className='produits_img_container' style={{ backgroundImage: `url('http://${process.env.REACT_APP_REMOTE_ADDR}:${process.env.REACT_APP_SERVER_PORT}/uploads/${product.image}')` }}></div>
+                                <div className='produits_img_container' style={{ backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${product.image}')` }}></div>
                             </Link>
                             <div className='produit_info'>
                                 <p className='produits_name'>{product.name}</p>
