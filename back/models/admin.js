@@ -18,6 +18,14 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
             is: /^[0-9a-f]{64}$/i // contrainte on password encoding
         },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {
         freezeTableName: true,
     })

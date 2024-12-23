@@ -20,7 +20,15 @@ module.exports = (sequelize, DataTypes) => {
                 model: 'products',
                 key: 'id'
             }
-        }
+        },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {freezeTableName: true})
 
     // Define association

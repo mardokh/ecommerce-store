@@ -32,7 +32,15 @@ module.exports = {
           type: Sequelize.STRING(64),
           allowNull: false,
           is: /^[0-9a-f]{64}$/i // contrainte on password encoding
-      }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     })
   },
 

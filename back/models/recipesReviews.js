@@ -22,11 +22,21 @@ module.exports = (sequelize, DataTypes) => {
             allowNull: false,
         },
         comment: {
-            type: DataTypes.STRING(255)
+            type: DataTypes.STRING(255),
+            allowNull: true,
         },
         note: {
-            type: DataTypes.INTEGER(11)
-        }
+            type: DataTypes.INTEGER(11),
+            allowNull: true,
+        },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {freezeTableName: true})
 
     // Define association

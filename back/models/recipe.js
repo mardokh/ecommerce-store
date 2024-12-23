@@ -25,6 +25,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         favrcp: {
             type: DataTypes.INTEGER,
+            allowNull: true,
             defaultValue: 0
         },
         image: {
@@ -34,8 +35,17 @@ module.exports = (sequelize, DataTypes) => {
         },
         note: {
             type: DataTypes.DECIMAL(10, 1),
+            allowNull: true,
             defaultValue: 0
-        }
+        },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {
         paranoid: true,
         freezeTableName: true,

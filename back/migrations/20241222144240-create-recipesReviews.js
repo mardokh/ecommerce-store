@@ -27,11 +27,21 @@ module.exports = {
           allowNull: false,
       },
       comment: {
-          type: Sequelize.STRING(255)
+          type: Sequelize.STRING(255),
+          allowNull: true,
       },
       note: {
-          type: Sequelize.INTEGER(11)
-      }
+          type: Sequelize.INTEGER(11),
+          allowNull: true,
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     })
   },
 

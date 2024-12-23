@@ -35,7 +35,15 @@ module.exports = {
           type: Sequelize.DECIMAL(10, 1),
           defaultValue: 0
       },
-    })
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      })
   },
 
   async down (queryInterface, Sequelize) {

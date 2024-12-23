@@ -13,18 +13,18 @@ module.exports = {
         autoIncrement: true,
       },
       client_id: {
-          type: Sequelize.STRING(255),
-          allowNull: false,
+        type: Sequelize.STRING(255),
+        allowNull: false,
       },
       product_id: {
-          type: Sequelize.INTEGER(11),
-          allowNull: false,
-          references: {
-              model: 'products',
-              key: 'id'
-          },
-          onUpdate: 'CASCADE',
-          onDelete: 'SET NULL',
+        type: Sequelize.INTEGER(11),
+        allowNull: false,
+        references: {
+          model: 'products',
+          key: 'id'
+        },
+        onUpdate: 'CASCADE',
+        onDelete: 'SET NULL',
       },
       createdAt: {
         allowNull: false,

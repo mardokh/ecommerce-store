@@ -32,6 +32,14 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.DECIMAL(10, 1),
             defaultValue: 0
         },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {freezeTableName: true})
 
     return productsNotesLevels

@@ -26,7 +26,15 @@ module.exports = (sequelize, DataTypes) => {
         },
         note: {
             type: DataTypes.INTEGER(11)
-        }
+        },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {freezeTableName: true})
 
     // Define association

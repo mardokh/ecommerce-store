@@ -29,6 +29,7 @@ module.exports = {
       },
       favrcp: {
           type: Sequelize.INTEGER,
+          allowNull: true,
           defaultValue: 0
       },
       image: {
@@ -38,8 +39,17 @@ module.exports = {
       },
       note: {
           type: Sequelize.DECIMAL(10, 1),
+          allowNull: true,
           defaultValue: 0
-      }
+      },
+      createdAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
+      updatedAt: {
+        allowNull: false,
+        type: Sequelize.DATE,
+      },
     })
   },
 

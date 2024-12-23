@@ -21,7 +21,15 @@ module.exports = (sequelize, DataTypes) => {
         images: {
             type: DataTypes.STRING(255),
             allowNull: false,
-        }
+        },
+        createdAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
+        updatedAt: {
+            allowNull: false,
+            type: DataTypes.DATE,
+        },
     }, {freezeTableName: true})
 
     // Define association
