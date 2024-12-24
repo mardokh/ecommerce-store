@@ -5,33 +5,33 @@
 module.exports = {
   
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('users', {
+    await queryInterface.createTable('recipesReviews', {
       id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
       },
-      firstName: {
-          type: Sequelize.STRING(255),
+      user_id: {
+          type: Sequelize.INTEGER(11),
+          references: {
+              model: 'users',
+              key: 'id'
+          },
+          onDelete: 'CASCADE',
+          onDelete: 'SET NULL',
+      },
+      recipe_id: {
+          type: Sequelize.INTEGER(11),
           allowNull: false,
       },
-      lastName: {
+      comment: {
           type: Sequelize.STRING(255),
-          allowNull: false,
+          allowNull: true,
       },
-      email: {
-          type: Sequelize.STRING(255),
-          allowNull: false,
-          unique: 'email',
-          validate: {
-              isEmail: true
-          }
-      },
-      password: {
-          type: Sequelize.STRING(64),
-          allowNull: false,
-          is: /^[0-9a-f]{64}$/i // contrainte on password encoding
+      note: {
+          type: Sequelize.INTEGER(11),
+          allowNull: true,
       },
       createdAt: {
         allowNull: false,
@@ -45,6 +45,6 @@ module.exports = {
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('users')
+    await queryInterface.dropTable('recipesReviews')
   }
 };

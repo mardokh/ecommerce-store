@@ -3,32 +3,27 @@
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
+
   async up (queryInterface, Sequelize) {
-    await queryInterface.createTable('productsReviews', {
+    await queryInterface.createTable('shopping_cart', {
       id: {
         type: Sequelize.INTEGER(11),
         allowNull: false,
         primaryKey: true,
         autoIncrement: true
       },
-      user_id: {
-          type: Sequelize.INTEGER(11),
-          references: {
-              model: 'users',
-              key: 'id'
-          },
-          onDelete: 'CASCADE',
-          onDelete: "SET NULL",
+      client_id: {
+          type: Sequelize.STRING(255),
+          allowNull: false,
       },
       product_id: {
           type: Sequelize.INTEGER(11),
-          allowNull: false,
-      },
-      comment: {
-          type: Sequelize.STRING(255)
-      },
-      note: {
-          type: Sequelize.INTEGER(11)
+          references: {
+              model: 'product',
+              key: 'id'
+          },
+          onDelete: 'CASCADE',
+          onDelete: 'SET NULL'
       },
       createdAt: {
         allowNull: false,
@@ -38,10 +33,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE,
       },
-      })
+    })
   },
 
   async down (queryInterface, Sequelize) {
-    await queryInterface.dropTable('productsReviews')
+    await queryInterface.dropTable('shopping_cart')
   }
 };
