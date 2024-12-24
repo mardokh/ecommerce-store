@@ -1,6 +1,6 @@
 // MODULES IMPORTS //
-const DB = require('../db.config')
-const Users = DB.users
+const db = require('../models')
+const Users = db.users
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 

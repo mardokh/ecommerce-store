@@ -1,11 +1,11 @@
 // MODULES IMPORTS // 
-const DB = require('../db.config')
-const Product = DB.product
-const productImages = DB.productImages
+const db = require('../models')
+const Product = db.product
+const productImages = db.productImages
 const fs = require('fs')
 const path = require('path')
-const productsReviews = DB.productsReviews
-const productsNotesLevels = DB.productsNotesLevels
+const productsReviews = db.productsReviews
+const productsNotesLevels = db.productsNotesLevels
 
 
 // GET ALL PRODUCTS //

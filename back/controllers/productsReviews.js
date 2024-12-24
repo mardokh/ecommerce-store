@@ -1,10 +1,10 @@
 // MODULES IMPORTS //
-const DB = require('../db.config')
-const ProductsReviews = DB.productsReviews
-const Product = DB.product
-const Users = DB.users
-const sequelize = DB.sequelize
-const productsNotesLevels = DB.productsNotesLevels
+const db = require('../models')
+const ProductsReviews = db.productsReviews
+const Product = db.product
+const Users = db.users
+const sequelize = db.sequelize
+const productsNotesLevels = db.productsNotesLevels
 
 
 // RECALCULATE REVIEWS//

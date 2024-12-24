@@ -1,7 +1,7 @@
 // MODULES IMPORTS //
-const DB = require('../db.config')
-const FavoriteRecipe = DB.favoriteRecipe
-const Recipe = DB.recipe
+const db = require('../models')
+const FavoriteRecipe = db.favoriteRecipe
+const Recipe = db.recipe
 const { v4: uuidv4 } = require('uuid')
 
 

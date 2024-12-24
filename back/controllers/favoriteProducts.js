@@ -1,7 +1,7 @@
 // MODULES IMPORTS //
-const DB = require('../db.config')
-const FavoriteProduct = DB.favoriteProduct
-const Product = DB.product
+const db = require('../models')
+const FavoriteProduct = db.favoriteProduct
+const Product = db.product
 const { v4: uuidv4 } = require('uuid')
 
 // GLOBALS VARIABLS //

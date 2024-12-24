@@ -1,7 +1,7 @@
 // MODULES IMPORT //
-const DB = require('../db.config')
-//const Recipe = DB.recipe
-const Product = DB.product
+const db = require('../models')
+//const Recipe = db.recipe
+const Product = db.product
 const Sequelize = require('sequelize')
 
 

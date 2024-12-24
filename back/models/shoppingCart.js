@@ -15,9 +15,8 @@ module.exports = (sequelize, DataTypes) => {
         },
         product_id: {
             type: DataTypes.INTEGER(11),
-            allowNull: false,
             references: {
-                model: 'products',
+                model: 'product',
                 key: 'id'
             }
         },
