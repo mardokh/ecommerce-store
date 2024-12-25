@@ -315,7 +315,7 @@ const Panier = () => {
                                 </div>
                                 <div className="shopping_img_and_details_container">
                                     <Link to={`/produit_details/${shopping.id}`}>
-                                        <div className="shopping_product_img" style={{backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${shopping.image}')`}}></div>
+                                        <div className="shopping_product_img" style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${shopping.image}')`}}></div>
                                     </Link>
                                     <div className="shopping_product_details_container">
                                         <Link to={`/produit_details/${shopping.id}`}>

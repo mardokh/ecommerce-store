@@ -114,7 +114,7 @@ const Recipes = () => {
                             {!refNotFound ? (
                                 currentTableData.map(recipe => (
                                     <tr key={recipe.id}>
-                                        <td className='recipe_manage_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${recipe.image}')`}}></td>
+                                        <td className='recipe_manage_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${recipe.image}')`}}></td>
                                         <td>{recipe.name}</td>
                                         <td>{recipe.description}</td>
                                         <td>{recipe.note}</td>

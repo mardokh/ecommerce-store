@@ -74,7 +74,7 @@ const RecipeDetails = () => {
             </div>
             
             <section className="details_recipe_parent_container">
-            <div className="details_recipe_img_container" style={{backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${recipe.image}')`}}></div>
+            <div className="details_recipe_img_container" style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${recipe.image}')`}}></div>
                 <div className="details_recipe_info_container">
                     <p className="recipe_details_name">{recipe.name}</p>
                     <div className="details_recipe_info_sub_container">

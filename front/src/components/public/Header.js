@@ -173,7 +173,7 @@ const Header = () => {
                                     research.map(search => (
                                         <div key={search.id}>                                      
                                             <div className='searchBar_item_container' onClick={() => redirection(search.id)}>
-                                                <div className='searchBar_item_image' style={{backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${search.image}')`}}></div>
+                                                <div className='searchBar_item_image' style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${search.image}')`}}></div>
                                                 <p>{search.name}</p>
                                             </div>                                       
                                         </div>

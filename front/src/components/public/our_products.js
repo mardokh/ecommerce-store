@@ -66,7 +66,7 @@ const OurProducts = () => {
             {!refNotfound ?
                 products.map(product => (
                 <div key={product.id} className='our_products_img_englob'>
-                    <Link to={`/produit_details/${product.id}`}>{<div className='our_products_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_REMOTE_URL}/uploads/${product.image}')`}}></div>}</Link>
+                    <Link to={`/produit_details/${product.id}`}>{<div className='our_products_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${product.image}')`}}></div>}</Link>
                     <div className='our_products_info'>
                         <p className='our_products_name'>{product.name}</p>
                         <div className='our_products_prix_notes'>
