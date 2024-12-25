@@ -31,7 +31,7 @@ app.use(cookieParser())
 
 // CORS POLICY //
 app.use(cors({
-  origin: `http://${process.env.REMOTE_ADDR}:${process.env.CLIENT_PORT}`,
+  origin: `${process.env.HOST}`,
   credentials: true
 }))
 
