@@ -19,7 +19,6 @@ module.exports = {
               key: 'id'
           },
           onDelete: 'CASCADE',
-          onDelete: 'SET NULL'
       },
       images: {
           type: Sequelize.STRING(255),

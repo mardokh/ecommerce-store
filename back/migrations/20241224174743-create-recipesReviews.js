@@ -19,7 +19,6 @@ module.exports = {
               key: 'id'
           },
           onDelete: 'CASCADE',
-          onDelete: 'SET NULL',
       },
       recipe_id: {
           type: Sequelize.INTEGER(11),

@@ -71,6 +71,8 @@ exports.addFavoriteProduct = async (req, res) => {
                 product_id: productId
             };
 
+            console.log(FavoriteProduct)
+
             // Create favorite product
             await FavoriteProduct.create(client_favoriteProduct);
 

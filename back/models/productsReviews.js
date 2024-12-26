@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
         })
         models.users.hasOne(productsReviews, {
             foreignKey: 'user_id', 
-            onDelete: 'SET NULL'
+            
         })
     }
 

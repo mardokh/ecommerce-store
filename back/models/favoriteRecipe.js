@@ -41,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
         })
         models.recipe.hasOne(favoriteRecipe, {
             foreignKey: 'recipe_id',
-            onDelete: 'SET NULL'
+            
         })
     }
 

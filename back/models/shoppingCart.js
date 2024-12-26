@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     }, {freezeTableName: true})
 
     // Define association
-    shoppingCart.assoaciate = (models) => {
+    shoppingCart.associate = (models) => {
         shoppingCart.belongsTo(models.product, {
             foreignKey: 'product_id', 
             as: 'shopping_cart_product', 
@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
         })
         models.product.hasMany(shoppingCart, {
             foreignKey: 'product_id', 
-            onDelete: 'SET NULL'
+            
         })
     }
 

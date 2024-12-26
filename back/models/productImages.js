@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         models.product.hasMany(productImages, {
             foreignKey: 'productId',
             as: 'product_images',
-            onDelete: 'SET NULL' 
+             
         })
     }
 
