@@ -31,7 +31,7 @@ app.use(cookieParser())
 
 // CORS POLICY //
 app.use(cors({
-  origin: `${process.env.HOST}`,
+  origin: `${process.env.CLIENT_HOST}`,
   credentials: true
 }))
 
