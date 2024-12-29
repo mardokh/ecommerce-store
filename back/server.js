@@ -72,7 +72,7 @@ DB.sequelize.authenticate()
 .then(() => console.log('Database connected sucessfully'))
 .then(() => {
   app.listen(port, () => { 
-    console.log('api server is starting')
+    console.log('api server is starting on port : ', port)
   })
 })
 .catch(err => console.log('Error to database connect !', err))
