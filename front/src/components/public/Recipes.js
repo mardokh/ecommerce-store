@@ -187,7 +187,7 @@ const Recettes = () => {
                 recipes.map(recipe => (
                     <div key={recipe.id} className='pics_container_sub'>
                         <div className='pics_englob'>
-                        <Link to={`/recette_details/${recipe.id}`}><div className='pics_container' style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${recipe.image}')`}}></div></Link>
+                        <Link to={`/recette_details/${recipe.id}`}><div className='pics_container' style={{backgroundImage: `url('${process.env.REACT_APP_SERVER_HOST}/uploads/${recipe.image}')`}}></div></Link>
                             <div className='info_container'>
                                 <p className='recette_name'>{recipe.name.substring(0, 29)}..</p>
                                 <div className="recettes_interactions">

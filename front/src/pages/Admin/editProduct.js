@@ -183,7 +183,7 @@ const EditProduct = () => {
                 <div className='edit_product_form_container'>
                     <div className='edit_product_principale_image_container'>
                         <p>Aperçu image principale</p>
-                        <div className="edit_product_image" style={{backgroundImage: `url('${!imageFlag ? `${process.env.REACT_APP_HOST}/uploads/${product.image}` : imageUrl}')`}}></div>
+                        <div className="edit_product_image" style={{backgroundImage: `url('${!imageFlag ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${product.image}` : imageUrl}')`}}></div>
                     </div>
                     <div className='edit_product_container'>
                         <div className='edit_product_item'>
@@ -214,7 +214,7 @@ const EditProduct = () => {
                         {product.images.map((image, index) => (
                             <div className="edit_product_images_container" key={index}>
                                 <i class="fa-solid fa-circle-xmark" id='edit_product_images_close_icon' onClick={() => deleteImage(index, image.id)}></i>
-                                <div className="edit_product_images" style={{backgroundImage: `url('${image.images ? `${process.env.REACT_APP_HOST}/uploads/${image.images}` : URL.createObjectURL(image)}')`}}></div>
+                                <div className="edit_product_images" style={{backgroundImage: `url('${image.images ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${image.images}` : URL.createObjectURL(image)}')`}}></div>
                             </div>
                         ))}
                     </div>

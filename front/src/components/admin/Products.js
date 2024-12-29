@@ -120,7 +120,7 @@ const Produits = () => {
                             {!refNotFound ? (
                                 currentTableData.map(product => (
                                     <tr key={product.id}>
-                                        <td className='product_manage_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${product.image}')`}}></td>
+                                        <td className='product_manage_img_container' style={{backgroundImage: `url('${process.env.REACT_APP_SERVER_HOST}/uploads/${product.image}')`}}></td>
                                         <td>{product.name}</td>
                                         <td>{product.price}</td>
                                         <td>{product.note}</td>

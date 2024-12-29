@@ -132,7 +132,7 @@ const EditRecipe = () => {
                 <div className='edit_recipe_form_container'>
                     <div className='edit_recipe_principale_image_container'>
                         <p>Aperçu image principale</p>
-                        <div className="edit_recipe_image" style={{backgroundImage: `url('${!imageFlag.current ? `${process.env.REACT_APP_HOST}/uploads/${recipe.image}` : imageUrl}')`}}></div>
+                        <div className="edit_recipe_image" style={{backgroundImage: `url('${!imageFlag.current ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${recipe.image}` : imageUrl}')`}}></div>
                     </div>
                     <div className='edit_recipe_container'>
                         <div className='edit_recipe_item'>

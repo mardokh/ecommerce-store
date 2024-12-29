@@ -129,7 +129,7 @@ const ProductDetails = () => {
                                     <div 
                                         key={index}
                                         className={(styleActive && index === imageIndex) || (index === 0 && imageDefault) ? "details_sideImg_img_active" : "details_sideImg_img"}
-                                        style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${file.images}')`}} onClick={() => cornerImageDisplay(file.images, index)}>
+                                        style={{backgroundImage: `url('${process.env.REACT_APP_SERVER_HOST}/uploads/${file.images}')`}} onClick={() => cornerImageDisplay(file.images, index)}>
                                     </div>
                                 ))}
                             </div>
@@ -144,7 +144,7 @@ const ProductDetails = () => {
                         </div>
                         <div className="details_img_rows_container">
                             <i class={`fa-solid fa-circle-chevron-up ${imageIndex === 0 && 'right_arrow_disabled'}`} id="details_left_arrow" onClick={goImageLeft}></i>
-                            <div className="details_img_container" style={{backgroundImage: `url('${process.env.REACT_APP_HOST}/uploads/${nextImageActive ? nexImage : product.image}')`}}></div>
+                            <div className="details_img_container" style={{backgroundImage: `url('${process.env.REACT_APP_SERVER_HOST}/uploads/${nextImageActive ? nexImage : product.image}')`}}></div>
                             <i class={`fa-solid fa-circle-chevron-up ${imageIndex === product.product_images.length - 1 && 'right_arrow_disabled'}`} id="details_right_arrow" onClick={goImageRight}></i>
                         </div>
                     </div>
