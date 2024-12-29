@@ -63,11 +63,15 @@ app.use('/session', JwtSession)
 app.get('*', (req, res) => res.status(404).send('404 not found !'))
 
 
+// SET SERVER PORT
+const port = process.env.PORT || 3000
+
+
 // STARTING API SERVER AND DATABASE //
 DB.sequelize.authenticate()
 .then(() => console.log('Database connected sucessfully'))
 .then(() => {
-  app.listen(process.env.SERVER_PORT, () => { 
+  app.listen(port, () => { 
     console.log('api server is starting')
   })
 })
