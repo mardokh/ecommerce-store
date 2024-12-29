@@ -10,7 +10,7 @@ module.exports = {
     logging: false,
   },
   production: {
-    use_env_variable: 'mysql://root:RMWqumUadjeDieUTeYfoajYGtvVrDkzT@junction.proxy.rlwy.net:50068/railway',
+    use_env_variable: 'DATABASE_URL',
     dialect: 'mysql',
     logging: false,
   },
