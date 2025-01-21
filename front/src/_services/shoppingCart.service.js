@@ -6,23 +6,16 @@ let shoppingGet = () => {
     return Axios.get('/shopping/carts')
 }
 
-let shoppingAdd = (cartItem) => {
-    return Axios.put('/shopping/carts/add', cartItem)
+let shoppingCreate = (cartItem) => {
+    return Axios.put('/shopping/carts/create', cartItem)
 }
 
-let shoppingDelete = (cartItem) => {
-    return Axios.delete('/shopping/carts/delete/'+cartItem)
+let shoppingDelete = (productId, limitOne) => {
+    return Axios.delete(`/shopping/carts/delete/${productId}/${limitOne}`)
 }
 
-let shoppingSomesDelete = (cartItem) => {
-    return Axios.delete('/shopping/carts/delete/somes/'+cartItem)
-}
-
-let shoppingCount = () => {
-    return Axios.get('/shopping/carts/count')
-}
 
 // EXPORTS //
 export const shoppingSerive = {
-    shoppingGet, shoppingAdd, shoppingDelete, shoppingSomesDelete, shoppingCount
+    shoppingGet, shoppingCreate, shoppingDelete
 }

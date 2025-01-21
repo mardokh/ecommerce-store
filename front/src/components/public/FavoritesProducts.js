@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useState } from "react"
 import { favoriteProductService } from "../../_services/favoritesProducts.service"
 import "../../styles/components.public/favorites_products.css"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
 
 
@@ -11,59 +11,54 @@ const FavoritesProducts = () => {
     // STATES //
     const [products, setProducts] = useState([])
     const [isLoad, setISload] = useState(false)
+    const [notFound, setNotFound] = useState(false) 
 
 
     // REDUX //
     const dispatch = useDispatch()
-     
-
-    // REFERENCE //
-    const refUseEffect = useRef(false)
-    const refProducts = useRef(false)
+    const favPrdcount = useSelector((state) => state.favPrdCount.count)
 
 
-    // GET ALL PRODUCTS ADDS IN FAVORITES
+    // GET FAVORITES
     useEffect(() => {
-        if (refUseEffect.current === false) {
-            favoriteProductService.favoriteProductGetAll()
-            .then(res => {
-                if (res.data.data && res.data.data[0] && res.data.data[0].favorite_product) {      
-                    refProducts.current = true
-                }
-                setProducts(res.data.data)
+        favoriteProductService.favoriteProductGetAll()
+        .then(res => {
+            setProducts(res.data.data)
+            setISload(true)
+        })
+        .catch(err => {
+            if (err.response?.status === 404) {
+                setProducts(err.response.data.message)
+                setNotFound(true)
                 setISload(true)
-            })
-            .catch(err => console.error(err))
-        }
-        return () => refUseEffect.current = true
+            } 
+            else {
+                console.error(err)
+            }
+        })
     }, [])
-
 
 
     // DELETE FAVORITE //
     const deleteFavoriteProduct = async (productId) => {
-
         try {
-            // Api call for delete favorite product
+            // Delete favorite
             await favoriteProductService.favoriteProductDelete(productId)
 
-            // Api call for get all favorites products
-            const favorites_products_del = await favoriteProductService.favoriteProductCount()
-
             // Update favorites count
-            dispatch(updateFavsProducts({count: favorites_products_del.data.data.length}))
+            dispatch(updateFavsProducts({count: favPrdcount - 1}))
 
-            // APi call for get favorites products
+            // Get favorites
             const favoriteProduct = await favoriteProductService.favoriteProductGetAll()
 
             // Update state
             setProducts(favoriteProduct.data.data)
-
-            if (favoriteProduct.data.data && favoriteProduct.data.data[0] && !favoriteProduct.data.data[0].favorite_product) {      
-                refProducts.current = false
-            }
         }
         catch (err) {
+            if (err.response?.status === 404) {
+                setProducts(err.response.data.message)
+                setNotFound(true)
+            }
             console.error(err)
         }
     }
@@ -77,7 +72,7 @@ const FavoritesProducts = () => {
 
     return (
         <div className="favorites_Products_main_container">
-            {refProducts.current ?
+            {!notFound ?
                 products.map(product => (
                     <div key={product.favorite_product.id} className="favorites_Products_container">
                         <div className="favorites_Products_close_icon_container">

@@ -10,7 +10,9 @@ import { useDispatch } from 'react-redux'
 import { updatefavsCarts } from '../../redux/reducers/favCartSlice'
 import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
 import { useSelector } from 'react-redux'
-
+import Cookies from 'js-cookie'
+import ShoppingCartConcur from '../../_utils/raceConcurrency/shoppingCart.concur'
+import FavoritesConcur from '../../_utils/raceConcurrency/favorites.concur'
 
 // MAIN FUNCTION //
 const Panier = () => {
@@ -19,8 +21,12 @@ const Panier = () => {
     const [products, setProducts] = useState()
     const [isLoad, setISload] = useState(false)
     const [refConfirm, setRefConfirm] = useState()
-    const [refNotfound, setRefNotfound] = useState(false)
+    const [notFound, setNotfound] = useState(false)
     const [fixingScroll, setFixingScroll] = useState(false)
+    const [raceCartConcur, setRaceCartConcur] = useState(false)
+    const [raceFavConcur, setraceFavConcur] = useState(false)
+    const [exist, setExist] = useState(false)
+    const [deleted, setDeleted] = useState(false)
     const [shoppingProductGlobal, setShoppingProductGlobal] = useState({
         display: 'flex',
         width: '90%',
@@ -34,58 +40,72 @@ const Panier = () => {
     
     // Redux set
     const favCartcount = useSelector((state) => state.favCartCount.count)
+    const favCartCount = useSelector((state) => state.favCartCount.count)
     const dispatch = useDispatch()
     
 
-    
     // REFERENCE //
     const refuseEffect = useRef(false)
     const scrollFixing = useRef()
     const shoppingNoProducts = useRef()
 
 
-    // Handle errors
-    const handleError = (err) => {
-        if (err.response && err.response.status) {
-            setRefNotfound(true)
-            setProducts(err.response.data.data)
-            setISload(true)
-        } else {
-            console.log('Error:', err.message)
-        }
-    }
-
     // GET ALL PRODUCTS FUNCTION //
     const getShopping = async () => {
 
         try {
-            // Get all products 
-            const productsResponse = await shoppingSerive.shoppingGet()
+            // Get products 
+            const products = await shoppingSerive.shoppingGet()
 
-            const productsData = productsResponse.data.data
-            
-            // Get all favotes products
-            const favoritesProducts = await favoriteProductService.favoriteProductGetAll()
-        
-            // Get favorite product id from favoritesProducts table
-            const favoriteIds = favoritesProducts.data.data === "aucun produit favori" ? false : favoritesProducts.data.data.map(favorite => favorite.product_id) 
+            // Set favorite id
+            let favId = false
+
+            // Get cookie from browser
+            const favoritesCookie = Cookies.get('client_id_favorites_products')
+
+            // If cookie exist get favorites
+            if (favoritesCookie) {
+                try {
+                    // Get favorites
+                    const favorites = await favoriteProductService.favoriteProductGetAll()
+    
+                    // Filter favorite ids
+                    favId = favorites.data.data.map(favorite => favorite.product_id)
+                }
+                catch (err) {
+                    // Check error response
+                    if (err.response && err.response.status === 404) {
+                        favId = false
+                    } 
+                    else {
+                        console.error(err)
+                    }
+                }
+            }
 
             // Update state
-            setProducts(productsData.map(shopping => ({
+            setProducts(products.data.data.map(shopping => ({
                 id: shopping.shopping_cart_product.id,
                 name: shopping.shopping_cart_product.name,
                 price: shopping.shopping_cart_product.price,
                 image: shopping.shopping_cart_product.image,
                 total_price: shopping.total_price,
                 product_count: shopping.product_count,
-                favorite: favoriteIds === false ? false : favoriteIds.includes(shopping.shopping_cart_product.id) ? true : false
+                favorite: !favId ? false : favId.includes(shopping.shopping_cart_product.id)
             })))
-
+            
             // Update loader 
             setISload(true)
         }
         catch (err) {
-            handleError(err)
+            if (err.response && err.response.status === 404) {
+                setProducts(err.response.data.message)
+                setNotfound(true)
+                setISload(true)
+            } 
+            else {
+                console.error(err)
+            }
         }
     }
 
@@ -102,19 +122,12 @@ const Panier = () => {
     }, [])
 
 
-    // INCREASE PRODUCTS QUANTITY HANDLE //
+    // UP QUANTITY //
     const upQuantity = async (productId) => {
         try {
-            // Set product id
             const cartItem = { id: productId }
-
-            // Api call for add product
-            await shoppingSerive.shoppingAdd(cartItem)
-
-            // Api call for get product
-            await shoppingSerive.shoppingGet()
-            
-            // Update state
+            await shoppingSerive.shoppingCreate(cartItem)
+            dispatch(updatefavsCarts({count: favCartCount + 1}))
             getShopping()
         }
         catch (err) {
@@ -123,19 +136,13 @@ const Panier = () => {
     }
 
 
-    // DECREASE PRODUCT QUANTITY HANDLE //
+    // DOWN QUANTITY //
     const downQuantity = async (productId) => {
         try {
             const currentProduct = products.find(product => product.id === productId)
-
             if (currentProduct.product_count > 1) {
-                // api call for subtracting product
-                await shoppingSerive.shoppingDelete(productId)
-
-                // api call for get product
-                await shoppingSerive.shoppingGet()
-
-                // Update state
+                await shoppingSerive.shoppingDelete(productId, 'limit')
+                dispatch(updatefavsCarts({count: favCartCount - 1}))
                 getShopping()
             }
         } catch (err) {
@@ -161,20 +168,16 @@ const Panier = () => {
     //CHOOSED PRODUCTS QUANTITY HANDLE //
     const choosedQuantity = async (newQuantity, productId) => {
         try {
-           
             newQuantity === "" && (newQuantity = 1)
     
             // Set product id
             const cartItem = { id: productId, quantity: newQuantity }
     
             // Api call for add product
-            await shoppingSerive.shoppingAdd(cartItem)
+            await shoppingSerive.shoppingCreate(cartItem)
     
             // Api call for get product
             await shoppingSerive.shoppingGet()
-
-            // Update state
-            getShopping()
         }
         catch (err) {
             console.error(err)
@@ -183,27 +186,22 @@ const Panier = () => {
 
 
     // DELETE AN SHOPPING CART //
-    const deleteCarts = async (productId) => {   
-
+    const deleteCarts = async (productId) => {
         try {
             // api call for delete product
-            await shoppingSerive.shoppingSomesDelete(productId) 
-
-            // api call for get product
-            const cartCount = await shoppingSerive.shoppingCount()
-
-            console.log(cartCount.data.data.length)
+            await shoppingSerive.shoppingDelete(productId, 'noLimit')
 
             // Update context
-            dispatch(updatefavsCarts({count: cartCount.data.data.length}))
+            dispatch(updatefavsCarts({count: favCartCount - 1}))
             
             // Update state
             getShopping()
         }
         catch (err) {
-            if (err.response && err.response.status === 404) {
-                getShopping()
+            if (err.response?.status === 404) {
+                setRaceCartConcur(true)
             }
+            console.error(err)
         }
     }
 
@@ -218,30 +216,37 @@ const Panier = () => {
     
             if (color === 'rgb(0, 0, 0)') {
                 
-                // Api call for add favorite product
-                const favorites_products_add = await favoriteProductService.favoriteProductAdd({ id: productId })
+                // Add favorite
+                await favoriteProductService.favoriteProductCreate({ id: productId })
 
-                // Update state context
-                dispatch(updateFavsProducts({count: favorites_products_add.data.data.length}))
+                // Update favorites count
+                dispatch(updateFavsProducts({count: favCartcount + 1}))
 
                 // Change icon color
                 heartIcon.style.fill = 'lightseagreen'
 
             } else {
-                // Api call for delete favorite product
+                // Delete favorite
                 await favoriteProductService.favoriteProductDelete(productId)
 
-                // Api call for get all favorites products
-                const favorites_products_del = await favoriteProductService.favoriteProductCount()
-
-                // Update context
-                dispatch(updateFavsProducts({count: favorites_products_del.data.data.length}))
+                // Update favorites count
+                dispatch(updateFavsProducts({count: favCartcount - 1}))
 
                 // Change icon color
                 heartIcon.style.fill = 'rgb(0, 0, 0)'
             }
         } catch (err) {
-            console.error(err)
+            if (err.response?.status === 409) {
+                setraceFavConcur(true)
+                setExist(true)
+            }
+            else if (err.response?.status === 404) {
+                setraceFavConcur(true)
+                setDeleted(true)
+            }
+            else {
+                console.error(err)
+            }
         }
     }
 
@@ -286,9 +291,14 @@ const Panier = () => {
     }
 
 
-    // RENDERING //
     return (
         <div className="main_container">
+            {raceCartConcur &&
+                <ShoppingCartConcur/>
+            }
+            {raceFavConcur &&
+                <FavoritesConcur exist={exist} deleted={deleted}/>
+            }
             <div className="shopping_details_back_home">
                 <Link to="/home">
                     <p>acceuil</p>
@@ -300,7 +310,7 @@ const Panier = () => {
             </div>
             <div style={shoppingProductGlobal}>
                 <div className="shopping_product_content_items">
-                    {!refNotfound ? (
+                    {!notFound ? (
                     products.map((shopping, index) => (
                             <div key={shopping.id} className="shopping_product_container">
                                 <div className="shopping_fav_and_delete_container">
@@ -374,7 +384,7 @@ const Panier = () => {
                     }
                 </div>
                 <div className="shopping_total_price_and_commande_global_container">
-                    <div style={{display: !refNotfound ? "flex" : "none"}} className= {fixingScroll ? "shopping_total_price_and_commande_container shopping_total_price_and_commande_container_fixed" : "shopping_total_price_and_commande_container"} ref={scrollFixing}>
+                    <div style={{display: !notFound ? "flex" : "none"}} className= {fixingScroll ? "shopping_total_price_and_commande_container shopping_total_price_and_commande_container_fixed" : "shopping_total_price_and_commande_container"} ref={scrollFixing}>
                         <div className="shopping_total_price_and_commande">
                             <div className="shopping_prices_container">
                                 <div className="shopping_total_price">
@@ -383,11 +393,11 @@ const Panier = () => {
                                 </div>
                                 <div className="shopping_total_price">
                                     <p style={{textAlign:"left"}}>Sous-total :</p>
-                                    <p style={{color:"rgb(87, 86, 86)"}}>{!refNotfound ? products.reduce((total, product) => total + parseFloat(product.total_price), 0).toFixed(2): null} Da</p>
+                                    <p style={{color:"rgb(87, 86, 86)"}}>{!notFound ? products.reduce((total, product) => total + parseFloat(product.total_price), 0).toFixed(2): null} Da</p>
                                 </div>
                                 <div className="shopping_total_price">
                                     <p style={{textAlign:"left"}}>Montant total :</p>
-                                    <p style={{color:"rgb(87, 86, 86)"}}>{!refNotfound ? products.reduce((total, product) => total + parseFloat(product.total_price), 0).toFixed(2): null} Da</p>
+                                    <p style={{color:"rgb(87, 86, 86)"}}>{!notFound ? products.reduce((total, product) => total + parseFloat(product.total_price), 0).toFixed(2): null} Da</p>
                                 </div>
                             </div>
                             <div className="shopping_commande">

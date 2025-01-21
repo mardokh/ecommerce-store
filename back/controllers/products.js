@@ -8,270 +8,160 @@ const productsReviews = db.productsReviews
 const productsNotesLevels = db.productsNotesLevels
 
 
-// GET ALL PRODUCTS //
+// GET PRODUCTS //
 exports.getAllProducts = async (req, res) => {
-
     try {
-        // Get all products from database
+        // Get products
         const products = await Product.findAll()
 
-        // Check if some products exists
+        // Check if products exists
         if (products.length === 0) {
-            return res.status(404).json({data: "section vide"})
+            return res.status(404).json({data: [], message: "section vide", type: "Failed"})
         } 
         
-        // Send successfylly response
-        return res.json({data: products})
+        // Success response
+        return res.status(200).json({data: products, message: "products obtained", type: "Success"})
     }
     catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
-
-// GET ONE PRODUCT //
+// GET PRODUCT //
 exports.getOneProduct = async (req, res) => {
-
     try {
-        // Extract product id from request
-        const productId = parseInt(req.params.id)
-        
-        // Check product id validity
-        if (!productId) {
-            return res.status(400).json({message: 'Missing id params !'})
+        // Extract product id
+        const id = parseInt(req.params.id)
+
+        // Validate product id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
         }
 
-        // Get product from database
-        const product = await Product.findOne({where: {id: productId}, 
+        // Get product
+        const product = await Product.findOne({where: {id}, 
             include: [{model: productImages, attributes: ['id', 'images'], as: 'product_images'}]})
         
         // Check if product exist
         if (product === null) {
-            return res.status(404).json({message: 'This product do not exist !'})
+            return res.status(404).json({data: [], message: 'This product do not exist', type: "Failed"})
         }
 
-        // Send successfylly response
-        return res.json({data: product})
+        // Success response
+        return res.status(200).json({data: product, message: "Product obtained", type: "Success"})
     }
     catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})   
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})   
     }
 }
 
-
-// GET PRODUCT NOTE //
-exports.getProductNote = async (req, res) => {
-
+// CREATE PRODUCT //
+exports.createProduct = async (req, res) => {
     try {
-        // Extract product id from request
-        const productId = parseInt(req.params.id)
-        
-        // Check product id validity
-        if (!productId) {
-            return res.status(400).json({message: 'Missing id params !'})
-        }
-
-        // Get product from database
-        const product = await Product.findOne({where: { id: productId }, attributes: ['note']})
-        
-        // Check if product exist
-        if (product === null) {
-            return res.status(404).json({message: 'This product do not exist !'})
-        }
-
-        // Send successfylly response
-        return res.json({data: product})
-    }
-    catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})   
-    }
-}
-
-
-
-// PUT PRODUCT //
-exports.putProduct = async (req, res) => {
-
-    try {
-        // Body request destructuring
+        // Extract inputs
         const {name, details, price} = req.body
 
-        // Img product path extract
+        // Img name extract
         const image = req.files.image[0].filename
 
-        // Imgs product path extract
+        // Imgs names extract
         const images = req.files['images']
 
-        // Check product inputs
+        // Check inputs
         if (!name || !details || !price || !image || !images) {
-            return res.status(400).json({message: 'Missing data input !'})
+            return res.status(400).json({data: [], message: 'Invalide or missing inputs', type: "Failed"})
         }
 
-        // Set product inputs
-        const inputs = {name: name, details: details, price: price, image: image}
-
         // Check if product exist
-        const product = await Product.findOne({where: {name:name}})
-
+        const product = await Product.findOne({where: {name}})
         if (product !== null) {
-            return res.status(409).json({message: `this product : ${name} is already exist !`})
+            return res.status(409).json({data: [], message: "This product is already exist", type: "Failed"})
         }
 
         // Create product
-        const createProduct = await Product.create(inputs)
+        const createProduct = await Product.create({name, details, price, image})
 
-        // Input product images
+        // Create secondarys images
         images.map(async file => {
             await productImages.create({productId: createProduct.id, images: file.filename})
         })
 
-        // Send successfylly response
-        return res.status(201).json({message: 'Product successfully creating'})
-
+        // Success response
+        return res.status(201).json({data: [], message: 'Product created', type: "Success"})
     }
     catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
-
 // UPDATE PRODUCT //
 exports.updateProduct = async (req, res) => {
-
     try {
-        // Body request destructuring        
+        // Extract inputs        
         const {id, name, details, price, image} = req.body
 
-        // Check product id validity
-        if (!id) {
-            return res.status(400).json({message: 'Missing id params !'})
+        // Validate product id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
         }
 
-        // Get product from database
-        const product = await Product.findOne({where: {id: id}})
+        // Check inputs
+        if (!name || !details || !price || !image) {
+            return res.status(400).json({data: [], message: "Invalide or missing inputs", type: "Failed"})
+        }
 
         // Check if product exist
+        const product = await Product.findOne({where: {id}})
         if (product === null) {
-            return res.status(404).json({message: 'This product do not exist !'})
+            return res.status(404).json({data: [], message: 'This product do not exist', type: "Failed"})
         }
 
         // Set main image
         let newImage = image
-
         if (req.files && req.files.image && req.files.image[0] && req.files.image[0].filename) {
             newImage = req.files.image[0].filename
         } 
 
-        // Set product inputs
-        const updateProduct = {
-            name,
-            details,
-            price,
-            image: newImage,
-        }
+        // Update product
+        await Product.update({name, details, price, image: newImage},{where: {id}})
 
-        // Update product from database
-        await Product.update(updateProduct, {where: {id: id}})
-
-        // Set secondarys news images
+        // Update secondarys images
         if (req.files && req.files['images']) {
-            // Extract images
             const newImages = req.files['images']
-
-            // Create images
             newImages.map(async file => {
                 await productImages.create({productId: id, images: file.filename})
             })
         }
 
-        // Get the image filename associated
+        // Delete the associated main image file
         const imageFilename = product.image
-
-        // Delete the associated image file
         if (imageFilename !== newImage) {
-                fs.unlinkSync(path.join(__dirname, '..', 'uploads', imageFilename))
+            fs.unlinkSync(path.join(__dirname, '..', 'uploads', imageFilename))
         }
        
-        // Send successfully response
-        return res.json({message: 'Product updated successfully'})
-        
+        // Send success response
+        return res.status(204).json({data: [], message: 'Product updated', type: "Success"})   
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({message: 'Database error', error: err.message, stack: err.stack})
     }
 }
-
-
-// TRASH PRODUCT  //
-exports.trasProduct = async (req, res) => {
-
-    try {
-        // Extract product id from request
-        const productId = parseInt(req.params.id)
-
-        // Check product id validity
-        if (!productId) {
-            return res.status(400).json({message: 'Missing id params !'})
-        }
-
-        // Get product from database
-        const product = await Product.findOne({where: {id: productId}})
-
-        // Check if product exist
-        if (product === null) {
-            return res.status(409).json({message: 'This product do not exist !'})
-        }
-
-        // Delete product from database
-        await Product.destroy({where: {id: productId}})
-
-        // Send successfully reponse
-        return res.json({message: 'Product successfully trash'})
-
-    }
-    catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
-    }
-}
-
-
-// UNTRASH PRODUCT //
-exports.untrashProduct = async (req, res) => {
-
-    try {
-        // Extract product id from request
-        const productId = parseInt(req.params.id)
-
-        // Check id params
-        if (!productId) {
-            return res.status(400).json({message: 'Missing id params !'})
-        }
-
-        // Untrash product from database
-        await Product.restore({where: {id: productId}})
-
-        // Send successfully response
-        return res.json({message: 'product successfully untrash'})
-    }
-    catch(err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
-    }
-}
-
 
 // DELETE PRODUCT //
 exports.deleteProduct = async (req, res) => {
-
     try {
-        // Extract product id from request
+        // Extract product id
         const productId = parseInt(req.params.id)
 
-        // Get product from database 
-        const product = await Product.findOne({ where: { id: productId } })
+        // Validate product id
+        if (!productId || !Number.isInteger(productId)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
+        }
 
-        // Check if product exist or not
+        // Check if product exist
+        const product = await Product.findOne({ where: { id: productId } })
         if (product === null) {
-            return res.status(404).json({ message: 'Product not found !' })
+            return res.status(404).json({data: [], message: 'This product do not exist', type: "Failed"})
         }
 
         // Delete main image
@@ -291,45 +181,38 @@ exports.deleteProduct = async (req, res) => {
         await productsNotesLevels.destroy({ where: {product_id: productId}, force: true })
 
         // Send successfully response
-        return res.status(204).json({ message: 'Product deleted sucessfully' })
+        return res.status(204).json({data: [], message: 'Product deleted', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({ message: 'Database error', error: err.message, stack: err.stack })
     }
 }
 
-
 // DELETE SECONDARY IMAGE //
 exports.deleteSecondaryImage = async (req, res) => {
-
     try {
-        // Extract image id from request
+        // Extract image id
         const imageId = parseInt(req.params.id)
 
         // Check id params
-        if (!imageId) {
-            return res.status(400).json({message: 'Missing id params !'})
+        if (!imageId || !Number.isInteger(imageId)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing image id', type: "Failed"})
         }
 
-        // Get image from database
+        // Get image
         const image = await productImages.findOne({where: {id: imageId}})
 
-        // Check if image exist
-        if (image === null) {
-            return res.status(404).json({message: 'image not found'})
-        }
-
-        // Delete image from databse
-        await productImages.destroy({where: { id: imageId }, force: true})
-
-        // Delete image from server
+        // Delete associated image
         fs.unlinkSync(path.join(__dirname, '..', 'uploads', image.images))
 
+        // Delete image
+        await productImages.destroy({where: {id: imageId}, force: true})
+
         // Successfully response
-        return res.status(204).json({message: 'image deleted sucessfully'})
+        return res.status(204).json({data: [], message: 'Image deleted', type: "Success"})
 
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

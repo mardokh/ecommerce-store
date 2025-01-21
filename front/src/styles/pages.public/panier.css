@@ -70,6 +70,10 @@
   width: 119px;
 }
 
+.quantity_container button {
+  cursor: pointer;
+}
+
 .btn_confirm_quantity {
   margin: 10px;
   background-color: gainsboro;

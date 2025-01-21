@@ -2,14 +2,14 @@
 import Axios from "./caller.service"
 
 
-// GET ALL REVIEWS //
+// GET REVIEWS //
 let getProductReview = (productId) => {
     return Axios.get(`/reviews/products?productId=${productId}`)
 }
 
-// ADD REVIEW //
-let addProductReview = (prodNote) => {
-    return Axios.put('/reviews/products/add', prodNote)
+// CREATE REVIEW //
+let createProductReview = (prodNote) => {
+    return Axios.put('/reviews/products/create', prodNote)
 }
 
 // UPDATE REVIEW //
@@ -25,5 +25,5 @@ let deleteProductReview = (reviewId, userId, productId) => {
 
 // EXPORTS //
 export const productsReviewsService = {
-    addProductReview, getProductReview, deleteProductReview, updateProductReview
+    createProductReview, getProductReview, deleteProductReview, updateProductReview
 }

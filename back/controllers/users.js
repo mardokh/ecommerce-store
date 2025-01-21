@@ -9,20 +9,18 @@ const jwt = require('jsonwebtoken')
 exports.createUser = async (req, res) => {
 
     try {
-        // Get data from body request
+        // Extract inputs
         const {firstName, lastName, email, password} = req.body
 
-        // Check data inputs
+        // Check inputs
         if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({message: "Missing inpunt !"})
+            return res.status(400).json({data: [], message: "Missing inpunt", type: "Failed"})
         }
 
-        // Fetch user into table
-        const user = await Users.findOne({where: {email: email}})
-
         // Check if user exist
+        const user = await Users.findOne({where: {email: email}})
         if (user !== null) {
-            return res.status(409).json({message: 'Cette adresse exist deja !'})
+            return res.status(409).json({data: [], message: 'Cette adresse exist deja', type: "Failed"})
         }
 
         // Password hash
@@ -34,12 +32,11 @@ exports.createUser = async (req, res) => {
         // Create user
         await Users.create(req.body)
 
-        // Send successfully 
-        return res.json({message: 'User created successfully'})
-        
+        // Success response 
+        return res.status(201).json({data: [], message: 'User created', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 
 }
@@ -48,28 +45,24 @@ exports.createUser = async (req, res) => {
 exports.loginUser = async (req, res) => {
     
     try {
-        // Get data from body request
+        // Extract inputs
         const {identifiant, password} = req.body
 
-        // Check data inputs
+        // Check inputs
         if (!identifiant || !password) {
-            return res.status(400).json({message: "Missing inpunt !"})
+            return res.status(400).json({data: [], message: "Missing or invalid inpunt", type: "Failed"})
         }
-
-        // Fetch user into table
-        const user = await Users.findOne({where: {email: identifiant}})
 
         // Check if user exist
+        const user = await Users.findOne({where: {email: identifiant}})
         if (user === null) {
-            return res.status(401).json({message: 'Mot de passe ou identifiant incorrect !'})
+            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
 
-        // Check password from database
+        // Check password
         const passe = await bcrypt.compare(password, user.password)
-
-        // Check if password
         if (!passe) {
-            return res.status(401).json({message: 'Mot de passe ou identifiant incorrect !'})
+            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
 
         // Generate json web token
@@ -78,12 +71,11 @@ exports.loginUser = async (req, res) => {
             identifiant: user.firstName
         }, process.env.JWT_SECRET, {expiresIn: "24h"})
 
-        // Send token 
-        return res.json({access_token: token, user_id: user.id})
-          
+        // Success response
+        return res.status(200).json({data : {access_token: token, user_id: user.id}, message: "User logged", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
@@ -91,27 +83,24 @@ exports.loginUser = async (req, res) => {
 exports.getUser = async (req, res) => {
 
     try {
-        // Extract id from request
-        const userId = parseInt(req.params.id)
+        // Extract id
+        const id = parseInt(req.params.id)
 
-        // Check id validity
-        if (!userId) {
-            return res.status(400).json({message: 'Missing id params from getUser !'})
+        // Validate id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid id', type: "Failed"})
         }
 
-        // Get user from database
-        const user = await Users.findOne({where: {id: userId}})
-
         // Check if user exist
+        const user = await Users.findOne({where: {id}})
         if (user === null) {
-            return res.status(404).json({message: 'THis user do not exist !'})
+            return res.status(404).json({data: [], message: 'This user do not exist', type: "Failed"})
         }
 
         // Send user successfully
-        return res.json({data: user})
-
+        return res.status(200).json({data: user, message: "User obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

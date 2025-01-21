@@ -4,11 +4,12 @@ import { productService } from '../../_services/products.service'
 import { shoppingSerive } from '../../_services/shoppingCart.service'
 import { useNavigate, Link } from 'react-router-dom'
 import { favoriteProductService } from '../../_services/favoritesProducts.service'
-//import MyContext from '../../_utils/contexts'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateFavsProducts } from '../../redux/reducers/favPrdSlice'
 import { updatefavsCarts } from '../../redux/reducers/favCartSlice'
+import Cookies from 'js-cookie'
+import FavoritesConcur from '../../_utils/raceConcurrency/favorites.concur'
 
 
 const Produits = () => {
@@ -16,109 +17,145 @@ const Produits = () => {
     // States
     const [products, setProducts] = useState()
     const [isLoad, setISload] = useState(false)
-    const [refNotfound, setRefNotfound] = useState(false)
+    const [notFound, setNotfound] = useState(false)
+    const [raceConcur, setRaceConcur] = useState(false)
+    const [exist, setExist] = useState(false)
+    const [deleted, setDeleted] = useState(false)
 
-    // Redux set
+
+    // REDUX //
     const dispatch = useDispatch()
+    const favPrdcount = useSelector((state) => state.favPrdCount.count)
+    const favCartCount = useSelector((state) => state.favCartCount.count)
+
 
     // Navigate
-    const navigate = useNavigate() 
+    const navigate = useNavigate()
 
-    // Reference
-    const flag = useRef(false)
 
-    // Handle errors
-    const handleError = (err) => {
-        if (err.response && err.response.status) {
-            setRefNotfound(true)
-            setProducts(err.response.data.data)
-            setISload(true)
-        } else {
-            console.log('Error:', err.message)
-        }
-    }
-
-    // GET ALL PRODUCTS FUNCTION
+    // GET PRODUCTS
     const getProducts = async () => {
-        try {
-            const productsResponse = await productService.getAllproducts()
-            const productsData = productsResponse.data.data
-            
-            const favoritesProducts = await favoriteProductService.favoriteProductGetAll()
-            const favoriteIds = favoritesProducts.data.data === "aucun produit favori" ? false : favoritesProducts.data.data.map(favorite => favorite.product_id) 
 
-            setProducts(productsData.map(product => ({
+        try {
+            // Get products
+            const products = await productService.getAllproducts()
+
+            // Set favorite id
+            let favId = false
+
+            // Get cookie from browser
+            const favoritesCookie = Cookies.get('client_id_favorites_products')
+
+            // If cookie exist get favorites
+            if (favoritesCookie) {
+                try {
+                    // Get favorites
+                    const favorites = await favoriteProductService.favoriteProductGetAll()
+    
+                    // Filter favorite ids
+                    favId = favorites.data.data.map(favorite => favorite.product_id)
+                }
+                catch (err) {
+                    // Check error response
+                    if (err.response && err.response.status === 404) {
+                        favId = false
+                    } 
+                    else {
+                        console.error(err)
+                    }
+                }
+            }
+
+            // Update state
+            setProducts(products.data.data.map(product => ({
                 id: product.id,
                 name: product.name,
                 price: product.price,
                 note: product.note,
                 image: product.image,
-                favorite: favoriteIds === false ? false : favoriteIds.includes(product.id)
+                favorite: !favId ? false : favId.includes(product.id)
             })))
 
+            // Set loader
             setISload(true)
-        } catch (err) {
-            handleError(err)
+        }
+        catch (err) {
+            if (err.response && err.response.status === 404) {
+                setProducts(err.response.data.message)
+                setNotfound(true)
+                setISload(true)
+            } 
+            else {
+                console.error(err)
+            }
         }
     }
 
-    // API CALL FOR GET ALL PRODUCTS
+
+    // GET PRODUCTS ON LOAD
     useEffect(() => {
-        if (flag.current === false) {
-            getProducts()
-        }
-        return () => flag.current = true
+        getProducts()
     }, [])
 
+    
     // ADD PRODUCT TO SHOPPING CARTS
     const addToCart = async (productId) => {
         try {
-            await shoppingSerive.shoppingAdd({ id: productId })
-            const shopping_cart_add = await shoppingSerive.shoppingGet()
-            dispatch(updatefavsCarts({count: shopping_cart_add.data.data.length}))
+            await shoppingSerive.shoppingCreate({ id: productId })
+            await shoppingSerive.shoppingGet()
+            dispatch(updatefavsCarts({count: favCartCount + 1}))
             navigate('/panier')
         } catch (err) {
             console.error(err)
         }
     }
 
-        // ADD PRODUCT TO FAVORITES //
-        const addTofavorite = async (productId, event) => {
-            try {
-                // Get css style of icon 
-                const heartIcon = event.currentTarget
-                const computedStyle = window.getComputedStyle(heartIcon)
-                const color = computedStyle.color
-        
-                if (color === 'rgba(0, 128, 0, 0.45)') {
-                    
-                    // Api call for add favorite product
-                    const favorites_products_add = await favoriteProductService.favoriteProductAdd({ id: productId })
+    // ADD PRODUCT TO FAVORITES //
+    const addTofavorite = async (productId, event) => {
+        try {
+            // Get css style of icon 
+            const heartIcon = event.currentTarget
+            const computedStyle = window.getComputedStyle(heartIcon)
+            const color = computedStyle.color
     
-                    // Update state context
-                    dispatch(updateFavsProducts({count: favorites_products_add.data.data.length}))
-    
-                    // Change icon color
-                    heartIcon.style.color = 'rgb(228, 60, 60)'
-    
-                } else {
-                    // Api call for delete favorite product
-                    await favoriteProductService.favoriteProductDelete(productId)
-    
-                    // Api call for get all favorites products
-                    const favorites_products_del = await favoriteProductService.favoriteProductCount()
-    
-                    // Update context
-                    dispatch(updateFavsProducts({count: favorites_products_del.data.data.length}))
-    
-                    // Change icon color
-                    heartIcon.style.color = 'rgba(0, 128, 0, 0.45)'
-                }
-            } catch (err) {
+            if (color === 'rgba(0, 128, 0, 0.45)') {
+                
+                // Add favorite
+                await favoriteProductService.favoriteProductCreate({ id: productId })
+
+                // Update favorites count
+                dispatch(updateFavsProducts({count: favPrdcount + 1}))
+
+                // Change icon color
+                heartIcon.style.color = 'rgb(228, 60, 60)'
+            } 
+            else {
+                // Delete favorite
+                await favoriteProductService.favoriteProductDelete(productId)
+
+                // Update favorites count
+                dispatch(updateFavsProducts({count: favPrdcount - 1}))
+
+                // Change icon color
+                heartIcon.style.color = 'rgba(0, 128, 0, 0.45)'
+            }
+        } catch (err) {
+            if (err.response?.status === 409) {
+                setRaceConcur(true)
+                setExist(true)
+            }
+            else if (err.response?.status === 404) {
+                setRaceConcur(true)
+                setDeleted(true)
+            }
+            else {
                 console.error(err)
             }
         }
+    }
 
+
+    // Reviews starry calculating
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating)
         const halfStar = rating % 1 > 0
@@ -156,12 +193,14 @@ const Produits = () => {
         return <CustomLoader />
     }
 
-    // Rendering
+    
     return (
         <div className="produits_global_container">
-            
+            {raceConcur &&
+                <FavoritesConcur exist={exist} deleted={deleted}/>
+            }
             <div className="produits_parent_container">
-                {!refNotfound ?
+                {!notFound ?
                     products.map(product => (
                         <div key={product.id} className='produits_img_englob'>
                             <div className='produits_favorite_icon_container'>

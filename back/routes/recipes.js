@@ -12,10 +12,8 @@ let router = express.Router()
 // GET ALL RECIPES  //
 router.get('', controller.getAllRecipes)
 
-
 // GET ONE RECIPE //
 router.get('/:id', controller.getOnRecipe)
-
 
 // MULTER CONFIGURATION FOR STORING IMAGES //
 var storage = multer.diskStorage({
@@ -30,19 +28,14 @@ var upload = multer({
     storage: storage
 })
 
-
-// PUT RECIPE //
-router.put('/add', upload.single('image'), checkTokenMIddleware, controller.putRecipe)
-
+// CREATE RECIPE //
+router.put('/create', upload.single('image'), checkTokenMIddleware, controller.createRecipe)
 
 // UPDATE RECIPE //
 router.patch('/update', upload.single('image'), checkTokenMIddleware, controller.updateRecipe)
 
-
 // DELETE RECIPE //
 router.delete('/delete/:id', checkTokenMIddleware, controller.deleteRecipe)
-
-
 
 
 // EXPORT MODULES

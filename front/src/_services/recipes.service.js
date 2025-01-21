@@ -9,8 +9,8 @@ let getOneRecipe = (recipeId) => {
     return Axios.get('/recipes/'+recipeId)
 }
 
-let addRecipe = (recipe) => {
-    return Axios.put('/recipes/add', recipe)
+let createRecipe = (recipe) => {
+    return Axios.put('/recipes/create', recipe)
 }
 
 let updateRecipe = (recipe) => {
@@ -25,5 +25,5 @@ let deleteRecipe = (recipeId) => {
 
 // EXPORTS //
 export const recipeService = {
-    getAllRecipes, getOneRecipe, addRecipe, updateRecipe, deleteRecipe
+    getAllRecipes, getOneRecipe, createRecipe, updateRecipe, deleteRecipe
 }

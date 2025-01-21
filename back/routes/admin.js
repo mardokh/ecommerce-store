@@ -6,8 +6,8 @@ const controller = require('../controllers/admin')
 let router = express.Router()
 
 
-// ADMIN ADD //
-router.put('/add', controller.createAdmin)
+// ADMIN CREATE //
+router.put('/create', controller.createAdmin)
 
 // ADMIN LOGIN //
 router.post('/login', controller.loginAdmin)

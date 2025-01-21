@@ -2,25 +2,18 @@
 const express = require('express')
 const controller = require('../controllers/favoriteProducts')
 
-
 // EXPRESS ROUTER INSTANCIATE //
 let router = express.Router()
-
-
-// ADD FAVORITE PRODUCT //
-router.put('/add', controller.addFavoriteProduct)
 
 
 // GET ALL FAVORITES PRODUCTS //
 router.get('', controller.getFavoritesProducts)
 
+// ADD FAVORITE PRODUCT //
+router.put('/create', controller.createFavoriteProduct)
 
 // DELETE AN FAVORITE PRODUCT //
-router.delete('/delete/:id', controller.deleteFavoritesProducts)
-
-
-// GET FAVORITES PRODUCTS COUNT //
-router.get('/count', controller.getFavoritesProductsCount)
+router.delete('/delete/:id', controller.deleteFavoriteProduct)
 
 
 // EXPORTS //

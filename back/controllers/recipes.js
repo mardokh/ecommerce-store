@@ -5,58 +5,56 @@ const fs = require('fs')
 const path = require('path')
 
 
-// GET ALL RECIPES //
+// GET RECIPES //
 exports.getAllRecipes = async (req, res) => {
 
     try {
-        // Get all recipes from table
+        // Get recipes
         const recipes = await Recipe.findAll()
 
-        // Check if find recipes
+        // Check if recipes exist
         if (recipes.length === 0) {
-            return res.status(404).json({data: "section vide"})
+            return res.status(404).json({data: [], message: "section vide", type: "Failed"})
         }
 
         // Send successfully 
-        return res.json({data: recipes})
+        return res.status(200).json({data: recipes, message: "recipe obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
-
-// GET ONE RECIPE //
+// GET RECIPE //
 exports.getOnRecipe = async (req, res) => {
 
     try {
         // Extract id from request
-        const recipeId = parseInt(req.params.id)
+        const id = parseInt(req.params.id)
 
-        // Check id validity
-        if (!recipeId) {
-            return res.status(400).json({message: 'Missing id params !'})
+        // Validate product id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing id', type: 'Failed'})
         }
 
         // Get product from database
-        const recipe = await Recipe.findOne({where: {id: recipeId}})
+        const recipe = await Recipe.findOne({where: {id}})
 
         // Check if recipe exist
-        if (recipe === null) {
-            return res.status(404).json({message: 'This recipe do not exist !'})
+        if (!recipe) {
+            return res.status(404).json({data: [], message: 'This recipe do not exist', type: "Failed"})
         }
 
         // Send recipe successfully
-        return res.json({data: recipe}) 
+        return res.status(200).json({data: recipe, message: "", type: "Success"}) 
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack}) 
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"}) 
     }
 }
 
-
-// PUT RECIPE //
-exports.putRecipe = async (req, res) => {
+// CREATE RECIPE //
+exports.createRecipe = async (req, res) => {
     try {
         // Body request destructuring
         const {name, ingredients, directions} = req.body
@@ -66,27 +64,23 @@ exports.putRecipe = async (req, res) => {
 
         // Check inputs
         if (!name || !ingredients || !directions || !image) {
-            return res.status(400).json({message: 'Missing input !'})
+            return res.status(400).json({data: [], message: 'Missing or invalid input', type: "Failed"})
         }
-
-        // Set data inputs
-        const inputs = {name: name, ingredients: ingredients, directions: directions, image: image}
 
         // Check if recipe exist
         const recipe = await Recipe.findOne({where: {name: name}})
-
         if (recipe !== null) {
-            return res.status(409).json({message: `this product : ${name} is already exist !`})
+            return res.status(409).json({data: [], message: 'This recipe already exist', type: "Failed"})
         }
 
         // Create recipe
-        await Recipe.create(inputs)
+        await Recipe.create({name, ingredients, directions, image})
 
-        // Send successfully
-        return res.status(201).json({message: 'Recipe successfully creating'})
+        // Send success response
+        return res.status(201).json({data: [], message: 'Recipe created', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
@@ -97,16 +91,20 @@ exports.updateRecipe = async (req, res) => {
         // Body request destructuring
         const { id, name, ingredients, directions, image } = req.body
 
-        // Check id validity
-        if (!id) {
-            return res.status(400).json({ message: 'Missing id params !' })
+        // Validate id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing id', type: 'Failed'})
+        }
+
+        // Validate inputs
+        if (!name, !ingredients, !directions, !image) {
+            return res.status(400).json({data: [], message: 'Invalid or missing inputs', type: 'Failed'})
         }
 
         // Check if recipe exist
-        const recipe = await Recipe.findOne({ where: {id: id}})
-
-        if (recipe === null) {
-            return res.status(404).json({ message: 'This recipe do not exist !' })
+        const recipe = await Recipe.findOne({ where: {id}})
+        if (!recipe) {
+            return res.status(404).json({data: [], message: 'This recipe do not exist', type: 'Failed'})
         }
 
         // Set image input
@@ -115,43 +113,32 @@ exports.updateRecipe = async (req, res) => {
             newImage = req.file.filename
         }
 
-        // Set inputs
-        const updatedRecipe = {
-            name,
-            ingredients,
-            directions,
-            image: newImage,
-        }
-
         // Update recipe
-        await Recipe.update(updatedRecipe, {where: {id: id}})
+        await Recipe.update({name, ingredients, directions, image: newImage},{where: {id}})
 
         // Send successfully
-        return res.json({ message: 'Recipe updated successfully' })
+        return res.status(204).json({data: [], message: 'Recipe updated', type: "Success"})
     } 
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, type: "Failed"})
     }
 }
-
 
 // DELETE RECIPE //
 exports.deleteRecipe = async (req, res) => {
 
     try {
         // Extract recipe id from request
-        const recipeId = parseInt(req.params.id)
+        const id = parseInt(req.params.id)
 
-        // Get recipe from database 
-        const recipe = await Recipe.findOne({ where: { id: recipeId } })
-
-        // Check if recipe exist or not
+        // Check if recipe exist
+        const recipe = await Recipe.findOne({ where: {id}})
         if (recipe === null) {
-            return res.status(404).json({ message: 'Recipe not found !' })
+            return res.status(404).json({data: [], message: 'Recipe not found', type: "Failed"})
         }
 
         // Delete recipe
-        await Recipe.destroy({ where: { id: recipeId }, force: true })
+        await Recipe.destroy({where: {id: id}, force: true})
 
         // Get the image filename associated
         const imageFilename = recipe.image
@@ -160,10 +147,10 @@ exports.deleteRecipe = async (req, res) => {
         fs.unlinkSync(path.join(__dirname, '..', 'uploads', imageFilename))
             
         // Send successfully response
-        return res.json({ message: 'Recipe and associated image successfully deleted' })
+        return res.status(204).json({data: [], message: 'Recipe deleted', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 

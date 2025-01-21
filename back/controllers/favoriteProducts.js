@@ -4,184 +4,102 @@ const FavoriteProduct = db.favoriteProduct
 const Product = db.product
 const { v4: uuidv4 } = require('uuid')
 
-// GLOBALS VARIABLS //
+// COOKIE NAME //
 const cookieName = 'client_id_favorites_products'
 
 
-exports.addFavoriteProduct = async (req, res) => {
-
-    try {
-        // IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME //
-        if (req.cookies && req.cookies[cookieName]) {
-            // Extract client id
-            const client_id = req.cookies[cookieName];
-
-            // Extract product id
-            const product_id = req.body.id;
-
-            // Check params
-            if (!product_id) {
-                return res.status(400).json({ message: 'Product ID is missing in the request body !' });
-            }
-
-            // Check if the product is already a favorite for this client
-            const existingFavorite = await FavoriteProduct.findOne({ where: { client_id, product_id } });
-            
-            if (!existingFavorite) {
-                // Create favorite product
-                await FavoriteProduct.create({ client_id, product_id });
-            }
-
-            // Fetch the product
-            const product = await Product.findByPk(product_id);
-
-            // Increment favorites occurrences
-            product.favprd += 1;
-
-            // Save the updated product
-            await product.save();
-
-            // Get favorites products
-            const favorites_products = await FavoriteProduct.findAll({ where: { client_id } });
-
-            // Check products
-            if (!favorites_products) {
-                return res.status(404).json({ message: 'Favorites products not found' });
-            }
-
-            // Send success
-            return res.json({ data: favorites_products });
-        } 
-
-        else {
-            // IF CLIENT DOESN'T HAVE COOKIE WITH SPECIFIED COOKIENAME //
-            const productId = req.body.id;
-
-            // Check params
-            if (!productId) {
-                return res.status(400).json({ message: 'Product ID is missing in the request body !' });
-            }
-
-            // Create client id
-            const clientId = uuidv4();
-
-            // Set entry
-            const client_favoriteProduct = {
-                client_id: clientId,
-                product_id: productId
-            };
-
-            console.log(FavoriteProduct)
-
-            // Create favorite product
-            await FavoriteProduct.create(client_favoriteProduct);
-
-            // Fetch the product
-            const product = await Product.findByPk(productId);
-
-            // Increment favorites occurrences
-            product.favprd += 1;
-
-            // Save the updated product
-            await product.save();
-
-            // Get favorites products
-            const favorites_products = await FavoriteProduct.findAll({ where: { client_id: clientId } });
-
-            // Check if favorites products exist
-            if (!favorites_products) {
-                return res.status(404).json({ message: 'Favorites products not found' });
-            }
-
-            // Create & send cookie
-            res.cookie(cookieName, clientId, { maxAge: 30 * 24 * 60 * 60 * 1000 });
-
-            // Send Successfully 
-            return res.json({ data: favorites_products });
-        }
-    }
-    catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack });
-    }
-};
-
-
-// GET FAVORITES PRODUCTS //
+// GET FAVORITES //
 exports.getFavoritesProducts = async (req, res) => {
-
     try {
-        // CHECK IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME
-        if (req.cookies && req.cookies[cookieName]) {
+        // Extract client id 
+        const client_id = req.cookies?.[cookieName]
 
-            // Extract client id 
-            const client_id = req.cookies[cookieName]
+        // Check if have client id
+        if (!client_id) {
+            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
+        }
 
-            // Get all favorites products from database
-            const favoritesProducts = await FavoriteProduct.findAll({where: {client_id: client_id},
-                include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'favorite_product' }]})
-            
-            // IF THE CLIENT HASN'T ADDED ANY FAVORITE
-            if (!favoritesProducts.length > 0) {
-                return res.json({ data: "aucun produit favori" })
-            }
-            else {
-                // Send favorites products to the client
-                return res.json({ data: favoritesProducts })
-            }    
+        // Get favorites
+        const favorites = await FavoriteProduct.findAll({where: {client_id},
+            include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'favorite_product' }]})
+        
+        // Check if favorties exist
+        if (!favorites.length > 0) {
+            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
         }
-        else {
-            // IF CLIENT DOESN'T HAVE CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME
-            return res.json({ data: "aucun produit favori" })
-        }
+        
+        // Success response
+        return res.status(200).json({data: favorites, message: "favorites obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
-
-// DELETE FAVORITE PRODUCT //
-exports.deleteFavoritesProducts = async (req, res) => {
-
+// CREATE FAVORITE //
+exports.createFavoriteProduct = async (req, res) => {
     try {
-        // Extract id
-        const favoriteProductId = req.params.id
+        // Extract product id
+        const product_id = req.body.id
 
-        // Delete favorite product
-        await FavoriteProduct.destroy({where: {product_id: favoriteProductId}, force: true})
+        // Extract client id
+        let client_id = req.cookies?.[cookieName]
 
-        // Send successfully
-        return res.json({data: 'favorite product deleted successfully'})
-    }
+        // Validate product id
+        if (!product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
+        }
+
+        // If no client_id create a new one
+        if (!client_id) {
+            client_id = uuidv4()
+            res.cookie(cookieName, client_id, { maxAge: 7 * 24 * 60 * 60 * 1000 })
+        }
+
+        // Check if this favorite already exists
+        const favorite = await FavoriteProduct.findOne({ where: { client_id, product_id } })
+        if (favorite) {
+            return res.status(409).json({data: [], message: 'This favorite product already exists', type: 'Failed'})
+        }
+
+        // Create favorite product
+        await FavoriteProduct.create({ client_id, product_id })
+
+        // Increment favorites count for this product
+        await Product.increment('favprd', { by: 1, where: { id: product_id } })
+
+        // Success response
+        return res.status(201).json({data: [], message: 'favorite created', type: 'Success'})
+    } 
     catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: 'Failed'})
     }
 }
 
-
-// GET FAVORITES PRODUCTS COUNT //
-exports.getFavoritesProductsCount = async (req, res) => {
-
+// DELETE FAVORITE //
+exports.deleteFavoriteProduct = async (req, res) => {
     try {
-        // IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME //
-        if (req.cookies && req.cookies[cookieName]) {
+        // Extract product id
+        const product_id = parseInt(req.params.id)
 
-            // Extract cookie 
-            const client_id = req.cookies[cookieName]
-
-            // Get favorites products
-            const favorites_products = await FavoriteProduct.findAll({ where: { client_id: client_id } })
-
-            // Check if favorites products exists
-            if (!favorites_products) {
-                return res.status(404).json({ message: 'Favorites products not found' })
-            }
-
-            // Send successfully 
-            return res.json({ data: favorites_products })
+        // Validate product id
+        if (!product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
         }
+
+        // Check if favorite exist
+        const favorite = await FavoriteProduct.findOne({where: {product_id}})
+        if (!favorite) {
+            return res.status(404).json({data: [], message: "This favorite do not exist", type: "Failed"})
+        }
+
+        // Delete favorite
+        await FavoriteProduct.destroy({where: {product_id}, force: true})
+
+        // Success response
+        return res.status(201).json({data: [], message: "favorite product deleted", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

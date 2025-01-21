@@ -1,8 +1,8 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { productService } from '../../_services/products.service';
-import Pagination from '../../pagination/Pagination';
-import '../../styles/components.admin/product.css';
+import { productService } from '../../_services/products.service'
+import Pagination from '../../pagination/Pagination'
+import '../../styles/components.admin/product.css'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import Kpi from "../../components/admin/KPI"
 
@@ -10,52 +10,42 @@ import Kpi from "../../components/admin/KPI"
 const Produits = () => {
 
     // STATES //
-    const [products, setProducts] = useState([]);
-    const [isLoad, setIsLoad] = useState(false);
-    const [refNotFound, setRefNotFound] = useState(false);
-    const flag = useRef(false);
-    const [currentPage, setCurrentPage] = useState(1);
+    const [products, setProducts] = useState([])
+    const [isLoad, setIsLoad] = useState(false)
+    const [refNotFound, setRefNotFound] = useState(false)
+    const [currentPage, setCurrentPage] = useState(1)
 
 
     // GLOBAL VARIABLES //
-    let PageSize = 4;
+    let PageSize = 4
 
 
     // NAVIGATION //
     const navigate = useNavigate()
 
 
-    // MAIN LOAD PRODUCTS //
-    const loadProducts = () => {
-        if (flag.current === false) {
-            productService.getAllproducts()
-                .then(res => {            
-                    setProducts(res.data.data)
-                    setRefNotFound(false)
-                    setIsLoad(true)
-                })
-                .catch(err => handleError(err));
-        }
-        return () => flag.current = true;
-    }
-
-    
-    // LOAD PRODUCTS ON PAGE LOAD //
-    useEffect(() => {
-        loadProducts()
-    },[])
-
-
-    // LOAD PRODUCTS ERRORS HANDLE //
+    // ERRORS HANDLE //
     const handleError = (err) => {
-        if (err.response && err.response.status) {
-            setRefNotFound(true);
-            setProducts(err.response.data.data);
-            setIsLoad(true);
+        if (err.response?.status === 404) {
+            setProducts(err.response.data.message)
+            setRefNotFound(true)
+            setIsLoad(true)
         } else {
             console.log('Error:', err.message);
         }
-    };
+    }
+   
+    
+    // GET PRODUCTS //
+    useEffect(() => {
+        productService.getAllproducts()
+        .then(res => {            
+            setProducts(res.data.data)
+            setRefNotFound(false)
+            setIsLoad(true)
+        })
+        .catch(err => handleError(err))
+    },[])
 
 
     // DELETE AN PRODUCT //

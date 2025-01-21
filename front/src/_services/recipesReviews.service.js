@@ -7,9 +7,9 @@ let getRecipesReviews = (recipeId) => {
     return Axios.get(`/reviews/recipes?recipeId=${recipeId}`)
 }
 
-// ADD REVIEW //
-let addRecipesReviews = (recipeNote) => {
-    return Axios.put('/reviews/recipes/add', recipeNote)
+// CREATE REVIEW //
+let createRecipesReviews = (recipeNote) => {
+    return Axios.put('/reviews/recipes/create', recipeNote)
 }
 
 // UPDATE REVIEW //
@@ -25,5 +25,5 @@ let deleteRecipesReviews = (reviewId, userId, recipeId) => {
 
 // EXPORTS //
 export const recipesReviewsService = {
-    getRecipesReviews, addRecipesReviews, updateRecipesReviews, deleteRecipesReviews
+    getRecipesReviews, createRecipesReviews, updateRecipesReviews, deleteRecipesReviews
 }

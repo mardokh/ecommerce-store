@@ -23,15 +23,16 @@ const OurProducts = () => {
 
     // Handle errors
     const handleError = (err) => {
-        if (err.response && err.response.status) {
+        if (err.response?.status) {
             setRefNotfound(true)
-            setProducts(err.response.data.data)
+            setProducts(err.response.data.message)
             setISload(true)
         } else {
             console.log('Error:', err.message)
         }
     }
 
+    // Set get products
     const getProducts = async () => {
         try {
             const products_res = await productService.getAllproducts()
@@ -44,12 +45,9 @@ const OurProducts = () => {
     }
 
 
-    // Get all products
+    // Get products
     useEffect(() => {
-        if (flag.current === false) {
-            getProducts()
-        }
-        return () => flag.current = true
+        getProducts()
     }, [])
 
 
@@ -58,9 +56,7 @@ const OurProducts = () => {
         return <CustomLoader/>
     }
 
-
-
-     // Rendering //
+     
     return (
         <div className="our_products_parent_container">
             {!refNotfound ?

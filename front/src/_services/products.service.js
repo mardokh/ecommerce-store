@@ -10,12 +10,8 @@ let getOneProduct = (productId) => {
     return Axios.get('/products/'+productId)
 }
 
-let getProductNote = (productId) => {
-    return Axios.get('/products/note/'+productId)
-}
-
-let addProduct = (product) => {
-    return Axios.put('/products/add', product)
+let createProduct = (product) => {
+    return Axios.put('/products/create', product)
 }
 
 let updateProcut = (product) => {
@@ -33,5 +29,5 @@ let deleteSecondaryImage = (imageId) => {
 
 // EXPORTS //
 export const productService = { 
-    getAllproducts, getOneProduct, addProduct, updateProcut, deleteProduct, deleteSecondaryImage, getProductNote 
+    getAllproducts, getOneProduct, createProduct, updateProcut, deleteProduct, deleteSecondaryImage 
 }

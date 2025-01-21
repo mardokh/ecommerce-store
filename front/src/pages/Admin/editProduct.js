@@ -22,7 +22,7 @@ const EditProduct = () => {
     const imagesDisplayContainerRef = useRef()
 
 
-    // GET ID PARAMS
+    // GET ID PARAMS //
     const {id} = useParams()
 
 

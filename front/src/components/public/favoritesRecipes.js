@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { favoriteRecipeService } from "../../_services/favoritesRecipes.service"
 import "../../styles/components.public/favorites_recipes.css"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateFavsRecipes } from '../../redux/reducers/favRcpSlice'
 
 
@@ -11,29 +11,31 @@ const FavoritesRecipes = () => {
     // STATES //
     const [recipes, setRecipes] = useState([])
     const [isLoad, setISload] = useState(false)
+    const [notFound, setNotFound] = useState(false)
 
+
+    // REDUX //
     const dispatch = useDispatch()
+    const favRcpCount = useSelector((state) => state.favRcpCount.count)
     
 
-    // REFERENCE //
-    const refUseEffect = useRef(false)
-    const refRecipes = useRef(false)
-
-
-    // GET ALL RECIPES ADDS IN FAVORITES
+    // GET FAVORITES //
     useEffect(() => {
-        if (refUseEffect.current === false) {
             favoriteRecipeService.favoriteRecipeGetAll()
             .then(res => {
-                if (res.data.data && res.data.data[0] && res.data.data[0].favorite_recipe) {      
-                    refRecipes.current = true
-                }
                 setRecipes(res.data.data)
                 setISload(true)
             })
-            .catch(err => console.error(err))
-        }
-        return () => refUseEffect.current = true
+            .catch(err => {
+                if (err.response?.status === 404) {
+                    setRecipes(err.response.data.message)
+                    setNotFound(true)
+                    setISload(true)
+                } 
+                else {
+                    console.error(err)
+                }
+            })
     }, [])
 
 
@@ -41,26 +43,23 @@ const FavoritesRecipes = () => {
     const deleteFavoriteRecipe = async (recipeId) => {
 
         try {
-            // Api call for delete favorite recipe
+            // Delete favorite
             await favoriteRecipeService.favoriteRecipeDelete(recipeId)
 
-            // Api call for get all favorites recipes
-            const favorites_recipes_del = await favoriteRecipeService.favoriteRecipeCount()
-
             // Update favorites count
-            dispatch(updateFavsRecipes({count: favorites_recipes_del.data.data.length}))
+            dispatch(updateFavsRecipes({count: favRcpCount - 1}))
 
-            // APi call for get favorites recipes
+            // Get favorites
             const favoriteRecipe = await favoriteRecipeService.favoriteRecipeGetAll()
 
             // Update state
             setRecipes(favoriteRecipe.data.data)
-
-            if (favoriteRecipe.data.data && favoriteRecipe.data.data[0] && !favoriteRecipe.data.data[0].favorite_recipe) {      
-                refRecipes.current = false
-            }
         }
         catch (err) {
+            if (err.response?.status === 404) {
+                setRecipes(err.response.data.message)
+                setNotFound(true)
+            }
             console.error(err)
         }
     }
@@ -74,7 +73,7 @@ const FavoritesRecipes = () => {
 
     return (
         <div className="favorites_Recipes_main_container">
-            {refRecipes.current ?
+            {!notFound ?
                 recipes.map(recipe => (
                     <div key={recipe.favorite_recipe.id} className="favorites_Recipes_container">
                         <div className="favorites_Recipes_close_icon_container">

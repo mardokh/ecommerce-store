@@ -4,184 +4,96 @@ const FavoriteRecipe = db.favoriteRecipe
 const Recipe = db.recipe
 const { v4: uuidv4 } = require('uuid')
 
-
-// GLOBALS VARIABLS //
+// COOKIE NAME //
 const cookieName = 'client_id_favorites_recipes'
 
 
-// ADD FAVORITE RECIPE //
-exports.addFavoriteRecipe = async (req, res) => {
-
-    try {
-        // IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME //
-        if (req.cookies && req.cookies[cookieName]) {
-
-            // Extract cookie 
-            const client_id = req.cookies[cookieName]
-
-            // Extract id
-            const recipe_id = req.body.id
-
-            // Check params
-            if (!recipe_id) {
-                return res.status(400).json({ message: 'Recipe ID is missing in the request body !' })
-            }
-
-            // Check if the recipe is already a favorite for this client
-            const existingFavorite = await FavoriteRecipe.findOne({ where: { client_id, recipe_id } });
-            
-            if (!existingFavorite) {
-                // Create favorite recipe
-                await FavoriteRecipe.create({ client_id, recipe_id });
-            }
-
-            // Fetch the recipe
-            const recipe = await Recipe.findByPk(recipe_id);
-
-            // Increment favorites occurrences
-            recipe.favrcp += 1;
-
-            // Save the updated recipe
-            await recipe.save();
-
-            // Get favorites recipes
-            const favorites_recipes = await FavoriteRecipe.findAll({ where: { client_id: client_id } })
-
-            // Check recipe
-            if (!favorites_recipes) {
-                return res.status(404).json({ message: 'Favorites recipes not found' })
-            }
-
-            // Send successfully 
-            return res.json({ data: favorites_recipes })
-        }
-
-        else {
-            // IF CLIENT DOESN'T HAVE COOKIE WITH SPECIFIED COOKIENAME //
-            const recipeId = req.body.id
-
-            // Check params
-            if (!recipeId) {
-                return res.status(400).json({ message: 'Recipe ID is missing in the request body' })
-            }
-
-            // Create clien id
-            const clientId = uuidv4()
-
-            // Set entrie
-            const client_favoriteRecipe = {
-                client_id: clientId,
-                recipe_id: recipeId
-            }
-
-            // Create favorite recipe
-            await FavoriteRecipe.create(client_favoriteRecipe)
-
-            // Fetch the recipe
-            const recipe = await Recipe.findByPk(recipeId);
-
-            // Increment favorites occurrences
-            recipe.favrcp += 1;
-
-            // Save the updated recipe
-            await recipe.save();
-
-            // Get favorites recipes
-            const favorites_recipes = await FavoriteRecipe.findAll({ where: { client_id: clientId } })
-
-            // Check recipe
-            if (!favorites_recipes) {
-                return res.status(404).json({ message: 'Favorites recipes not found' })
-            }
-
-            // Create & send cookie
-            res.cookie(cookieName, clientId, { maxAge: 30 * 24 * 60 * 60 * 1000})
-
-            // Send Successfully 
-            return res.json({ data: favorites_recipes })
-        }
-    }
-    catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
-    }
-}
-
-
-// GET FAVORITES RECIPES //
+// GET FAVORITES //
 exports.getFavoritesRecipes = async (req, res) => {
-
     try {
-        // CHECK IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME
-        if (req.cookies && req.cookies[cookieName]) {
+        // Extract client id 
+        const client_id = req.cookies?.[cookieName]
 
-            // Extract client id 
-            const client_id = req.cookies[cookieName]
+        // Check if have client id
+        if (!client_id) {
+            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
+        }
 
-            // Get all favorites recipes from database
-            const favoritesRecipes = await FavoriteRecipe.findAll({where: {client_id: client_id},
-                include: [{ model: Recipe, attributes: ['id', 'name', 'image'], as: 'favorite_recipe' }]})
-            
-            // IF THE CLIENT HASN'T ADDED ANY FAVORITE
-            if (!favoritesRecipes.length > 0) {
-                return res.json({ data: "aucune recette favorite" })
-            }
-            else {
-                // Send favorites recipes to the client
-                return res.json({ data: favoritesRecipes })
-            }    
+        // Get favorites
+        const favorites = await FavoriteRecipe.findAll({where: {client_id: client_id},
+            include: [{ model: Recipe, attributes: ['id', 'name', 'image'], as: 'favorite_recipe' }]})
+        
+        // Check if favorties exist
+        if (!favorites.length > 0) {
+            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
         }
-        else {
-            // IF CLIENT DOESN'T HAVE CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME
-            return res.json({ data: "aucune recette favorite" })
-        }
+
+        // Success response
+        return res.status(200).json({data: favorites, message: "Favorites obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
-
-// DELETE FAVORITE RECIPE //
-exports.deleteFavoritesRecipes = async (req, res) => {
-
+// CREATE FAVORITE //
+exports.createFavoriteRecipe = async (req, res) => {
     try {
-        // Extract id
-        const favoriteRecipeId = req.params.id
+        // Extract recipe id
+        const recipe_id = req.body.id
 
-        // Delete favorite recipe
-        await FavoriteRecipe.destroy({where: {recipe_id: favoriteRecipeId}, force: true})
+        // Extract client id
+        let client_id = req.cookies?.[cookieName]
 
-        // Send successfully
-        return res.json({data: 'favorite recipe deleted successfully'})
-    }
+        // Validate recipe id
+        if (!recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing recipe id', type: 'Failed'})
+        }
+
+        // If no client_id create a new one
+        if (!client_id) {
+            client_id = uuidv4()
+            res.cookie(cookieName, client_id, { maxAge: 7 * 24 * 60 * 60 * 1000 })
+        }
+
+        // Check if favorite already exists
+        const favorite = await FavoriteRecipe.findOne({ where: { client_id, recipe_id } })
+        if (favorite) {
+            return res.status(409).json({data: [], message: 'This favorite already exist', type: 'Failed'})
+        }
+
+        // Create favorite recipe
+        await FavoriteRecipe.create({ client_id, recipe_id })
+
+        // Increment favorites count for the recipe
+        await Recipe.increment('favrcp', { by: 1, where: { id: recipe_id } })
+
+        // Success response
+        return res.status(201).json({data: [], message: 'Favorite created', type: 'Success'})
+    } 
     catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: 'Failed'})
     }
 }
 
-// GET FAVORITES RECIPES COUNT //
-exports.getFavoritesRecipesCount = async (req, res) => {
-
+// DELETE FAVORITE //
+exports.deleteFavoriteRecipe = async (req, res) => {
     try {
-        // IF CLIENT HAS COOKIE WITH SPECIFIED COOKIENAME //
-        if (req.cookies && req.cookies[cookieName]) {
+        // Extract recipe id
+        const recipe_id = parseInt(req.params.id)
 
-            // Extract cookie 
-            const client_id = req.cookies[cookieName]
-
-            // Get favorites recipes
-            const favorites_recipes = await FavoriteRecipe.findAll({ where: { client_id: client_id } })
-
-            // Check if favorites recipes exists
-            if (!favorites_recipes) {
-                return res.status(404).json({ message: 'Favorites recipes not found' })
-            }
-
-            // Send successfully 
-            return res.json({ data: favorites_recipes })
+        // Validate recipe id
+        if (!recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: 'Invalid or missing recipe id', type: 'Failed'})
         }
+
+        // Delete favorite
+        await FavoriteRecipe.destroy({where: {recipe_id}, force: true})
+
+        // Success response
+        return res.status(201).json({data: [], message: "Favorite deleted", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

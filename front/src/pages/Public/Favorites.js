@@ -26,15 +26,23 @@ const Favorites = () => {
                 <p>favoris</p>
             </div>
 
-            <div className="favories_fav_products_container">
-                <p className="favories_title">Mes produits favoris ({favPrdcount})</p>
-                <FavoritesProducts />
-            </div>
+            {favPrdcount === 0 && favRcpcount === 0 &&
+                <div>Aucun favoris n'a été ajouter a votre liste</div>
+            }
 
-            <div className="favories_fav_recipes_container">
-                <p className="favories_title">Mes recettes favorites({favRcpcount})</p>
-                <FavoritesRecipes />
-            </div>
+            {favPrdcount > 0 &&
+                <div className="favories_fav_products_container">
+                    <p className="favories_title">Mes produits favoris ({favPrdcount})</p>
+                    <FavoritesProducts />
+                </div>
+            }
+
+            {favRcpcount > 0 &&
+                <div className="favories_fav_recipes_container">
+                    <p className="favories_title">Mes recettes favorites({favRcpcount})</p>
+                    <FavoritesRecipes />
+                </div>
+            }
             
         </div>
     )

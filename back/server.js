@@ -64,7 +64,7 @@ app.get('*', (req, res) => res.status(404).send('404 not found !'))
 
 
 // SET SERVER PORT
-const port = process.env.PORT || 3000
+const port = process.env.PORT || 8989
 
 
 // STARTING API SERVER AND DATABASE //

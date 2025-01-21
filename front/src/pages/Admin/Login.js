@@ -51,8 +51,10 @@ const AdminLogin = () => {
             // API call for send credentials
             const res = await AdminService.adminLogin(credentials)
 
+            console.log(res)
+
             // Save token to local storage
-            AdminService.saveToken(res.data.access_token)
+            AdminService.saveToken(res.data.data.access_token)
 
             // Redirect
             navigate("/admin")

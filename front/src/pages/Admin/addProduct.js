@@ -90,7 +90,7 @@ const AddProduct = () => {
             }
     
             // Api call for add product
-            await productService.addProduct(formData)
+            await productService.createProduct(formData)
     
             setProduct({ name: "", price: "", details: "", image: "", images: [] })
 
@@ -105,8 +105,12 @@ const AddProduct = () => {
             setTimeout(() => setOnLoader(false), 2000)
 
         }
-        catch (error) {
-            console.error('Error : ', error)
+        catch (err) {
+            if (err.response?.status === 409) {
+                alert("Se produit exist deja dans les favoris")
+                window.location.reload(true)
+            }
+            console.error(err)
         }
     }
     

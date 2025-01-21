@@ -9,16 +9,16 @@ const controller = require('../controllers/recipesReviews')
 let router = express.Router()
 
 
-// GET ALL REVEIWS //
+// GET REVIEWS //
 router.get('', controller.getRecipesReviews)
 
-// ADD REVEIW //
-router.put('/add', controller.addRecipesReviews)
+// CREATE REVIEW //
+router.put('/create', controller.createRecipesReviews)
 
-// UPDATE REVEIW //
+// UPDATE REVIEW //
 router.patch('/update', controller.updateRecipesReviews)
 
-// DELETE REVIWE
+// DELETE REVIEW //
 router.delete('/delete/:reviewId/:userId/:recipeId', controller.deleteRecipesReviews)
 
 

@@ -5,200 +5,115 @@ const Product = db.product
 const { v4: uuidv4 } = require('uuid')
 const {Sequelize} = require('sequelize')
 
-
-// GLOBALS VARIABLS //
+// COOKIE NAME //
 const cookieName = 'client_id_shopping_carts'
 
 
-// ADD SHOPPING CARTS //
-exports.addShoppingCart = async (req, res) => {
-
-    try {
-        // IF CLIENT HAS (client_id) COOKIE //
-        if (req.cookies && req.cookies[cookieName]) {
-
-            // Extract cookie 
-            const client_id = req.cookies[cookieName]
-
-            // Extract id
-            const product_id = req.body.id;
-
-            // Extract quantity
-            const quantity = req.body.quantity || 1;
-            
-            // Check params
-            if (!product_id || !quantity) {
-                return res.status(400).json({ message: 'Missing params !' });
-            }
-
-            // Set entrie
-            const client_cart = {
-                client_id: client_id,
-                product_id: product_id
-            }
-
-            // Entries loop creator
-            for (let i = 0; i < quantity; i++) {
-                await ShoppingCart.create(client_cart);
-            }
-
-            // Get product
-            const product = await Product.findOne({ where: { id: product_id } })
-
-            // Check products
-            if (!product) {
-                return res.status(404).json({ message: 'Product not found' })
-            }
-
-            // Send successfully 
-            return res.json({ data: product })
-        }
-
-        else {
-            // IF CLIENT DOESN'T HAVE (client_id) COOKIE //
-            const productId = req.body.id
-
-            // Check params
-            if (!productId) {
-                return res.status(400).json({ message: 'Product ID is missing in the request body' })
-            }
-
-            // Set entrie
-            const clientId = uuidv4()
-            const clientCart = {
-                client_id: clientId,
-                product_id: productId
-            }
-
-            // Create entrie
-            await ShoppingCart.create(clientCart)
-
-            // Get product
-            const product = await Product.findOne({ where: { id: productId } })
-
-            // Check product
-            if (!product) {
-                return res.status(404).json({ message: 'Product not found' })
-            }
-
-            // Create & send cookie
-            res.cookie(cookieName, clientId, { maxAge: 30 * 24 * 60 * 60 * 1000})
-
-            // Send Successfully 
-            return res.json({ data: product })
-        } 
-    }
-    catch (err) {
-        return res.status(500).json({ message: 'Database error from shopping cart!', error: err.message, stack: err.stack })
-    }
-}
-
-
-// GET SHOPPING CARTS //
+// GET CARTS //
 exports.getShoppingCart = async (req, res) => {
 
     try {
-        // CHECK IF CLIENT HAS (client_id) COOKIE
-        if (req.cookies && req.cookies[cookieName]) {
+        // Extract client id 
+        const client_id = req.cookies?.[cookieName]
 
-            // Extract client id 
-            const client_id = req.cookies[cookieName]
-
-            // Fetch unique products added by the client and count of entries
-            const clientShopping = await ShoppingCart.findAll({
-                where: { client_id: client_id },
-                attributes: [
-                    'product_id',
-                    [Sequelize.fn('COUNT', Sequelize.col('product_id')), 'product_count'],
-                    [Sequelize.fn('SUM', Sequelize.col('price')), 'total_price']
-                ],
-                include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'shopping_cart_product' }],
-                group: ['product_id']
-            })
-
-            // IF THE CLIENT HASN'T ADDED ANY PRODUCTS
-            if (!clientShopping.length > 0) {
-                //return res.json({ data: "vous n'avez ajouté aucun produit" })
-                return res.status(404).json({data: "Votre panier est vide"})
-            }
-            else {
-                // Send products and counts to the client
-                return res.json({ data: clientShopping })
-            }
-        } 
-
-        else {
-            // IF CLIENT DOESN'T HAVE (client_id) COOKIE
-            return res.status(404).json({ data: "Votre panier est vide" })
+        // If do not have client_id
+        if (!client_id) {
+            return res.status(404).json({data: [], message: "Votre panier est vide", type: "Failed"})
         }
+
+        // Get carts
+        const clientShopping = await ShoppingCart.findAll({
+            where: { client_id: client_id },
+            attributes: [
+                'product_id',
+                [Sequelize.fn('COUNT', Sequelize.col('product_id')), 'product_count'],
+                [Sequelize.fn('SUM', Sequelize.col('price')), 'total_price']
+            ],
+            include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'shopping_cart_product' }],
+            group: ['product_id']
+        })
+
+        // Check if carts exist
+        if (!clientShopping.length > 0) {
+            return res.status(404).json({data: [], message: "Votre panier est vide", type: "Failed"})
+        }
+        
+        // Success response
+        return res.status(200).json({data: clientShopping, message: "Cart obtained", type: "Success"})
     } 
     catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error!', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
+// CREATE CART //
+exports.createShoppingCart = async (req, res) => {
 
-// DELETE ONE SHOPPING CART //
+    try {
+        // Extract id
+        const product_id = req.body.id
+    
+        // Extract cookie
+        let client_id = req.cookies?.[cookieName]
+
+        // Extract quantity
+        const quantity = req.body.quantity || 1
+        
+        // Validate id
+        if (!product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid id', type: "Failed"})
+        }
+
+        // Validate input
+        if (!quantity) {
+            return res.status(400).json({data: [], message: 'Missing or invalid input', type: "Failed"})
+        }
+
+        // If no client_id create a new one
+        if (!client_id) {
+            client_id = uuidv4()
+            res.cookie(cookieName, client_id, { maxAge: 7 * 24 * 60 * 60 * 1000 })
+        }
+
+        // Entries loop creator
+        for (let i = 0; i < quantity; i++) {
+            await ShoppingCart.create({client_id, product_id});
+        }
+
+        // Success response 
+        return res.status(201).json({data: [], message: "Cart created", type: "Success"})
+    }
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error from shopping cart', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
+
+// DELETE CART //
 exports.deleteShoppingCart = async (req, res) => {
 
     try {
-        // Extract id
-        const productId = req.params.id
-        
-        // Delete product
-        await ShoppingCart.destroy({where: {product_id: productId}, force: true, limit: 1})
+        // Extract params
+        const limitOne = req.params.limit
+        const product_id = parseInt(req.params.id)
 
-        // Send successfully
-        return res.json({data: 'product deleted successfully'})
-    }
-    catch(err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
-    }
-}
-
-
-// DELETE SOME SHOPPING CARTS //
-exports.deleteSomeShoppingCarts = async (req, res) => {
-
-    try {
-        // Extract id
-        const productId = req.params.id
-        
-        // Delete product
-        await ShoppingCart.destroy({where: {product_id: productId}})
-
-        // Send successfully
-        return res.json({data: 'product deleted successfully'})
-    }
-    catch(err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
-    }
-}
-
-
-// GET SHOPPING CARTS COUNT //
-exports.getShoppingCartsCount = async (req, res) => {
-
-    try {
-        // CHECK IF CLIENT HAS (client_id) COOKIE
-        if (req.cookies && req.cookies[cookieName]) {
-
-            // Extract client id 
-            const client_id = req.cookies[cookieName]
-
-            // Get shopping carts
-            const clientShopping = await ShoppingCart.findAll({where: {client_id: client_id}})
-
-            // Check if have shopping carts
-            if (!clientShopping) {
-                return res.status(404).json({message: 'No shopping carts found !'})
-            }
-
-            // Send successfully
-            return res.json({data: clientShopping})
+        // Validate id
+        if (!product_id || !Number.isInteger(product_id) || !limitOne) {
+            return res.status(400).json({data: [], message: 'Missing or invalid params', type: "Failed"})
         }
+
+        // Check if cart exist
+        const cart = await ShoppingCart.findOne({where: {product_id}})
+        if (cart === null) {
+            return res.status(404).json({data: [], message: 'This cart do not exist', type: "Failed"})
+        }
+        
+        // Delete product
+        await ShoppingCart.destroy({where: {product_id}, force: true, limit: limitOne === 'limit' ? 1 : 0})
+
+        // Send successfully
+        return res.json({data: [], message: "Cart deleted", type: "Success"})
     }
-    catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
+    catch(err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
-}  
+}

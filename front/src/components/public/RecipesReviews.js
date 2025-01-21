@@ -53,7 +53,7 @@ const RecipesReviews = ({ recipeId }) => {
             };
 
             // Send form to endPoint
-            await recipesReviewsService.addRecipesReviews(newReview)
+            await recipesReviewsService.createRecipesReviews(newReview)
 
             // Reset form fields
             setRating(0)

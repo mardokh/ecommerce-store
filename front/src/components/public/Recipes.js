@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useRef } from "react"
 import '../../styles/components.public/recettes.css'
+import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { recipeService } from '../../_services/recipes.service'
 import { favoriteRecipeService } from '../../_services/favoritesRecipes.service'
 import { Link } from "react-router-dom"
 import Cookies from 'js-cookie'
-import MyContext from '../../_utils/contexts'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updateFavsRecipes } from '../../redux/reducers/favRcpSlice'
 
 
@@ -15,92 +15,77 @@ const Recettes = () => {
     // STATES //
     const [recipes, setRecipes] = useState([])
     const [isLoad, setISload] = useState(false)
-    const [refNotfound, setRefNotfound] = useState(false)
+    const [notfound, setNotFound] = useState(false)
 
     
-    // Redux set
+    // REDUX //
     const dispatch = useDispatch()
-    
-
-    // REFERENCES //
-    const flag = useRef(false)
+    const favRcpCount = useSelector((state) => state.favRcpCount.count)
 
 
-    // Handle errors
-    const handleError = (err) => {
-        if (err.response && err.response.status) {
-            setRefNotfound(true)
-            setRecipes(err.response.data.data)
-            setISload(true)
-        } else {
-            console.log('Error:', err.message)
-        }
-    }
-
-
+    // GET RECIPES
     const getRecipes = async () => {
 
         try {
-            // Get all recipes 
-            const RecipesResponse = await recipeService.getAllRecipes()
+            // Get recipes 
+            const recipes = await recipeService.getAllRecipes()
 
-            const recipesData = RecipesResponse.data.data
+            console.log(recipes)
+
+            // Set favorite id
+            let favId = false
 
             // Get cookie from browser
-            const isFavoritesCookieExists = Cookies.get('client_id_favorites_recipes')
+            const favoritesCookie = Cookies.get('client_id_favorites_recipes')
 
-            // If cookie exist
-            if (isFavoritesCookieExists) {
+            // If cookie exist get favorites
+            if (favoritesCookie) {
+                try {
+                    // Get favorites
+                    const favorites = await favoriteRecipeService.favoriteRecipeGetAll()
 
-                // Get all favotes recipes
-                const favoritesRecipes = await favoriteRecipeService.favoriteRecipeGetAll()
-
-                if (favoritesRecipes.data.data === "aucune recette favorite") {
-
-                    //Update state
-                    setRecipes(recipesData)
-
-                    // Update loader 
-                    setISload(true)
+                    // Filter favorite ids
+                    favId = favorites.data.data.map(favorite => favorite.recipe_id)
                 }
-                else {
-                    // Get favorite produt id from favoritesRecipes table
-                    const favoriteIds = favoritesRecipes.data.data.map(favorite => favorite.recipe_id)
-
-                    // Update state
-                    setRecipes(recipesData.map(recipe => ({
-                        id: recipe.id,
-                        name: recipe.name,
-                        note: recipe.note,
-                        image: recipe.image,
-                        favorite: favoriteIds.includes(recipe.id) ? true : false
-                    })))
-
-                    // Update loader 
-                    setISload(true)
+                catch (err) {
+                    // Check error response
+                    if (err.response && err.response.status === 404) {
+                        favId = false
+                    } 
+                    else {
+                        console.error(err)
+                    }
                 }
             }
-            else {
-                //Update state
-                setRecipes(recipesData)
 
-                // Update loader 
-                setISload(true)
-            }
+            // Update state
+            setRecipes(recipes.data.data.map(recipe => ({
+                id: recipe.id,
+                name: recipe.name,
+                note: recipe.note,
+                image: recipe.image,
+                favorite: !favId ? false : favId.includes(recipe.id)
+            })))
+
+            // Update loader 
+            setISload(true)
         }
         catch (err) {
-            handleError(err)
+            if (err.response && err.response.status === 404) {
+                setRecipes(err.response.data.message)
+                setNotFound(true)
+                setISload(true)
+            } 
+            else {
+                console.error(err)
+            }
         }
     }
 
 
-    // API CALL FOR GET RECIPES //
+    // GET RECIPES ON LOAD //
     useEffect(() => {
-
-        if (flag.current === false) {
-            getRecipes()
-        }
-        return () => flag.current = true
+        getRecipes()
     }, [])
 
 
@@ -115,22 +100,20 @@ const Recettes = () => {
             if (color === 'rgba(0, 128, 0, 0.45)') {
                 
                 // Api call for add favorite recipe
-                const favorites_recipes_add = await favoriteRecipeService.favoriteRecipeAdd({ id: recipeId })
+                await favoriteRecipeService.favoriteRecipeCreate({ id: recipeId })
 
                 // Update state context
-                dispatch(updateFavsRecipes({count: favorites_recipes_add.data.data.length}))
+                dispatch(updateFavsRecipes({count: favRcpCount + 1}))
 
                 // Change icon color
                 heartIcon.style.color = 'gold'
-            } else {
+            } 
+            else {
                 // Api call for delete favorite recipe
                 await favoriteRecipeService.favoriteRecipeDelete(recipeId)
 
-                // Api call for get all favorites recipes
-                const favorites_recipes_del = await favoriteRecipeService.favoriteRecipeCount()
-
                 // Update state context
-                dispatch(updateFavsRecipes({count: favorites_recipes_del.data.data.length}))
+                dispatch(updateFavsRecipes({count: favRcpCount - 1}))
 
                 // Change icon color
                 heartIcon.style.color = 'rgba(0, 128, 0, 0.45)'
@@ -139,8 +122,8 @@ const Recettes = () => {
             console.error(err)
         }
     }
-    
 
+    // Reviews starry calculating
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating)
          const halfStar = rating % 1 > 0
@@ -176,14 +159,14 @@ const Recettes = () => {
 
     // Loader //
     if (!isLoad) {
-        return <div>Loading...</div>
+        return <CustomLoader />
     }
 
 
     return (
         <div className="recipe_global_container">
             <div className="recipes_parent_container">
-                {!refNotfound ?
+                {!notfound ?
                 recipes.map(recipe => (
                     <div key={recipe.id} className='pics_container_sub'>
                         <div className='pics_englob'>

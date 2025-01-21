@@ -6,20 +6,14 @@ const controller = require('../controllers/favoriteRecipes')
 let router = express.Router()
 
 
-// ADD FAVORITE RECIPE //
-router.put('/add', controller.addFavoriteRecipe)
-
-
 // GET ALL FAVORITES RECIPES //
 router.get('', controller.getFavoritesRecipes)
 
+// ADD FAVORITE RECIPE //
+router.put('/create', controller.createFavoriteRecipe)
 
 // DELETE AN FAVORITE RECIPE //
-router.delete('/delete/:id', controller.deleteFavoritesRecipes)
-
-
-// GET FAVORITES PRODUCTS COUNT //
-router.get('/count', controller.getFavoritesRecipesCount)
+router.delete('/delete/:id', controller.deleteFavoriteRecipe)
 
 
 // EXPORTS //

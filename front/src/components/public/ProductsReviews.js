@@ -19,7 +19,7 @@ const ProductsReviews = ({ productId }) => {
     const [prodId, setProdId] = useState(0)
     const [commentClone, setComment] = useState("")
     const [reviewData, setReviewData] = useState([])
-    const [reviewNoteFoundMessage, setReviewNoteFoundMessage] = useState("")
+    const [notFound, setNotFound] = useState("")
     const [userConnected, setUserConnected] = useState(false)
     const [user, setUser] = useState({})
     const [commentEdit, setCommentEdit] = useState(false)
@@ -56,7 +56,7 @@ const ProductsReviews = ({ productId }) => {
             };
 
             // Send form to endPoint
-            await productsReviewsService.addProductReview(newReview)
+            await productsReviewsService.createProductReview(newReview)
 
             // Reset form fields
             setRating(0)
@@ -105,19 +105,6 @@ const ProductsReviews = ({ productId }) => {
 
         } catch (err) {
             console.error('Error', err)
-        }
-    }
-
-
-    // GET REVIEWS ERRORS HANDLING //
-    const handleError = (err) => {
-        if (err.response && err.response.status === 404) {
-            setReviewData([])
-            setReviewNoteFoundMessage(err.response.data.message)
-            setISload(true)
-        }
-        else {
-            console.log('Error:', err)
         }
     }
 
@@ -183,7 +170,14 @@ const ProductsReviews = ({ productId }) => {
             setISload(true)
     
         } catch (err) {
-            handleError(err)
+            if (err.response && err.response.status === 404) {
+                setReviewData([])
+                setNotFound(err.response.data.message)
+                setISload(true)
+            }
+            else {
+                console.log('Error:', err)
+            }
         }
     }
     
@@ -462,7 +456,7 @@ const ProductsReviews = ({ productId }) => {
                     : 
                     (
                         <div className="details_reviews_no_comment">
-                            <p>{reviewNoteFoundMessage}</p>
+                            <p>{notFound}</p>
                         </div>
                     )
                 }

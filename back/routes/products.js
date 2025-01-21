@@ -18,10 +18,6 @@ router.get('', controller.getAllProducts)
 router.get('/:id', controller.getOneProduct)
 
 
-// GET PRODUCT NOTE //
-router.get('/note/:id', controller.getProductNote)
-
-
 // MULTER CONFIGURATION FOR STORING IMAGES //
 var storage = multer.diskStorage({
     destination: (req, file, callback) => {
@@ -36,20 +32,12 @@ var upload = multer({
 })
 
 
-// PUT PRODUCT //
-router.put('/add', checkTokenMIddleware, upload.fields([{name: 'image', maxCount: 1}, {name: 'images', maxCount: 10}]), controller.putProduct)
+// CREATE PRODUCT //
+router.put('/create', checkTokenMIddleware, upload.fields([{name: 'image', maxCount: 1}, {name: 'images', maxCount: 10}]), controller.createProduct)
 
 
 // UPDATE PRODUCT //
 router.patch('/update', checkTokenMIddleware, upload.fields([{name: 'image', maxCount: 1}, {name: 'images', maxCount: 10}]), controller.updateProduct)
-
-
-// TRASH PRODUCT //
-router.delete('/trash/:id', checkTokenMIddleware, controller.trasProduct)
-
-
-// UNTRASH PRODUCT //
-router.post('/untrash/:id', checkTokenMIddleware, controller.untrashProduct)
 
 
 // DELETE PRODUCT //

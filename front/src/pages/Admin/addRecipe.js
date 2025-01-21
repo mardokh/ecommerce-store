@@ -34,7 +34,7 @@ const AddRecipe = () => {
             formData.append('image', recipe.image)
 
             // Api call for add recipe
-            await recipeService.addRecipe(formData)
+            await recipeService.createRecipe(formData)
 
             setRecipe({name: "", ingredients: "", directions: "", image: ""})
 

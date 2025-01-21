@@ -7,7 +7,7 @@ const sequelize = db.sequelize
 const recipesNotesLevels = db.recipesNotesLevels
 
 
-// RECALCULATE REVIEWS//
+// RECALCULATE REVIEWS //
 const calculateReviews = async (user_id, recipe_id) => {
 
     // Get ratings occurrences sum for each rating level
@@ -81,52 +81,21 @@ const calculateReviews = async (user_id, recipe_id) => {
     }
 }
 
-
-// ADD REVIEWS //
-exports.addRecipesReviews = async (req, res) => {
-
-    try {
-
-        // Extract recipe id & note
-        const {user_id, recipe_id, comment, note} = req.body
-
-        // Check inputs 
-        if (!user_id || !recipe_id || !comment || !note) {
-            return res.status(400).json({message: 'Missing inputs in request body !'})
-        }
-
-        // check if the client has already rated this recipe
-        const recipeNoted = await RecipesReviews.findOne({where: { user_id: user_id, recipe_id: recipe_id }})
-
-        if (recipeNoted) {
-            return res.status(409).json({ message: 'You have already commented on this recipes' })
-        }
-
-        // Create recipe review
-        await RecipesReviews.create({user_id, recipe_id, comment, note})
-
-        // Calculate review
-        await calculateReviews(user_id, recipe_id)
-        
-        // Send successfully
-        return res.status(201).json({ message: 'Review added successfully' })
-    }
-    catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
-    }
-}
-
-
-// GET ALL REVIEWS //
+// GET REVIEWS //
 exports.getRecipesReviews = async (req, res) => {
 
     try {
-        // Extract recipe id
-        const recipe_id = req.query.recipeId
+        // Extract id
+        const recipe_id = parseInt(req.query.recipeId)
 
-        // Get comments & notes
+        // Validate id
+        if (!recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: "Missing or invalid id", type: "Failed"})
+        }
+
+        // Get reviews
         const recipesReviews = await RecipesReviews.findAll({
-            where: { recipe_id: recipe_id },
+            where: {recipe_id},
             include: [
                 { 
                     model: Users, 
@@ -136,22 +105,58 @@ exports.getRecipesReviews = async (req, res) => {
             ]
         })
 
-        // Check if comments exists
+        // Check if reviews exists
         if (!recipesReviews.length > 0) {
-            return res.status(404).json({ message: "aucun commentaire" })
+            return res.status(404).json({data: [], message: "Aucun avis pour cette recette", type: "Failed"})
         }
 
         // Get reveiws levels
-        const RecipesNotesLevels = await recipesNotesLevels.findAll({where: { recipe_id: recipe_id }})
+        const RecipesNotesLevels = await recipesNotesLevels.findAll({where: {recipe_id}})
 
-        // Sucessfully response
-        return res.json({ data: [{recipesReviews, RecipesNotesLevels}] })
+        // Success response
+        return res.status(200).json({data: [{recipesReviews, RecipesNotesLevels}], message: "Review obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
+// CREATE REVIEW //
+exports.createRecipesReviews = async (req, res) => {
+
+    try {
+        // Extract recipe id & note
+        const {user_id, recipe_id, comment, note} = req.body
+
+        // Validate ids
+         if (!user_id || !Number.isInteger(user_id) || !recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
+        }
+
+        // Validate inputs
+        if (!comment || !note || !Number.isInteger(note)) {
+            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
+        }
+
+        // Check if this review already exist
+        const recipeNoted = await RecipesReviews.findOne({where: {user_id, recipe_id}})
+        if (recipeNoted) {
+            return res.status(409).json({data: [], message: 'Vous avez deja commenter cette recette', type: "Failed"})
+        }
+
+        // Create review
+        await RecipesReviews.create({user_id, recipe_id, comment, note})
+
+        // Calculate review
+        await calculateReviews(user_id, recipe_id)
+        
+        // Send successfully
+        return res.status(201).json({data: [], message: 'Review created', type: "Success"})
+    }
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
 
 // UPDATE REVIEW //
 exports.updateRecipesReviews = async (req, res) => {
@@ -160,18 +165,29 @@ exports.updateRecipesReviews = async (req, res) => {
         // Extract recipe id & note
         const {user_id, recipe_id, comment, note} = req.body
 
-        // Check inputs 
-        if (!user_id || !comment || !note) {
-            return res.status(400).json({message: 'Missing inputs in request body !'})
+        // Validate ids
+        if (!user_id || !Number.isInteger(user_id) || !recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
+        }
+
+        // Validate inputs
+        if (!comment || !note || !Number.isInteger(note)) {
+            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
+        }
+
+        // Check if review exist
+        const review = await RecipesReviews.findOne({where: {recipe_id, user_id}})
+        if (!review) {
+            return res.status(404).json({data: [], message: "This review do not exist", type: "Failed"})
         }
 
         // Update review
-        await RecipesReviews.update(req.body, {where: {recipe_id: recipe_id, user_id: user_id}})
+        await RecipesReviews.update(req.body, {where: {recipe_id, user_id}})
 
         // Calculate review
         await calculateReviews(user_id, recipe_id)
 
-        // Sucessfully response
+        // Success response
         return res.json({message: 'avis modifier avec succées'})
     }
     catch (err) {
@@ -179,8 +195,7 @@ exports.updateRecipesReviews = async (req, res) => {
     }
 }
 
-
-// DELETE REVIEWS //
+// DELETE REVIEW //
 exports.deleteRecipesReviews = async (req, res) => {
 
     try {
@@ -189,17 +204,16 @@ exports.deleteRecipesReviews = async (req, res) => {
         const user_id = parseInt(req.params.userId)
         const recipe_id = parseInt(req.params.recipeId)
 
-        // Check reviews id
-        if (!reviewId) {
-            return res.json({message: 'Missing or incorrect id !'})
+        // Validate inputs and ids
+        if (!reviewId || !Number.isInteger(reviewId) || !user_id || !Number.isInteger(user_id) ||
+            !recipe_id || !Number.isInteger(recipe_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
         }
 
-        // Get reveiws
+        // Check if review exist
         const reveiws = await RecipesReviews.findOne({where: {id: reviewId}})
-
-        // Check if reviews exist
-        if (reveiws === null) {
-            return res.status(404).json({message: 'reveiws not found !'})
+        if (!reveiws) {
+            return res.status(404).json({data: [], message: 'Review not found', type: "Failed"})
         }
 
         // Delete reviwes
@@ -208,10 +222,10 @@ exports.deleteRecipesReviews = async (req, res) => {
         // Calculate review
         await calculateReviews(user_id, recipe_id)
 
-        // Sucessfully responses
-        return res.status(204).send()
+        // Success responses
+        return res.status(204).json({data: [], message: "Review deleted", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

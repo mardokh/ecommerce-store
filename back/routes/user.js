@@ -10,7 +10,7 @@ let router = express.Router()
 router.get('/:id', controller.getUser)
 
 // USER ADD //
-router.put('/add', controller.createUser)
+router.put('/create', controller.createUser)
 
 // USER LOGIN //
 router.post('/login', controller.loginUser)

@@ -3,8 +3,8 @@ import Axios from "./caller.service"
 
 
 
-let favoriteRecipeAdd = (favRecipe) => {
-    return Axios.put('/favorites/recipes/add', favRecipe)
+let favoriteRecipeCreate = (favRecipe) => {
+    return Axios.put('/favorites/recipes/create', favRecipe)
 }
 
 let favoriteRecipeGetAll = () => {
@@ -15,13 +15,8 @@ let favoriteRecipeDelete = (favRecipeId) => {
     return Axios.delete('/favorites/recipes/delete/'+favRecipeId)
 }
 
-let favoriteRecipeCount = () => {
-    return Axios.get('/favorites/recipes/count')
-}
-
-
 
 // EXPORTS //
 export const favoriteRecipeService = {
-    favoriteRecipeAdd, favoriteRecipeGetAll, favoriteRecipeDelete, favoriteRecipeCount
+    favoriteRecipeCreate, favoriteRecipeGetAll, favoriteRecipeDelete
 }

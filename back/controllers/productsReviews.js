@@ -81,51 +81,21 @@ const calculateReviews = async (user_id, product_id) => {
     }
 }
 
-
-// ADD REVIEWS //
-exports.addProductReview = async (req, res) => {
-
-    try {
-        // Extract inputs from request
-        const { user_id, product_id, comment, note } = req.body;
-
-        // Validate inputs
-        if (!user_id || !product_id || !comment || !note) {
-            return res.status(400).json({ message: 'Missing inputs in request body!' })
-        }
-
-        // Check if the user already reviewed this product
-        const productNoted = await ProductsReviews.findOne({where: { user_id: user_id, product_id: product_id }})
-
-        if (productNoted) {
-            return res.status(409).json({ message: 'You have already commented on this product' })
-        }
-
-        // Create new review
-        await ProductsReviews.create({ user_id, product_id, comment, note })
-
-        // Calculate review
-        await calculateReviews(user_id, product_id)
-
-        // Return success response
-        return res.status(201).json({ message: 'Review added successfully' })
-    } 
-    catch (err) {
-        return res.status(500).json({ message: 'Database error!', error: err.message, stack: err.stack })
-    }
-}
-
-
-// GET ALL REVIEWS //
+// GET REVIEWS //
 exports.getProductReview = async (req, res) => {
 
     try {
         // Extract product id
-        const product_id = req.query.productId
+        const product_id = parseInt(req.query.productId)
+
+        // Validate product id
+        if (!product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: "Invalide or missing product id", type: "Failed"})
+        }
 
         // Get comments & notes
         const productsReviews = await ProductsReviews.findAll({
-            where: { product_id: product_id },
+            where: {product_id},
             include: [
                 { 
                     model: Users, 
@@ -137,20 +107,56 @@ exports.getProductReview = async (req, res) => {
 
         // Check if comments exists
         if (!productsReviews.length > 0) {
-            return res.status(404).json({ message: "Aucun avis pour ce produit" })
+            return res.status(404).json({data: [], message: "Aucun avis pour ce produit", type: "Failed"})
         }
 
         // Get reveiws levels
         const ProductsNotesLevels = await productsNotesLevels.findAll({where: { product_id: product_id }})
 
         // Sucessfully response
-        return res.json({ data: [{productsReviews, ProductsNotesLevels}] })
+        return res.status(200).json({data: [{productsReviews, ProductsNotesLevels}], message: "Review obtained", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
+// CREATE REVIEWS //
+exports.createProductReview = async (req, res) => {
+
+    try {
+        // Extract inputs from request
+        const { user_id, product_id, comment, note } = req.body
+
+        // Validate ids
+        if (!user_id || !Number.isInteger(user_id) || !product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
+        }
+
+        // Validate inputs
+        if (!comment || !note || !Number.isInteger(note)) {
+            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
+        }
+
+        // Check if this review already exist
+        const review = await ProductsReviews.findOne({where: {user_id, product_id}})
+        if (review) {
+            return res.status(409).json({data: [], message: 'Vous avez deja commenter se produit', type: "Failed" })
+        }
+
+        // Create review
+        await ProductsReviews.create({user_id, product_id, comment, note})
+
+        // Calculate review
+        await calculateReviews(user_id, product_id)
+
+        // Return success response
+        return res.status(201).json({data: [], message: 'Review created', type: "Success" })
+    } 
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
 
 // UPDATE REVIEW //
 exports.updateProductReview = async (req, res) => {
@@ -159,25 +165,35 @@ exports.updateProductReview = async (req, res) => {
         // Extract product id & note
         const {user_id, product_id, comment, note} = req.body
 
-        // Check inputs 
-        if (!user_id || !comment || !note) {
-            return res.status(400).json({message: 'Missing inputs in request body !'})
+        // Validate ids
+        if (!user_id || !Number.isInteger(user_id) || !product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
+        }
+
+        // Validate inputs
+        if (!comment || !note || !Number.isInteger(note)) {
+            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
+        }
+
+        // Check if review exist
+        const review = await ProductsReviews.findOne({where: {product_id, user_id}})
+        if (!review) {
+            return res.status(404).json({data: [], message: "This review do not exist", type: "Failed"})
         }
 
         // Update review
-        await ProductsReviews.update(req.body, {where: {product_id: product_id, user_id: user_id}})
+        await ProductsReviews.update(req.body, {where: {product_id, user_id}})
 
-        // Recalculate reviews
+        // Calculate reviews
         await calculateReviews(user_id, product_id)
 
-        // Sucessfully response
-        return res.json({message: 'avis modifier avec succées'})   
+        // Success response
+        return res.status(204).json({data: [], message: 'Avis modifier avec succées', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
-
 
 // DELETE REVIEWS //
 exports.deleteProductReview = async (req, res) => {
@@ -188,29 +204,28 @@ exports.deleteProductReview = async (req, res) => {
         const user_id = parseInt(req.params.userId)
         const product_id = parseInt(req.params.productId)
 
-        // Check reviews id
-        if (!reviewId || !user_id || !product_id) {
-            return res.json({message: 'Missing or incorrect params !'})
+        // Validate inputs and ids
+        if (!reviewId || !Number.isInteger(reviewId) || !user_id || !Number.isInteger(user_id) ||
+            !product_id || !Number.isInteger(product_id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
         }
 
-        // Get reveiws
-        const reveiws = await ProductsReviews.findOne({where: {id: reviewId}})
-
         // Check if reviews exist
-        if (reveiws === null) {
-            return res.status(404).json({message: 'reveiws not found !'})
+        const reveiws = await ProductsReviews.findOne({where: {id: reviewId}})
+        if (!reveiws) {
+            return res.status(404).json({data: [], message: 'Reviews not found', type: "Failed"})
         }
 
         // Delete reviwes
         await ProductsReviews.destroy({where: {id: reviewId}, force: true})
 
-        // Recalculate reviews
+        // Calculate reviews
         await calculateReviews(user_id, product_id)
 
-        // Sucessfully responses
-        return res.status(204).send()
+        // Success responses
+        return res.status(204).json({data: [], message: "Review deleted", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }

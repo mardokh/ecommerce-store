@@ -7,22 +7,19 @@ const jwt = require('jsonwebtoken')
 
 // ADD ADMIN //
 exports.createAdmin = async (req, res) => {
-
     try {
-        // Get data from body request 
+        // Extract inputs
         const {identifiant, password} = req.body
 
-        // Check data inputs
+        // Check inputs
         if (!identifiant || !password) {
-            return res.status(400).json({message: 'Missing inputs !'})
+            return res.status(400).json({data: [], message: 'Missing or invalid inputs', type: "Failed"})
         }
 
-        // Fetch admin into table
-        const admin = await Admin.findOne({where: {identifiant: identifiant}})
-
         // Check if admin exist
+        const admin = await Admin.findOne({where: {identifiant}})
         if (admin !== null) {
-            return res.status(409).json({message: `This user ${identifiant} already exist`})
+            return res.status(409).json({data: [], message: 'This admin already exist', type: "Failed"})
         }
 
         // Password hash
@@ -34,12 +31,11 @@ exports.createAdmin = async (req, res) => {
         // Create admin
         await Admin.create(req.body)
 
-        // Send successfully
-        return res.json({message: 'Admin created succesfully'})
-
+        // Success response
+        return res.json({data: [], message: 'Admin created', type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({ message: 'Database error !', error: err.message, stack: err.stack })
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
 
@@ -52,23 +48,19 @@ exports.loginAdmin = async (req, res) => {
 
         // Check data inputs
         if (!identifiant || !password) {
-            return res.status(400).json({message: 'Missing inputs !'})
+            return res.status(400).json({data: [], message: 'Missing or invalid inputs', type: "Failed"})
         }
-
-        // Fetch admin from database
-        const admin = await Admin.findOne({where: {identifiant: identifiant}})
 
         // Check if admin exist
+        const admin = await Admin.findOne({where: {identifiant: identifiant}})
         if (admin === null) {
-            return res.status(401).json({message: 'Mot de passe ou identifiant incorrect !'})
+            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
 
-        // Check password from database
+        // Check password
         const passe = await bcrypt.compare(password, admin.password)
-
-        // Check if password
         if (!passe) {
-            return res.status(401).json({message: 'Mot de passe ou identifiant incorrect !'})
+            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
 
         // Generate json web token
@@ -77,11 +69,10 @@ exports.loginAdmin = async (req, res) => {
             identifiant: admin.identifiant
         }, process.env.JWT_SECRET, {expiresIn: "24h"})
 
-        // Send token 
-        return res.json({access_token : token})
-        
+        // Success response
+        return res.status(200).json({data: {access_token : token}, message: "Admin logged", type: "Success"})
     }
     catch (err) {
-        return res.status(500).json({message: 'Database error !', error: err.message, stack: err.stack})
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
