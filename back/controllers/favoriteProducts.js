@@ -14,11 +14,6 @@ exports.getFavoritesProducts = async (req, res) => {
         // Extract client id 
         const client_id = req.cookies?.[cookieName]
 
-        // Check if have client id
-        if (!client_id) {
-            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
-        }
-
         // Get favorites
         const favorites = await FavoriteProduct.findAll({where: {client_id},
             include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'favorite_product' }]})
@@ -44,11 +39,6 @@ exports.createFavoriteProduct = async (req, res) => {
 
         // Extract client id
         let client_id = req.cookies?.[cookieName]
-
-        // Validate product id
-        if (!product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
-        }
 
         // If no client_id create a new one
         if (!client_id) {
@@ -81,11 +71,6 @@ exports.deleteFavoriteProduct = async (req, res) => {
     try {
         // Extract product id
         const product_id = parseInt(req.params.id)
-
-        // Validate product id
-        if (!product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
-        }
 
         // Check if favorite exist
         const favorite = await FavoriteProduct.findOne({where: {product_id}})

@@ -43,4 +43,3 @@ exports.searchBar = async (req, res) => {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
 }
-

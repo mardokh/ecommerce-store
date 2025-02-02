@@ -1,51 +1,38 @@
 //  MODULES IMPORTATION //
 const express = require('express')
 const controller = require('../controllers/products')
-const multer = require('multer')
-const path = require('path')
 const checkTokenMIddleware = require('../jsonwebtoken/check_jwt_endPoints')
-
+const upload = require('../middlewares/multerConfig')
+const {validateGetProduct, validateCreateProduct, validateUpdateProduct,
+     validateDeleteProduct, validateDeleteSecondaryImage } = require('../middlewares/validateProducts')
 
 // EXPRESS ROUTER INSTANCIATE //
 let router = express.Router()
 
 
-//  GET ALL PRODUCTS  //
+// GET PRODUCTS //
 router.get('', controller.getAllProducts)
 
 
-//  GET ONE PRODUCT  //
-router.get('/:id', controller.getOneProduct)
-
-
-// MULTER CONFIGURATION FOR STORING IMAGES //
-var storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null,"./uploads")
-    },
-    filename: (req, file, callback) => {
-        callback(null, `image-${Date.now()}.${file.originalname}`)
-    }
-})
-var upload = multer({
-    storage: storage
-})
+// GET PRODUCT //
+router.get('/:id', validateGetProduct, controller.getOneProduct)
 
 
 // CREATE PRODUCT //
-router.put('/create', checkTokenMIddleware, upload.fields([{name: 'image', maxCount: 1}, {name: 'images', maxCount: 10}]), controller.createProduct)
+router.put('/create', checkTokenMIddleware, upload, validateCreateProduct, controller.createProduct)
+
 
 
 // UPDATE PRODUCT //
-router.patch('/update', checkTokenMIddleware, upload.fields([{name: 'image', maxCount: 1}, {name: 'images', maxCount: 10}]), controller.updateProduct)
+router.patch('/update', checkTokenMIddleware, upload, validateUpdateProduct, controller.updateProduct)
 
 
 // DELETE PRODUCT //
-router.delete('/delete/:id', checkTokenMIddleware, controller.deleteProduct)
+router.delete('/delete/:id', checkTokenMIddleware, validateDeleteProduct, controller.deleteProduct)
 
 
 // DELETE SECONDARY IMAGE //
-router.delete('/secondaryimage/:id', checkTokenMIddleware, controller.deleteSecondaryImage)
+router.delete('/secondaryimage/:id', checkTokenMIddleware, validateDeleteSecondaryImage, controller.deleteSecondaryImage)
 
 
 

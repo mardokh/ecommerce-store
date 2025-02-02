@@ -1,6 +1,6 @@
 //  MODULES IMPORTATION //
 const express = require('express')
-const controller = require('../controllers/SearchBar')
+const controller = require('../controllers/searchBar')
 
 
 // EXPRESS ROUTER INSTANCIATE //

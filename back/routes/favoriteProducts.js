@@ -1,19 +1,20 @@
 //  MODULES IMPORTS //
 const express = require('express')
 const controller = require('../controllers/favoriteProducts')
+const { validateGetFavorites, validateCreateFavorite, validateDeleteFavorite } = require('../middlewares/validateFavorites')
 
 // EXPRESS ROUTER INSTANCIATE //
 let router = express.Router()
 
 
 // GET ALL FAVORITES PRODUCTS //
-router.get('', controller.getFavoritesProducts)
+router.get('', validateGetFavorites, controller.getFavoritesProducts)
 
 // ADD FAVORITE PRODUCT //
-router.put('/create', controller.createFavoriteProduct)
+router.put('/create', validateCreateFavorite, controller.createFavoriteProduct)
 
 // DELETE AN FAVORITE PRODUCT //
-router.delete('/delete/:id', controller.deleteFavoriteProduct)
+router.delete('/delete/:id', validateDeleteFavorite, controller.deleteFavoriteProduct)
 
 
 // EXPORTS //

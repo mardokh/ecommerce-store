@@ -33,11 +33,6 @@ exports.getOneProduct = async (req, res) => {
         // Extract product id
         const id = parseInt(req.params.id)
 
-        // Validate product id
-        if (!id || !Number.isInteger(id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
-        }
-
         // Get product
         const product = await Product.findOne({where: {id}, 
             include: [{model: productImages, attributes: ['id', 'images'], as: 'product_images'}]})
@@ -58,57 +53,39 @@ exports.getOneProduct = async (req, res) => {
 // CREATE PRODUCT //
 exports.createProduct = async (req, res) => {
     try {
-        // Extract inputs
-        const {name, details, price} = req.body
+        const { name, details, price } = req.body
 
-        // Img name extract
-        const image = req.files.image[0].filename
+        // Retrieve assigned filenames
+        const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null
+        const images = req.savedFileNames.images || []
 
-        // Imgs names extract
-        const images = req.files['images']
-
-        // Check inputs
-        if (!name || !details || !price || !image || !images) {
-            return res.status(400).json({data: [], message: 'Invalide or missing inputs', type: "Failed"})
-        }
-
-        // Check if product exist
-        const product = await Product.findOne({where: {name}})
+        // Check if product exists
+        const product = await Product.findOne({ where: { name } })
         if (product !== null) {
-            return res.status(409).json({data: [], message: "This product is already exist", type: "Failed"})
+            return res.status(409).json({ data: [], message: "This product already exists", type: "Failed" })
         }
 
         // Create product
-        const createProduct = await Product.create({name, details, price, image})
+        const createProduct = await Product.create({ name, details, price, image })
 
-        // Create secondarys images
-        images.map(async file => {
-            await productImages.create({productId: createProduct.id, images: file.filename})
-        })
+        // Save additional images
+        for (const fileName of images) {
+            await productImages.create({ productId: createProduct.id, images: fileName })
+        }
 
-        // Success response
-        return res.status(201).json({data: [], message: 'Product created', type: "Success"})
-    }
-    catch(err) {
-        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+        return res.status(201).json({ data: [], message: "Product created", type: "Success" })
+    } 
+    catch (err) {
+        return res.status(500).json({ data: [], message: "Database error", error: err.message, stack: err.stack, type: "Failed" })
     }
 }
+
 
 // UPDATE PRODUCT //
 exports.updateProduct = async (req, res) => {
     try {
         // Extract inputs        
         const {id, name, details, price, image} = req.body
-
-        // Validate product id
-        if (!id || !Number.isInteger(id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
-        }
-
-        // Check inputs
-        if (!name || !details || !price || !image) {
-            return res.status(400).json({data: [], message: "Invalide or missing inputs", type: "Failed"})
-        }
 
         // Check if product exist
         const product = await Product.findOne({where: {id}})
@@ -152,11 +129,6 @@ exports.deleteProduct = async (req, res) => {
     try {
         // Extract product id
         const productId = parseInt(req.params.id)
-
-        // Validate product id
-        if (!productId || !Number.isInteger(productId)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing product id', type: 'Failed'})
-        }
 
         // Check if product exist
         const product = await Product.findOne({ where: { id: productId } })

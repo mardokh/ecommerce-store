@@ -14,11 +14,6 @@ exports.getFavoritesRecipes = async (req, res) => {
         // Extract client id 
         const client_id = req.cookies?.[cookieName]
 
-        // Check if have client id
-        if (!client_id) {
-            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
-        }
-
         // Get favorites
         const favorites = await FavoriteRecipe.findAll({where: {client_id: client_id},
             include: [{ model: Recipe, attributes: ['id', 'name', 'image'], as: 'favorite_recipe' }]})
@@ -44,11 +39,6 @@ exports.createFavoriteRecipe = async (req, res) => {
 
         // Extract client id
         let client_id = req.cookies?.[cookieName]
-
-        // Validate recipe id
-        if (!recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing recipe id', type: 'Failed'})
-        }
 
         // If no client_id create a new one
         if (!client_id) {
@@ -82,9 +72,10 @@ exports.deleteFavoriteRecipe = async (req, res) => {
         // Extract recipe id
         const recipe_id = parseInt(req.params.id)
 
-        // Validate recipe id
-        if (!recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing recipe id', type: 'Failed'})
+        // Check if favorite exist
+        const favorite = await FavoriteRecipe.findOne({where: {recipe_id}})
+        if (!favorite) {
+            return res.status(404).json({data: [], message: "This favorite do not exist", type: "Failed"})
         }
 
         // Delete favorite
