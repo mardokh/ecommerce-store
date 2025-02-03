@@ -38,20 +38,36 @@ const validateGetProduct = [
 // VALIDATE CREATE PRODUCT //
 const validateCreateProduct = [
     body('name')
-        .notEmpty().withMessage('Name is required')
-        .isLength({ max: 100 }).withMessage('Name cannot exceed 100 characters')
-        .matches(safeTextRegex).withMessage('Invalid characters in name')
+        .notEmpty().withMessage('Le champ du nom de produit est requis')
+        .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
+        .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('details')
-        .notEmpty().withMessage('Details are required')
-        .isLength({ max: 500 }).withMessage('Details cannot exceed 500 characters')
-        .matches(safeTextRegex).withMessage('Invalid characters in details')
+        .notEmpty().withMessage('Le champ details est requis')
+        .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
+        .matches(safeTextRegex).withMessage('Le champ ddetails contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('price')
         .isInt({ min: 1 })
-        .withMessage('Price must be a positive number'),
+        .withMessage('Le champ prix doit contenir un nombre positif'),
+
+    body('image')
+        .custom((value, { req }) => {
+            if (!req.files || !req.files.image || !req.files.image[0]) {
+                throw new Error('Une image principale est requise.');
+            }
+            return true;
+    }),
+
+    body('images')
+        .custom((value, { req }) => {
+            if (!req.files || !req.files['images'] || req.files['images'].length === 0) {
+                throw new Error('Au moins une image secondaire est requise.');
+            }
+            return true;
+    }),    
 
     (req, res, next) => {
         const errors = validationResult(req);
@@ -70,27 +86,32 @@ const validateUpdateProduct = [
         .withMessage('Product ID must be a positive integer'),
 
     body('name')
-        .notEmpty().withMessage('Name is required')
-        .isLength({ max: 100 }).withMessage('Name cannot exceed 100 characters')
-        .matches(safeTextRegex).withMessage('Invalid characters in name')
+        .notEmpty().withMessage('Le champ du nom de produit est requis')
+        .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
+        .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('details')
-        .notEmpty().withMessage('Details are required')
-        .isLength({ max: 500 }).withMessage('Details cannot exceed 500 characters')
-        .matches(safeTextRegex).withMessage('Invalid characters in details')
+        .notEmpty().withMessage('Le champ details est requis')
+        .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
+        .matches(safeTextRegex).withMessage('Le champ ddetails contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('price')
         .isInt({ min: 1 })
-        .withMessage('Price must be a positive number'),
+        .withMessage('Le champ prix doit être un nombre positif'),
+
+    body('image')
+        .notEmpty().withMessage('Une image principale est requise'),
+
+    body('images')
+        .notEmpty().withMessage('Au moin une image secondaire est requise'),
 
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => err.msg), type: 'Failed' })
         }
-        
         next();
     }
 ]

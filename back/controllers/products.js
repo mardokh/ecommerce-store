@@ -55,9 +55,11 @@ exports.createProduct = async (req, res) => {
     try {
         const { name, details, price } = req.body
 
-        // Retrieve assigned filenames
-        const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null
-        const images = req.savedFileNames.images || []
+        // Extract image
+        const image = req.files.image[0].filename
+
+        // Extract images
+        const images = req.files['images']
 
         // Check if product exists
         const product = await Product.findOne({ where: { name } })

@@ -37,11 +37,6 @@ const upload = (req, res, next) => {
             }
             return res.status(400).json({ error: err.message || "Something went wrong during file upload." });
         }
-
-        if (!req.files || (!req.files['image'] && req.files['images']) || (req.files['image'] && !req.files['images'])) {
-            return res.status(400).json({ error: "'image' and 'images' must both be uploaded together." });
-        }
-
         next();
     });
 };
