@@ -7,17 +7,21 @@ const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-]+$/;
 
 // Function to save files to disk
 const saveFiles = (req) => {
+    let savedFileNames = {}; // Initialize savedFileNames as an empty object
     if (req.files) {
         Object.entries(req.files).forEach(([field, files]) => {
+            savedFileNames[field] = []; // Initialize array for field
             files.forEach((file, index) => {
                 const fileExtension = path.extname(file.originalname);
                 const fileName = `${field}-${Date.now()}-${index}${fileExtension}`;
                 const filePath = path.join(__dirname, '../uploads', fileName);
 
                 fs.writeFileSync(filePath, file.buffer); // Save file to disk
+                savedFileNames[field].push(fileName); // Store generated filename
             });
         });
     }
+    return savedFileNames;
 };
 
 // VALIDATE GET PRODUCT //
@@ -50,31 +54,26 @@ const validateCreateProduct = [
         .trim().escape().blacklist("<>'\""),
 
     body('price')
-        .isInt({ min: 1 })
+        .isFloat({ min: 0.01 })
         .withMessage('Le champ prix doit contenir un nombre positif'),
 
     body('image')
         .custom((value, { req }) => {
             if (!req.files || !req.files.image || !req.files.image[0]) {
-                throw new Error('Une image principale est requise.');
+                throw new Error('Une image principale est requise');
             }
             return true;
-    }),
+        }),
 
     body('images')
-        .custom((value, { req }) => {
-            if (!req.files || !req.files['images'] || req.files['images'].length === 0) {
-                throw new Error('Au moins une image secondaire est requise.');
-            }
-            return true;
-    }),    
+        .optional(), 
 
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
             return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => err.msg), type: 'Failed' })
         }
-        saveFiles(req) // Save to disk
+        req.savedFileNames = saveFiles(req);
         next();
     }
 ]
@@ -98,14 +97,14 @@ const validateUpdateProduct = [
         .trim().escape().blacklist("<>'\""),
 
     body('price')
-        .isInt({ min: 1 })
+        .isFloat({ min: 0.01 })
         .withMessage('Le champ prix doit être un nombre positif'),
 
     body('image')
         .notEmpty().withMessage('Une image principale est requise'),
 
     body('images')
-        .notEmpty().withMessage('Au moin une image secondaire est requise'),
+        .optional(),
 
     (req, res, next) => {
         const errors = validationResult(req);
@@ -148,6 +147,3 @@ const validateDeleteSecondaryImage = [
 
 
 module.exports = {validateGetProduct, validateCreateProduct, validateUpdateProduct, validateDeleteProduct, validateDeleteSecondaryImage}
-
-
-

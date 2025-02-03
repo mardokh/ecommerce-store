@@ -53,35 +53,31 @@ exports.getOneProduct = async (req, res) => {
 // CREATE PRODUCT //
 exports.createProduct = async (req, res) => {
     try {
-        const { name, details, price } = req.body
+        const { name, details, price } = req.body;
 
-        // Extract image
-        const image = req.files.image[0].filename
-
-        // Extract images
-        const images = req.files['images']
+        // Retrieve assigned filenames
+        const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null;
+        const images = req.savedFileNames.images || [];
 
         // Check if product exists
-        const product = await Product.findOne({ where: { name } })
+        const product = await Product.findOne({ where: { name } });
         if (product !== null) {
-            return res.status(409).json({ data: [], message: "This product already exists", type: "Failed" })
+            return res.status(409).json({ data: [], message: "This product already exists", type: "Failed" });
         }
 
         // Create product
-        const createProduct = await Product.create({ name, details, price, image })
+        const createProduct = await Product.create({ name, details, price, image });
 
         // Save additional images
         for (const fileName of images) {
-            await productImages.create({ productId: createProduct.id, images: fileName })
+            await productImages.create({ productId: createProduct.id, images: fileName });
         }
 
-        return res.status(201).json({ data: [], message: "Product created", type: "Success" })
-    } 
-    catch (err) {
-        return res.status(500).json({ data: [], message: "Database error", error: err.message, stack: err.stack, type: "Failed" })
+        return res.status(201).json({ data: [], message: "Product created", type: "Success" });
+    } catch (err) {
+        return res.status(500).json({ data: [], message: "Database error", error: err.message, stack: err.stack, type: "Failed" });
     }
-}
-
+};
 
 // UPDATE PRODUCT //
 exports.updateProduct = async (req, res) => {
