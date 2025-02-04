@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-]+$/;
+const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-%]+$/;
 
 // Function to save files to disk
 const saveFiles = (req) => {
@@ -50,7 +50,7 @@ const validateCreateProduct = [
     body('details')
         .notEmpty().withMessage('Le champ details est requis')
         .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ ddetails contient des caractères invalides')
+        .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('price')
@@ -93,7 +93,7 @@ const validateUpdateProduct = [
     body('details')
         .notEmpty().withMessage('Le champ details est requis')
         .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ ddetails contient des caractères invalides')
+        .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
         .trim().escape().blacklist("<>'\""),
 
     body('price')
@@ -101,7 +101,14 @@ const validateUpdateProduct = [
         .withMessage('Le champ prix doit être un nombre positif'),
 
     body('image')
-        .notEmpty().withMessage('Une image principale est requise'),
+    .custom((value, { req }) => {
+        if (value) {
+            if (!safeTextRegex.test(value)) {
+                throw new Error('Le champ image contient des caractères invalides');
+            }
+        }
+        return true;
+    }),
 
     body('images')
         .optional(),
@@ -111,6 +118,7 @@ const validateUpdateProduct = [
         if (!errors.isEmpty()) {
             return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => err.msg), type: 'Failed' })
         }
+        req.savedFileNames = saveFiles(req);
         next();
     }
 ]

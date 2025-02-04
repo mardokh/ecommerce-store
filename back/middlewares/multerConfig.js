@@ -18,7 +18,7 @@ const fileFilter = (req, file, callback) => {
 // Multer configuration with memory storage
 const multerUpload = multer({
     storage: storage, // No files are written to disk initially
-    limits: { fileSize: 5 * 1024 * 1024 }, // 5MB size limit
+    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB size limit
     fileFilter: fileFilter
 }).fields([
     { name: 'image', maxCount: 1 },
@@ -30,7 +30,7 @@ const upload = (req, res, next) => {
     multerUpload(req, res, (err) => {
         if (err) {
             if (err.code === 'LIMIT_FILE_SIZE') {
-                return res.status(400).json({ error: "File too large. Maximum size is 5MB." });
+                return res.status(400).json({ error: "File too large. Maximum size is 2MB." });
             }
             if (err.code === 'LIMIT_UNEXPECTED_FILE') {
                 return res.status(400).json({ error: "Too many images uploaded. Maximum 10 allowed for 'images' and 1 for 'image'." });

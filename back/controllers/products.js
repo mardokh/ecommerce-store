@@ -93,19 +93,19 @@ exports.updateProduct = async (req, res) => {
 
         // Set main image
         let newImage = image
-        if (req.files && req.files.image && req.files.image[0] && req.files.image[0].filename) {
-            newImage = req.files.image[0].filename
-        } 
+        if (req.savedFileNames.image && req.savedFileNames.image[0]) {
+            newImage = req.savedFileNames.image[0]
+        }
 
         // Update product
         await Product.update({name, details, price, image: newImage},{where: {id}})
 
         // Update secondarys images
-        if (req.files && req.files['images']) {
-            const newImages = req.files['images']
-            newImages.map(async file => {
-                await productImages.create({productId: id, images: file.filename})
-            })
+        if (req.savedFileNames.images) {
+            const newImages = req.savedFileNames.images
+            for (const fileName of newImages) {
+                await productImages.create({ productId: id, images: fileName });
+            }
         }
 
         // Delete the associated main image file
