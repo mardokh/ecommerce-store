@@ -14,6 +14,10 @@ exports.getFavoritesRecipes = async (req, res) => {
         // Extract client id 
         const client_id = req.cookies?.[cookieName]
 
+        if(!client_id) {
+            return res.status(404).json({data: [], message: "Aucun favoris", type: "Failed"})
+        }
+
         // Get favorites
         const favorites = await FavoriteRecipe.findAll({where: {client_id: client_id},
             include: [{ model: Recipe, attributes: ['id', 'name', 'image'], as: 'favorite_recipe' }]})

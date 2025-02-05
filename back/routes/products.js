@@ -19,12 +19,12 @@ router.get('/:id', validateGetProduct, controller.getOneProduct)
 
 
 // CREATE PRODUCT //
-router.put('/create', checkTokenMIddleware, upload, validateCreateProduct, controller.createProduct)
+router.put('/create', upload, validateCreateProduct, controller.createProduct)
 
 
 
 // UPDATE PRODUCT //
-router.patch('/update', checkTokenMIddleware, upload, validateUpdateProduct, controller.updateProduct)
+router.patch('/update', upload, validateUpdateProduct, controller.updateProduct)
 
 
 // DELETE PRODUCT //

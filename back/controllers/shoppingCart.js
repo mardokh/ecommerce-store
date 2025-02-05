@@ -58,16 +58,6 @@ exports.createShoppingCart = async (req, res) => {
 
         // Extract quantity
         const quantity = req.body.quantity || 1
-        
-        // Validate id
-        if (!product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid id', type: "Failed"})
-        }
-
-        // Validate input
-        if (!quantity) {
-            return res.status(400).json({data: [], message: 'Missing or invalid input', type: "Failed"})
-        }
 
         // If no client_id create a new one
         if (!client_id) {
@@ -95,11 +85,6 @@ exports.deleteShoppingCart = async (req, res) => {
         // Extract params
         const limitOne = req.params.limit
         const product_id = parseInt(req.params.id)
-
-        // Validate id
-        if (!product_id || !Number.isInteger(product_id) || !limitOne) {
-            return res.status(400).json({data: [], message: 'Missing or invalid params', type: "Failed"})
-        }
 
         // Check if cart exist
         const cart = await ShoppingCart.findOne({where: {product_id}})

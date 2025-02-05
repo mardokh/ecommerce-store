@@ -14,17 +14,21 @@ exports.getFavoritesProducts = async (req, res) => {
         // Extract client id 
         const client_id = req.cookies?.[cookieName]
 
+        if(!client_id) {
+            return res.status(404).json({data: [], message: "Aucun favoris", type: "Failed"})
+        }
+
         // Get favorites
         const favorites = await FavoriteProduct.findAll({where: {client_id},
             include: [{ model: Product, attributes: ['id', 'name', 'price', 'image'], as: 'favorite_product' }]})
         
         // Check if favorties exist
         if (!favorites.length > 0) {
-            return res.status(404).json({data: [], message: "Aucun favori", type: "Failed"})
+            return res.status(404).json({data: [], message: "Aucun favoris", type: "Failed"})
         }
         
         // Success response
-        return res.status(200).json({data: favorites, message: "favorites obtained", type: "Success"})
+        return res.status(200).json({data: favorites, message: "Favorites obtained", type: "Success"})
     }
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})

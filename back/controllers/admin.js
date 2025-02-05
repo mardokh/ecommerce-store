@@ -11,11 +11,6 @@ exports.createAdmin = async (req, res) => {
         // Extract inputs
         const {identifiant, password} = req.body
 
-        // Check inputs
-        if (!identifiant || !password) {
-            return res.status(400).json({data: [], message: 'Missing or invalid inputs', type: "Failed"})
-        }
-
         // Check if admin exist
         const admin = await Admin.findOne({where: {identifiant}})
         if (admin !== null) {
@@ -29,7 +24,7 @@ exports.createAdmin = async (req, res) => {
         req.body.password = hash
 
         // Create admin
-        await Admin.create(req.body)
+        await Admin.create({identifiant, password})
 
         // Success response
         return res.json({data: [], message: 'Admin created', type: "Success"})
@@ -44,20 +39,15 @@ exports.loginAdmin = async (req, res) => {
 
     try {
         // Get data from body request 
-        const {identifiant, password} = req.body
+        const {identifiant, password} = req.body       
 
-        // Check data inputs
-        if (!identifiant || !password) {
-            return res.status(400).json({data: [], message: 'Missing or invalid inputs', type: "Failed"})
-        }
-
-        // Check if admin exist
+        // Check if admin match
         const admin = await Admin.findOne({where: {identifiant: identifiant}})
         if (admin === null) {
             return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
 
-        // Check password
+        // Check if password match
         const passe = await bcrypt.compare(password, admin.password)
         if (!passe) {
             return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})

@@ -7,7 +7,6 @@ const path = require('path')
 
 // GET RECIPES //
 exports.getAllRecipes = async (req, res) => {
-
     try {
         // Get recipes
         const recipes = await Recipe.findAll()
@@ -27,15 +26,9 @@ exports.getAllRecipes = async (req, res) => {
 
 // GET RECIPE //
 exports.getOnRecipe = async (req, res) => {
-
     try {
         // Extract id from request
         const id = parseInt(req.params.id)
-
-        // Validate product id
-        if (!id || !Number.isInteger(id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing id', type: 'Failed'})
-        }
 
         // Get product from database
         const recipe = await Recipe.findOne({where: {id}})
@@ -46,7 +39,7 @@ exports.getOnRecipe = async (req, res) => {
         }
 
         // Send recipe successfully
-        return res.status(200).json({data: recipe, message: "", type: "Success"}) 
+        return res.status(200).json({data: recipe, message: "", type: "Success"})
     }
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"}) 
@@ -56,16 +49,11 @@ exports.getOnRecipe = async (req, res) => {
 // CREATE RECIPE //
 exports.createRecipe = async (req, res) => {
     try {
-        // Body request destructuring
+        // Extract inputs
         const {name, ingredients, directions} = req.body
 
-        // Extract image path
-        const image = req.file.filename
-
-        // Check inputs
-        if (!name || !ingredients || !directions || !image) {
-            return res.status(400).json({data: [], message: 'Missing or invalid input', type: "Failed"})
-        }
+        // Extract image
+        const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null;
 
         // Check if recipe exist
         const recipe = await Recipe.findOne({where: {name: name}})
@@ -86,20 +74,9 @@ exports.createRecipe = async (req, res) => {
 
 // UPDATE RECIPE //
 exports.updateRecipe = async (req, res) => {
-    
     try {
         // Body request destructuring
         const { id, name, ingredients, directions, image } = req.body
-
-        // Validate id
-        if (!id || !Number.isInteger(id)) {
-            return res.status(400).json({data: [], message: 'Invalid or missing id', type: 'Failed'})
-        }
-
-        // Validate inputs
-        if (!name, !ingredients, !directions, !image) {
-            return res.status(400).json({data: [], message: 'Invalid or missing inputs', type: 'Failed'})
-        }
 
         // Check if recipe exist
         const recipe = await Recipe.findOne({ where: {id}})
@@ -109,8 +86,8 @@ exports.updateRecipe = async (req, res) => {
 
         // Set image input
         let newImage = image
-        if (req.file && req.file.filename) {
-            newImage = req.file.filename
+        if (req.savedFileNames.image && req.savedFileNames.image[0]) {
+            newImage = req.savedFileNames.image[0]
         }
 
         // Update recipe
@@ -126,7 +103,6 @@ exports.updateRecipe = async (req, res) => {
 
 // DELETE RECIPE //
 exports.deleteRecipe = async (req, res) => {
-
     try {
         // Extract recipe id from request
         const id = parseInt(req.params.id)

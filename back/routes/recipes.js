@@ -1,41 +1,29 @@
 //  MODULES IMPORTATION //
 const express = require('express')
 const controller = require('../controllers/recipes')
-const multer = require('multer')
-const path = require('path')
 const checkTokenMIddleware = require('../jsonwebtoken/check_jwt_endPoints')
+const upload = require('../middlewares/multerConfig')
+const {validateGetRecipe, validateCreateRecipe, validateUpdateRecipe, 
+    validateDeleteRecipe} = require('../middlewares/validateRecipes')
+
 
 // EXPRESS ROUTER INSTANCIATE //
 let router = express.Router()
-
 
 // GET ALL RECIPES  //
 router.get('', controller.getAllRecipes)
 
 // GET ONE RECIPE //
-router.get('/:id', controller.getOnRecipe)
-
-// MULTER CONFIGURATION FOR STORING IMAGES //
-var storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null,"./uploads")
-    },
-    filename: (req, file, callback) => {
-        callback(null, `image-${Date.now()}.${file.originalname}`)
-    }
-})
-var upload = multer({
-    storage: storage
-})
+router.get('/:id', validateGetRecipe, controller.getOnRecipe)
 
 // CREATE RECIPE //
-router.put('/create', upload.single('image'), checkTokenMIddleware, controller.createRecipe)
+router.put('/create', upload, validateCreateRecipe, checkTokenMIddleware, controller.createRecipe)
 
 // UPDATE RECIPE //
-router.patch('/update', upload.single('image'), checkTokenMIddleware, controller.updateRecipe)
+router.patch('/update', upload, validateUpdateRecipe, checkTokenMIddleware, controller.updateRecipe)
 
 // DELETE RECIPE //
-router.delete('/delete/:id', checkTokenMIddleware, controller.deleteRecipe)
+router.delete('/delete/:id', validateDeleteRecipe, checkTokenMIddleware, controller.deleteRecipe)
 
 
 // EXPORT MODULES

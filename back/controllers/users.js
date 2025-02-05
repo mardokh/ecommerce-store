@@ -5,17 +5,36 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 
 
+// ADD USER //
+exports.getUser = async (req, res) => {
+    try {
+        // Extract id
+        const id = parseInt(req.params.id)
+
+        // Validate id
+        if (!id || !Number.isInteger(id)) {
+            return res.status(400).json({data: [], message: 'Missing or invalid id', type: "Failed"})
+        }
+
+        // Check if user exist
+        const user = await Users.findOne({where: {id}})
+        if (user === null) {
+            return res.status(404).json({data: [], message: 'This user do not exist', type: "Failed"})
+        }
+
+        // Send user successfully
+        return res.status(200).json({data: user, message: "User obtained", type: "Success"})
+    }
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
+
 // CREATE USER //
 exports.createUser = async (req, res) => {
-
     try {
         // Extract inputs
         const {firstName, lastName, email, password} = req.body
-
-        // Check inputs
-        if (!firstName || !lastName || !email || !password) {
-            return res.status(400).json({data: [], message: "Missing inpunt", type: "Failed"})
-        }
 
         // Check if user exist
         const user = await Users.findOne({where: {email: email}})
@@ -30,7 +49,7 @@ exports.createUser = async (req, res) => {
         req.body.password = hash
 
         // Create user
-        await Users.create(req.body)
+        await Users.create({firstName, lastName, email, password})
 
         // Success response 
         return res.status(201).json({data: [], message: 'User created', type: "Success"})
@@ -43,15 +62,9 @@ exports.createUser = async (req, res) => {
 
 // LOGIN USER //
 exports.loginUser = async (req, res) => {
-    
     try {
         // Extract inputs
         const {identifiant, password} = req.body
-
-        // Check inputs
-        if (!identifiant || !password) {
-            return res.status(400).json({data: [], message: "Missing or invalid inpunt", type: "Failed"})
-        }
 
         // Check if user exist
         const user = await Users.findOne({where: {email: identifiant}})
@@ -73,32 +86,6 @@ exports.loginUser = async (req, res) => {
 
         // Success response
         return res.status(200).json({data : {access_token: token, user_id: user.id}, message: "User logged", type: "Success"})
-    }
-    catch (err) {
-        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
-    }
-}
-
-// ADD USER //
-exports.getUser = async (req, res) => {
-
-    try {
-        // Extract id
-        const id = parseInt(req.params.id)
-
-        // Validate id
-        if (!id || !Number.isInteger(id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid id', type: "Failed"})
-        }
-
-        // Check if user exist
-        const user = await Users.findOne({where: {id}})
-        if (user === null) {
-            return res.status(404).json({data: [], message: 'This user do not exist', type: "Failed"})
-        }
-
-        // Send user successfully
-        return res.status(200).json({data: user, message: "User obtained", type: "Success"})
     }
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})

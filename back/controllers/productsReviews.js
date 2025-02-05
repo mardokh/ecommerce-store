@@ -83,15 +83,9 @@ const calculateReviews = async (user_id, product_id) => {
 
 // GET REVIEWS //
 exports.getProductReview = async (req, res) => {
-
     try {
         // Extract product id
-        const product_id = parseInt(req.query.productId)
-
-        // Validate product id
-        if (!product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: "Invalide or missing product id", type: "Failed"})
-        }
+        const product_id = parseInt(req.params.id)
 
         // Get comments & notes
         const productsReviews = await ProductsReviews.findAll({
@@ -123,20 +117,9 @@ exports.getProductReview = async (req, res) => {
 
 // CREATE REVIEWS //
 exports.createProductReview = async (req, res) => {
-
     try {
         // Extract inputs from request
         const { user_id, product_id, comment, note } = req.body
-
-        // Validate ids
-        if (!user_id || !Number.isInteger(user_id) || !product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
-
-        // Validate inputs
-        if (!comment || !note || !Number.isInteger(note)) {
-            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
-        }
 
         // Check if this review already exist
         const review = await ProductsReviews.findOne({where: {user_id, product_id}})
@@ -160,20 +143,9 @@ exports.createProductReview = async (req, res) => {
 
 // UPDATE REVIEW //
 exports.updateProductReview = async (req, res) => {
-
     try {
         // Extract product id & note
         const {user_id, product_id, comment, note} = req.body
-
-        // Validate ids
-        if (!user_id || !Number.isInteger(user_id) || !product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
-
-        // Validate inputs
-        if (!comment || !note || !Number.isInteger(note)) {
-            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
-        }
 
         // Check if review exist
         const review = await ProductsReviews.findOne({where: {product_id, user_id}})
@@ -182,7 +154,7 @@ exports.updateProductReview = async (req, res) => {
         }
 
         // Update review
-        await ProductsReviews.update(req.body, {where: {product_id, user_id}})
+        await ProductsReviews.update({comment, note}, {where: {product_id, user_id}})
 
         // Calculate reviews
         await calculateReviews(user_id, product_id)
@@ -197,18 +169,11 @@ exports.updateProductReview = async (req, res) => {
 
 // DELETE REVIEWS //
 exports.deleteProductReview = async (req, res) => {
-
     try {
         // Extract reviews id
         const reviewId = parseInt(req.params.reviewId)
         const user_id = parseInt(req.params.userId)
         const product_id = parseInt(req.params.productId)
-
-        // Validate inputs and ids
-        if (!reviewId || !Number.isInteger(reviewId) || !user_id || !Number.isInteger(user_id) ||
-            !product_id || !Number.isInteger(product_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
 
         // Check if reviews exist
         const reveiws = await ProductsReviews.findOne({where: {id: reviewId}})

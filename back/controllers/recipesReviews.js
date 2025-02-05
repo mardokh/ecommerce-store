@@ -83,15 +83,9 @@ const calculateReviews = async (user_id, recipe_id) => {
 
 // GET REVIEWS //
 exports.getRecipesReviews = async (req, res) => {
-
     try {
         // Extract id
-        const recipe_id = parseInt(req.query.recipeId)
-
-        // Validate id
-        if (!recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: "Missing or invalid id", type: "Failed"})
-        }
+        const recipe_id = parseInt(req.params.id)
 
         // Get reviews
         const recipesReviews = await RecipesReviews.findAll({
@@ -123,20 +117,9 @@ exports.getRecipesReviews = async (req, res) => {
 
 // CREATE REVIEW //
 exports.createRecipesReviews = async (req, res) => {
-
     try {
         // Extract recipe id & note
         const {user_id, recipe_id, comment, note} = req.body
-
-        // Validate ids
-         if (!user_id || !Number.isInteger(user_id) || !recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
-
-        // Validate inputs
-        if (!comment || !note || !Number.isInteger(note)) {
-            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
-        }
 
         // Check if this review already exist
         const recipeNoted = await RecipesReviews.findOne({where: {user_id, recipe_id}})
@@ -160,20 +143,9 @@ exports.createRecipesReviews = async (req, res) => {
 
 // UPDATE REVIEW //
 exports.updateRecipesReviews = async (req, res) => {
-
     try {
         // Extract recipe id & note
         const {user_id, recipe_id, comment, note} = req.body
-
-        // Validate ids
-        if (!user_id || !Number.isInteger(user_id) || !recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
-
-        // Validate inputs
-        if (!comment || !note || !Number.isInteger(note)) {
-            return res.status(404).json({data: [], message: "Missing or invalid input", type: "Failed"})
-        }
 
         // Check if review exist
         const review = await RecipesReviews.findOne({where: {recipe_id, user_id}})
@@ -182,7 +154,7 @@ exports.updateRecipesReviews = async (req, res) => {
         }
 
         // Update review
-        await RecipesReviews.update(req.body, {where: {recipe_id, user_id}})
+        await RecipesReviews.update({comment, note}, {where: {recipe_id, user_id}})
 
         // Calculate review
         await calculateReviews(user_id, recipe_id)
@@ -203,12 +175,6 @@ exports.deleteRecipesReviews = async (req, res) => {
         const reviewId = parseInt(req.params.reviewId)
         const user_id = parseInt(req.params.userId)
         const recipe_id = parseInt(req.params.recipeId)
-
-        // Validate inputs and ids
-        if (!reviewId || !Number.isInteger(reviewId) || !user_id || !Number.isInteger(user_id) ||
-            !recipe_id || !Number.isInteger(recipe_id)) {
-            return res.status(400).json({data: [], message: 'Missing or invalid ids', type: "Failed"})
-        }
 
         // Check if review exist
         const reveiws = await RecipesReviews.findOne({where: {id: reviewId}})

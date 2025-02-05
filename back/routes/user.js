@@ -1,19 +1,19 @@
 //  MODULES IMPORTS //
 const express = require('express')
 const controller = require('../controllers/users')
-
+const {validateGetUser, validateCreateUser, validateLoginUser} = require('../middlewares/validateUsers')
 
 // EXPRESS ROUTER INSTANCIATE //
 let router = express.Router()
 
 // GET USER //
-router.get('/:id', controller.getUser)
+router.get('/:id', validateGetUser, controller.getUser)
 
 // USER ADD //
-router.put('/create', controller.createUser)
+router.put('/create', validateCreateUser, controller.createUser)
 
 // USER LOGIN //
-router.post('/login', controller.loginUser)
+router.post('/login', validateLoginUser, controller.loginUser)
 
 
 // EXPORT MODULES
