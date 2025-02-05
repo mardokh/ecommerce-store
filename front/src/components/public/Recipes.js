@@ -7,7 +7,7 @@ import { Link } from "react-router-dom"
 import Cookies from 'js-cookie'
 import { useDispatch, useSelector } from 'react-redux'
 import { updateFavsRecipes } from '../../redux/reducers/favRcpSlice'
-
+import FavoritesConcur from '../../_utils/raceConcurrency/favorites.concur'
 
 
 const Recettes = () => {
@@ -16,6 +16,9 @@ const Recettes = () => {
     const [recipes, setRecipes] = useState([])
     const [isLoad, setISload] = useState(false)
     const [notfound, setNotFound] = useState(false)
+    const [raceConcur, setRaceConcur] = useState(false)
+    const [exist, setExist] = useState(false)
+    const [deleted, setDeleted] = useState(false)
 
     
     // REDUX //
@@ -29,8 +32,6 @@ const Recettes = () => {
         try {
             // Get recipes 
             const recipes = await recipeService.getAllRecipes()
-
-            console.log(recipes)
 
             // Set favorite id
             let favId = false
@@ -119,7 +120,17 @@ const Recettes = () => {
                 heartIcon.style.color = 'rgba(0, 128, 0, 0.45)'
             }
         } catch (err) {
-            console.error(err)
+            if (err.response?.status === 409) {
+                setRaceConcur(true)
+                setExist(true)
+            }
+            else if (err.response?.status === 404) {
+                setRaceConcur(true)
+                setDeleted(true)
+            }
+            else {
+                console.error(err)
+            }
         }
     }
 
@@ -165,6 +176,9 @@ const Recettes = () => {
 
     return (
         <div className="recipe_global_container">
+            {raceConcur &&
+                <FavoritesConcur exist={exist} deleted={deleted}/>
+            }
             <div className="recipes_parent_container">
                 {!notfound ?
                 recipes.map(recipe => (

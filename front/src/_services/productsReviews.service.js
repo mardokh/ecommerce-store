@@ -4,7 +4,7 @@ import Axios from "./caller.service"
 
 // GET REVIEWS //
 let getProductReview = (productId) => {
-    return Axios.get(`/reviews/products?productId=${productId}`)
+    return Axios.get(`/reviews/products/${productId}`)
 }
 
 // CREATE REVIEW //

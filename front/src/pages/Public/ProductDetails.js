@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react"
-import { useParams, Link } from "react-router-dom"
+import { useParams, Link, useNavigate } from "react-router-dom"
 import { productService } from "../../_services/products.service"
 import "../../styles/pages.public/product_details.css"
 //import ProductNotes from "../../components/public/productNotes"
@@ -7,9 +7,10 @@ import "../../styles/pages.public/product_details.css"
 import ProductsReviews from "../../components/public/ProductsReviews"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 //import { productsReviewsService } from "../../_services/productsReviews.service"
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
-import { useSelector } from 'react-redux'
+import { shoppingSerive } from '../../_services/shoppingCart.service'
+import { updatefavsCarts } from '../../redux/reducers/favCartSlice'
 
 
 const ProductDetails = () => {
@@ -26,11 +27,16 @@ const ProductDetails = () => {
 
     // REDUX //
     const havePrdComment = useSelector((state) => state.havePrdComment.status)
+    const favCartCount = useSelector((state) => state.favCartCount.count)
     const dispatch = useDispatch()
 
 
     // GET ID PARAMS
     const {id} = useParams()
+
+
+    // Navigate
+    const navigate = useNavigate()
 
 
     // REFERENCES //
@@ -86,10 +92,22 @@ const ProductDetails = () => {
         sideImagesContainer.current.scrollTo({top: newScroll, behavior: 'smooth'})
     }
 
-
     // REVIWES FORM HANDLER //
     const dispRviewsForm = () => {
         dispatch(updatePrdReveiwDisplay({status: true}))
+    }
+
+
+    // ADD PRODUCT TO SHOPPING CARTS
+    const addToCart = async (productId) => {
+        try {
+            await shoppingSerive.shoppingCreate({ id: productId })
+            await shoppingSerive.shoppingGet()
+            dispatch(updatefavsCarts({count: favCartCount + 1}))
+            navigate('/panier')
+        } catch (err) {
+            console.error(err)
+        }
     }
     
 
@@ -184,7 +202,7 @@ const ProductDetails = () => {
                         </div>
                     </div>
                     <div className="details_shopping_add_favorite_container">
-                        <button className="details_shopping_add_btn">Ajouter au panier</button>
+                        <button className="details_shopping_add_btn" onClick={() => addToCart(product.id)}>Ajouter au panier</button>
                         <button className="details_shopping_command_btn">Commander</button>
                     </div>
                     {/*<pre className="details_product_details">{product.details}</pre>*/}

@@ -4,7 +4,7 @@ import Axios from "./caller.service"
 
 // GET ALL REVIEWS //
 let getRecipesReviews = (recipeId) => {
-    return Axios.get(`/reviews/recipes?recipeId=${recipeId}`)
+    return Axios.get(`/reviews/recipes/${recipeId}`)
 }
 
 // CREATE REVIEW //

@@ -6,7 +6,7 @@ import { tokenService } from "./token.service"
 
 // USER ADD //
 let userAdd = (credentials) => {
-    return Axios.put('/user/add', credentials)
+    return Axios.put('/user/create', credentials)
 }
 
 

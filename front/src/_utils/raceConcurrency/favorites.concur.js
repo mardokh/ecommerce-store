@@ -9,13 +9,13 @@ const FavoritesConcur = ({exist, deleted}) => {
             {exist ? (
                 <div className='favorites_concur_exist'>
                     <p>Erreur</p>
-                    <p>Ce produit exist deja dans les favoris</p>
+                    <p>Ce favoris exist deja dans votre liste</p>
                     <button onClick={() => window.location.reload()}>continuer</button>
                 </div>
             ):deleted &&
                 <div className='favorites_concur_deleted'>
                     <p>Erreur</p>
-                    <p>Ce produit a été précédemment supprimé des favoris</p>
+                    <p>Ce favoris a été précédemment supprimé de la liste</p>
                     <button onClick={() => window.location.reload()}>continuer</button>
                 </div>
             }

@@ -49,10 +49,10 @@ const SingIn = () => {
             const res = await UserService.userLogin(credentials)
 
             // Save token to local storage
-            UserService.saveToken(res.data.access_token)
+            UserService.saveToken(res.data.data.access_token)
 
             // Set connected cookie
-            Cookies.set('userId', res.data.user_id, { expires: 1/24 })
+            Cookies.set('userId', res.data.data.user_id, { expires: 1/24 })
 
             // Redirect
             navigate(`/user/account/${res.data.user_id}`)

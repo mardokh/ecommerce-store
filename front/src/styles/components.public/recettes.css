@@ -100,7 +100,7 @@
     color: gray;
 }
 
-.recette_rating_star_container { 
+.recette_rating_star_container {
     display: flex;
     width: 110px;
     font-size: 22px;
@@ -108,8 +108,8 @@
 
 
 .recette_rating_star_enable {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .recette_rating_star_enable polygon {
@@ -119,8 +119,8 @@
 }
 
 .recette_rating_star_disable {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
 }
 
 .recette_rating_star_disable polygon { 

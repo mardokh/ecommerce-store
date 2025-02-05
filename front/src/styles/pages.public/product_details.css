@@ -68,6 +68,10 @@
     cursor: pointer;
 }
 
+.details_shopping_add_btn:hover, .details_shopping_command_btn:hover {
+    background-color: rgb(25, 157, 150);
+}
+
 .details_info_container {
     height: 600px;
     width: 100%;
