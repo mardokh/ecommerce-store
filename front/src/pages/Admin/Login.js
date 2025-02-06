@@ -51,8 +51,6 @@ const AdminLogin = () => {
             // API call for send credentials
             const res = await AdminService.adminLogin(credentials)
 
-            console.log(res)
-
             // Save token to local storage
             AdminService.saveToken(res.data.data.access_token)
 
@@ -70,10 +68,10 @@ const AdminLogin = () => {
     return (
             <form className="loginAdmin_form_container" onSubmit={submitFrom}>
                 <div className="loginAdmin_input_container">
-                    <input type="text" name="identifiant" placeholder="identifiant" onChange={(e) => inputChange(e.target.name, e.target.value)}/>
+                    <input type="email" name="email" placeholder="Adresse e-mail" onChange={(e) => inputChange(e.target.name, e.target.value)}/>
                 </div>
                 <div className="loginAdmin_input_container">
-                    <input type="password" name="password" placeholder="password" onChange={(e) => inputChange(e.target.name, e.target.value)}/>
+                    <input type="password" name="password" placeholder="Mot de passe" onChange={(e) => inputChange(e.target.name, e.target.value)}/>
                 </div>
                 <div className="loginAdmin_input_container">
                     <input className="loginAdmin_submit_btn" type="submit" value="connexion"/>

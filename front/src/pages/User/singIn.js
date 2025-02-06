@@ -69,7 +69,7 @@ const SingIn = () => {
             <p className="user_connection_form_title">connecter vous</p>
             <form className="user_connection_form" onSubmit={submitFrom}>
                 <div className="user_connection_input_container">
-                    <input type="email" name="identifiant" placeholder="votre adresse email" onChange={(e) => inputChange(e.target.name, e.target.value)} />
+                    <input type="email" name="email" placeholder="Adresse e-mail" onChange={(e) => inputChange(e.target.name, e.target.value)} />
                 </div>
                 <div className="user_connection_input_container">
                     <input type="password" name="password" placeholder="mot de passe" onChange={(e) => inputChange(e.target.name, e.target.value)} />
