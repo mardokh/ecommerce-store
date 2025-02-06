@@ -43,13 +43,10 @@ exports.createUser = async (req, res) => {
         }
 
         // Password hash
-        const hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
-
-        // Update password with hash
-        req.body.password = hash
+        const hashPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
 
         // Create user
-        await Users.create({firstName, lastName, email, password})
+        await Users.create({firstName, lastName, email, password: hashPass})
 
         // Success response 
         return res.status(201).json({data: [], message: 'User created', type: "Success"})
@@ -57,31 +54,30 @@ exports.createUser = async (req, res) => {
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
-
 }
 
 // LOGIN USER //
 exports.loginUser = async (req, res) => {
     try {
         // Extract inputs
-        const {identifiant, password} = req.body
+        const {email, password} = req.body
 
         // Check if user exist
-        const user = await Users.findOne({where: {email: identifiant}})
+        const user = await Users.findOne({where: {email}})
         if (user === null) {
-            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
+            return res.status(401).json({data: [], message: 'Mot de passe ou email incorrect', type: "Failed"})
         }
 
         // Check password
         const passe = await bcrypt.compare(password, user.password)
         if (!passe) {
-            return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
+            return res.status(401).json({data: [], message: 'Mot de passe ou email incorrect', type: "Failed"})
         }
 
         // Generate json web token
         const token = jwt.sign({
             id: user.id,
-            identifiant: user.firstName
+            email: user.email
         }, process.env.JWT_SECRET, {expiresIn: "24h"})
 
         // Success response

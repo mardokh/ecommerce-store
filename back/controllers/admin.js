@@ -9,22 +9,19 @@ const jwt = require('jsonwebtoken')
 exports.createAdmin = async (req, res) => {
     try {
         // Extract inputs
-        const {identifiant, password} = req.body
+        const {lastName, firstName, email, password} = req.body
 
         // Check if admin exist
-        const admin = await Admin.findOne({where: {identifiant}})
+        const admin = await Admin.findOne({where: {email}})
         if (admin !== null) {
             return res.status(409).json({data: [], message: 'This admin already exist', type: "Failed"})
         }
 
         // Password hash
-        const hash = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
-        
-        // Update password with hash
-        req.body.password = hash
+        const hashedPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
 
         // Create admin
-        await Admin.create({identifiant, password})
+        await Admin.create({lastName, firstName, email, password: hashedPass})
 
         // Success response
         return res.json({data: [], message: 'Admin created', type: "Success"})
@@ -36,13 +33,12 @@ exports.createAdmin = async (req, res) => {
 
 // LOGIN ADMIN //
 exports.loginAdmin = async (req, res) => {
-
     try {
         // Get data from body request 
-        const {identifiant, password} = req.body       
+        const {email, password} = req.body
 
         // Check if admin match
-        const admin = await Admin.findOne({where: {identifiant: identifiant}})
+        const admin = await Admin.findOne({where: {email}})
         if (admin === null) {
             return res.status(401).json({data: [], message: 'Mot de passe ou identifiant incorrect', type: "Failed"})
         }
@@ -56,7 +52,7 @@ exports.loginAdmin = async (req, res) => {
         // Generate json web token
         const token = jwt.sign({
             id: admin.id,
-            identifiant: admin.identifiant
+            email: admin.email
         }, process.env.JWT_SECRET, {expiresIn: "24h"})
 
         // Success response

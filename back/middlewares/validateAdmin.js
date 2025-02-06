@@ -1,21 +1,32 @@
 const { body, param, validationResult } = require('express-validator')
 
 
-const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-%]+$/;
-
 // VALIDATE CREATE USER //
 const validateCreateAdmin = [
-    body('identifiant')
-        .notEmpty().withMessage('Le champ prenom est requis')
-        .isLength({ max: 50 }).withMessage('Le champ prenom ne doit pas dépasse 50 caractères')
-        .matches(safeTextRegex).withMessage('Le champ prenom contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+    body('lastName')
+        .notEmpty().withMessage('Le champ Nom est requis').bail()
+        .isLength({ max: 20 }).withMessage('Votre Nom ne doit pas excéder 30 caractères').bail()
+        .isAlpha().withMessage('Votre Nom doit contenir seulment des lettres').bail()
+        .trim().escape(),
+
+    body('firstName')
+        .notEmpty().withMessage('Le champ Prenom est requis').bail()
+        .isLength({ max: 20 }).withMessage('Votre Prenom ne doit pas excéder 30 caractères').bail()
+        .isAlpha().withMessage('Votre Prenom doit contenir seulment des lettres').bail()
+        .trim().escape(),
+
+    body('email')
+        .notEmpty().withMessage('Le champ Email est requis').bail()
+        .isEmail().withMessage('Vote Email doit etre une adresse valide').bail(),
 
     body('password')
-        .notEmpty().withMessage('Le champ nom est requis')
-        .isLength({ max: 50 }).withMessage('Le champ nom ne doit pas dépasse 50 caractères')
-        .matches(safeTextRegex).withMessage('Le champ nom contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Le champ Mot de passe est requis').bail()
+        .isLength({ min: 8, max: 12 }).withMessage('Le Mot de passe doit contenir entre 8 et 12 caractères').bail()
+        .matches(/\d/).withMessage('Le Mot de passe doit contenir au moins un chiffre').bail()
+        .matches(/[A-Z]/).withMessage('Le Mot de passe doit contenir au moins une lettre majuscule').bail()
+        .matches(/[a-z]/).withMessage('Le Mot de passe doit contenir au moins une lettre minuscule').bail()
+        .matches(/^[a-zA-Z0-9]+$/).withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
+        .trim().escape(),
 
     (req, res, next) => {
         const errors = validationResult(req);
@@ -28,17 +39,11 @@ const validateCreateAdmin = [
 
 // VALIDATE CREATE USER //
 const validateLoginAdmin = [
-    body('identifiant')
-        .notEmpty().withMessage('Le champ prenom est requis')
-        .isLength({ max: 50 }).withMessage('Le champ prenom ne doit pas dépasse 50 caractères')
-        .matches(safeTextRegex).withMessage('Le champ prenom contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+    body('email')
+        .notEmpty().withMessage('Une adresse email est requise').bail(),
 
     body('password')
-        .notEmpty().withMessage('Le champ nom est requis')
-        .isLength({ max: 50 }).withMessage('Le champ nom ne doit pas dépasse 50 caractères')
-        .matches(safeTextRegex).withMessage('Le champ nom contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Un mot de passe est requis').bail(),
 
     (req, res, next) => {
         const errors = validationResult(req);

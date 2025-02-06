@@ -9,9 +9,21 @@ module.exports = (sequelize, DataTypes) => {
             primaryKey: true,
             autoIncrement: true
         },
-        identifiant: {
+        firstName: {
             type: DataTypes.STRING(255),
             allowNull: false,
+        },
+        lastName: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+        },
+        email: {
+            type: DataTypes.STRING(255),
+            allowNull: false,
+            unique: 'email',
+            validate: {
+                isEmail: true
+            }
         },
         password: {
             type: DataTypes.STRING(64),
