@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
             defaultValue: ''
         },
         details: {
-            type: DataTypes.STRING(255),
+            type: DataTypes.TEXT,
             allowNull: false,
             defaultValue: ''
         },

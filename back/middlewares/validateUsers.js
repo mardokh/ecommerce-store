@@ -5,7 +5,7 @@ const { body, param, validationResult } = require('express-validator')
 const validateGetUser = [
     param('id')
         .isInt({ min: 1 })
-        .withMessage('Product ID must be a positive integer'),
+        .withMessage('User ID must be a positive integer'),
 
     (req, res, next) => {
         const errors = validationResult(req)
@@ -20,13 +20,13 @@ const validateGetUser = [
 const validateCreateUser = [
     body('lastName')
         .notEmpty().withMessage('Le champ Nom est requis').bail()
-        .isLength({ max: 20 }).withMessage('Votre Nom ne doit pas excéder 30 caractères').bail()
+        .isLength({ max: 20 }).withMessage('Votre Nom ne doit pas excéder 20 caractères').bail()
         .isAlpha().withMessage('Votre Nom doit contenir seulment des lettres').bail()
         .trim().escape(),
 
     body('firstName')
         .notEmpty().withMessage('Le champ Prenom est requis').bail()
-        .isLength({ max: 20 }).withMessage('Votre Prenom ne doit pas excéder 30 caractères').bail()
+        .isLength({ max: 20 }).withMessage('Votre Prenom ne doit pas excéder 20 caractères').bail()
         .isAlpha().withMessage('Votre Prenom doit contenir seulment des lettres').bail()
         .trim().escape(),
 
@@ -40,7 +40,7 @@ const validateCreateUser = [
         .matches(/\d/).withMessage('Le Mot de passe doit contenir au moins un chiffre').bail()
         .matches(/[A-Z]/).withMessage('Le Mot de passe doit contenir au moins une lettre majuscule').bail()
         .matches(/[a-z]/).withMessage('Le Mot de passe doit contenir au moins une lettre minuscule').bail()
-        .matches(/^[a-zA-Z0-9]+$/).withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
+        .isAlphanumeric().withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
         .trim().escape(),
 
     (req, res, next) => {

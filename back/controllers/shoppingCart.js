@@ -11,7 +11,6 @@ const cookieName = 'client_id_shopping_carts'
 
 // GET CARTS //
 exports.getShoppingCart = async (req, res) => {
-
     try {
         // Extract client id 
         const client_id = req.cookies?.[cookieName]
@@ -48,7 +47,6 @@ exports.getShoppingCart = async (req, res) => {
 
 // CREATE CART //
 exports.createShoppingCart = async (req, res) => {
-
     try {
         // Extract id
         const product_id = req.body.id
@@ -80,7 +78,6 @@ exports.createShoppingCart = async (req, res) => {
 
 // DELETE CART //
 exports.deleteShoppingCart = async (req, res) => {
-
     try {
         // Extract params
         const limitOne = req.params.limit

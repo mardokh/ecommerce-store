@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-%]+$/;
+const safeTextRegex = /^[^<>]*$/;
 
 // Function to save files to disk
 const saveFiles = (req) => {
@@ -42,20 +42,21 @@ const validateGetProduct = [
 // VALIDATE CREATE PRODUCT //
 const validateCreateProduct = [
     body('name')
-        .notEmpty().withMessage('Le champ du nom de produit est requis')
-        .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
-        .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Le nom du produit est requis').bail()
+        .isLength({ max: 100 }).withMessage('Le nom du produit ne doit pas dépasser 100 caractères').bail()
+        .matches(safeTextRegex).withMessage('Le nom du produit contient des caractères invalides').bail()
+        .trim(),
 
     body('details')
-        .notEmpty().withMessage('Le champ details est requis')
-        .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Les détails du produit sont requis').bail()
+        .isLength({ max: 500 }).withMessage('Les détails du produit ne doivent pas dépasser 500 caractères').bail()
+        .matches(safeTextRegex).withMessage('Les détails du produit contiennent des caractères invalides').bail()
+        .trim(),
 
     body('price')
-        .isFloat({ min: 0.01 })
-        .withMessage('Le champ prix doit contenir un nombre positif'),
+        .notEmpty().withMessage('Le prix du produit est requis').bail()
+        .isFloat({ min: 0.01 }).withMessage('Le prix doit etre un nombre positif').bail()
+        .trim(),
 
     body('image')
         .custom((value, { req }) => {
@@ -80,31 +81,28 @@ const validateCreateProduct = [
 
 // VALIDATE UPDATE PRODUCT //
 const validateUpdateProduct = [
-    body('id')
-        .isInt({ min: 1 })
-        .withMessage('Product ID must be a positive integer'),
-
     body('name')
-        .notEmpty().withMessage('Le champ du nom de produit est requis')
-        .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
-        .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Le nom du produit est requis').bail()
+        .isLength({ max: 150 }).withMessage('Le nom du produit ne doit pas dépasser 150 caractères').bail()
+        .matches(safeTextRegex).withMessage('Le nom du produit contient des caractères invalides').bail()
+        .trim(),
 
     body('details')
-        .notEmpty().withMessage('Le champ details est requis')
-        .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Les détails du produit sont requis').bail()
+        .isLength({ max: 500 }).withMessage('Les détails du produit ne doivent pas dépasser 500 caractères').bail()
+        .matches(safeTextRegex).withMessage('Les détails du produit contiennent des caractères invalides').bail()
+        .trim(),
 
     body('price')
-        .isFloat({ min: 0.01 })
-        .withMessage('Le champ prix doit être un nombre positif'),
+        .notEmpty().withMessage('Le prix du produit est requis').bail()
+        .isFloat({ min: 0.01 }).withMessage('Le champ prix doit contenir un nombre positif').bail()
+        .trim(),
 
     body('image')
     .custom((value, { req }) => {
         if (value) {
             if (!safeTextRegex.test(value)) {
-                throw new Error('Le champ image contient des caractères invalides');
+                throw new Error('Image field content invalide characters');
             }
         }
         return true;

@@ -25,7 +25,7 @@ const validateCreateAdmin = [
         .matches(/\d/).withMessage('Le Mot de passe doit contenir au moins un chiffre').bail()
         .matches(/[A-Z]/).withMessage('Le Mot de passe doit contenir au moins une lettre majuscule').bail()
         .matches(/[a-z]/).withMessage('Le Mot de passe doit contenir au moins une lettre minuscule').bail()
-        .matches(/^[a-zA-Z0-9]+$/).withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
+        .isAlphanumeric().withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
         .trim().escape(),
 
     (req, res, next) => {

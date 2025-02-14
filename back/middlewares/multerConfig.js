@@ -22,7 +22,7 @@ const multerUpload = multer({
     fileFilter: fileFilter
 }).fields([
     { name: 'image', maxCount: 1 },
-    { name: 'images', maxCount: 10 }
+    { name: 'images', maxCount: 8 }
 ]);
 
 // Middleware for handling errors and validation
