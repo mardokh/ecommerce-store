@@ -1,56 +1,42 @@
 // MODULES IMPORTS //
-import React, {useState, useRef, useEffect, memo} from 'react'
+import React, {useState, useRef, useEffect} from 'react'
 import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
+import {NmeMaxLength, NameAllowedChar, DetailsMaxLength, DetailsAllowedChar, PriceAllowedNumb} from '../../_utils/regex/addProduct.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
-const ImagesDisplay = memo(({ images, imageRef, deleteImage, product }) => (
-    <div className="add_product_image_container" ref={imageRef}>
-        {product.images.length > 0 && (
-            images.map((image, index) => (
-                <div className="add_product_images_container" key={index}>
-                    <i className="fa-solid fa-circle-xmark" id='add_product_images_close_icon' onClick={() => deleteImage(index)}></i>
-                    <div className="add_product_images" style={{backgroundImage: `url('${URL.createObjectURL(image)}')`}}></div>
-                </div>
-            ))
-        )}
-    </div>
-), (prevProps, nextProps) => {
-    // Comparaison des props pour déterminer si le composant doit être mis à jour
-    return prevProps.images === nextProps.images;
-});
-
-
-// MAIN FUNCTION
+// MAIN FUNCTION //
 const AddProduct = () => {
 
     // STATES //
-    const [product, setProduct] = useState({name: "", price: "", details: "", image: "", images: []})
+    const [product, setProduct] = useState({name: "", price: "", details: "", image: null, images: []})
     const [imageUrl, setImageUrl] = useState()
+    const [imagesUrl, setImagesUrl] = useState([])
     const [loader, setLoader] = useState(false)
     const [onLoader, setOnLoader] = useState(false)
+    const [imageUploaded, setImageUploaded] = useState(false)
+    const [nameError, setNameError] = useState("")
+    const [detailsError, setDetailsError] = useState("")
+    const [priceError, setPriceError] = useState("")
 
 
     // REFERENCES //
-    const imageFlag = useRef(false)
-    const imagesDisplayContainerRef = useRef()
+    const imagesContainerRef = useRef()
     const priceInputRef = useRef()
+    const formRef = useRef()
 
 
-    // IMAGES CONTAINER SCROLL //
-    const scrollToRightEnd = () => {
-        if (imagesDisplayContainerRef.current) {
-            imagesDisplayContainerRef.current.scrollTo({left: imagesDisplayContainerRef.current.scrollWidth, behavior: 'smooth'})
-        }
-    }
-
+    // IMAGES CONTAINER HORIZONTAL SCROLL //
     useEffect(() => {
-        scrollToRightEnd()
+        if (imagesContainerRef.current) {
+            imagesContainerRef.current.scrollTo({left: imagesContainerRef.current.scrollWidth, behavior: 'smooth'})
+        }
     }, [product])
 
-    // Disable scroll behavior on price input field
+
+    // Disable scroll on price field
     useEffect(() => {
         const handleWheel = (e) => {
             e.preventDefault();
@@ -60,26 +46,28 @@ const AddProduct = () => {
                 e.preventDefault();
             }
         };
-
         const priceInput = priceInputRef.current;
         priceInput.addEventListener('wheel', handleWheel);
         priceInput.addEventListener('keydown', handleKeyDown);
-
         return () => {
             priceInput.removeEventListener('wheel', handleWheel);
             priceInput.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
     
-    
-    // FORM SUBMIT //
+
+    // FORM SUBMIT HANDLER //
     const handleSubmit = async (e) => {
         e.preventDefault()
+        if (!product.name || !product.details || !product.price || !product.image) {
+            if (!product.name) setNameError("Le nom du produit est requis");
+            if (!product.details) setDetailsError("Les détails du produit sont requis");
+            if (!product.price) setPriceError("Le prix du produit est requis");
+            return;
+        }        
         try {
-            // Load data
             setOnLoader(true)
             setLoader(true)
-    
             const formData = new FormData()
             formData.append('name', product.name)
             formData.append('price', product.price)
@@ -88,22 +76,14 @@ const AddProduct = () => {
             for (const file of product.images) {
                 formData.append('images', file)
             }
-    
-            // Api call for add product
             await productService.createProduct(formData)
-    
-            setProduct({ name: "", price: "", details: "", image: "", images: [] })
-
+            setProduct({ name: "", price: "", details: "", image: null, images: [] })
+            formRef.current.reset()
             setImageUrl("")
-
-            imageFlag.current = false
-    
-            // Update loader
+            setImagesUrl([])
+            setImageUploaded(false)
             setLoader(false)
-    
-            // Close windows
             setTimeout(() => setOnLoader(false), 2000)
-
         }
         catch (err) {
             if (err.response?.status === 409) {
@@ -115,7 +95,7 @@ const AddProduct = () => {
     }
     
 
-    // UPDATE INPUTS STATE //
+    // NAME_DETAILS_PRICE FIELDS HANDLER //
     const handleInputChange = (name, value) => {
         setProduct({
             ...product,
@@ -123,46 +103,84 @@ const AddProduct = () => {
         })
     }
 
-    // UPDATE IMAGE STATE //
+
+    // IMAGE FIELDS HANDLER //
     const handleImageChange = (image) => {
-        
         setProduct({
             ...product,
             image: image
         })
+        const newUrl = URL.createObjectURL(image)
+        setImageUrl(newUrl)
+        setImageUploaded(true)
+    }
 
-        if (image) {
-            const urlImage = URL.createObjectURL(image)
-            setImageUrl(urlImage)
-            imageFlag.current = true
+
+    // IMAGES FIELDS HANDLER //
+    const handleImagesChange = (e) => {
+        const images = Array.from(e.target.files)
+        setProduct({
+            ...product,
+            images: [...product.images, ...images]
+        })
+        const newUrls = images.map(image => URL.createObjectURL(image))
+        setImagesUrl([...imagesUrl, ...newUrls])
+    }
+
+
+    // IMAGES PREVIEW DELETE //
+    const deleteImage = (index) => {
+        setImagesUrl(prevImages => {
+            return prevImages.filter((_, i) => i !== index);
+        });
+        setProduct(prevProduct => ({
+            ...prevProduct,
+            images: prevProduct.images.filter((_, i) => i !== index)
+        }));
+    };
+
+
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'name') {
+            if (!value) {
+                setNameError("Le nom du produit est requis")
+            } else if (!NmeMaxLength.test(value)) {
+                setNameError("Le nom du produit ne doit pas dépasser 100 caractères")
+            } else if (!NameAllowedChar.test(value)) {
+                setNameError("Le nom du produit contient des caractères invalides")
+            } else {
+                setNameError("")
+                handleInputChange(name, value)
+            }
+        }
+        if (name === 'details') {
+            if (!value) {
+                setDetailsError("Les détails du produit sont requis")
+            } else if (!DetailsMaxLength.test(value)) {
+                setDetailsError("Les détails du produit ne doivent pas dépasser 500 caractères")
+            } else if (!DetailsAllowedChar.test(value)) {
+                setDetailsError("Les détails du produit contiennent des caractères invalides")
+            } else {
+                setDetailsError("")
+                handleInputChange(name, value)
+            }
+        }
+        if (name === 'price') {
+            if (!value)  {
+                setPriceError("Le prix du produit est requis")
+            } else if (!PriceAllowedNumb.test(value)) {
+                setPriceError("Le prix doit etre un nombre positif")
+            } else {
+                setPriceError("")
+                handleInputChange(name, value)
+            }
         }
     }
 
 
-    // UPDATE IMAGES STATE //
-    const handleImagesChange = (e) => {
-        const newImages = Array.from(e.target.files).map(image => image)
-        setProduct(prevProduct => ({
-            ...prevProduct,
-            images: [...prevProduct.images, ...newImages]
-        }))
-    }
-
-
-    // IMAGES ITEM DELETE //
-    const deleteImage = (index) => {
-        setProduct(prevImages => {
-            const updatedImages = [...prevImages.images]
-            updatedImages.splice(index, 1)
-            return { ...prevImages, images: updatedImages }
-        })
-    }
-    
-
-
     // MAIN RENDERING //
     return (
-
         <div className="add_product_global_container">
             {onLoader &&
                 <div className='add_product_load_success_global_container'>
@@ -186,20 +204,42 @@ const AddProduct = () => {
                 <div className='add_product_form_container'>
                     <div className='add_product_principale_image_container'>
                         <p>Aperçu image principale</p>
-                        <div className="add_product_image" style={{backgroundImage: `url('${!imageFlag.current ? AddImage : imageUrl}')`}}></div>
+                        <div className="add_product_image" style={{backgroundImage: `url('${!imageUploaded ? AddImage : imageUrl}')`}}></div>
                     </div>
-                    <div className='add_product_container'>
+                    <form className='add_product_container' onSubmit={handleSubmit} ref={formRef}>
                         <div className='add_product_item'>
                             <label>Name</label>
-                            <input type='text' name='name' value={product.name} onChange={(e) => handleInputChange(e.target.name, e.target.value)}/>
+                            <input
+                                type='text' 
+                                name='name' 
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            />
+                            {nameError.length > 0 &&
+                                <p className='add_product_error'>{nameError}</p>
+                            }
                         </div>
                         <div className='add_product_item'>
                             <label>Details</label>
-                            <textarea name='details' value={product.details} onChange={(e) => handleInputChange(e.target.name, e.target.value)}></textarea>
+                            <textarea
+                                name='details'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            >
+                            </textarea>
+                            {detailsError.length > 0 &&
+                                <p className='add_product_error'>{detailsError}</p>
+                            }
                         </div>
                         <div className='add_product_item'>
                             <label>Price</label>
-                            <input type='number' name='price' value={product.price} onChange={(e) => handleInputChange(e.target.name, e.target.value)} ref={priceInputRef}></input>
+                            <input
+                                type='number' 
+                                name='price' 
+                                ref={priceInputRef}
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            />
+                            {priceError.length > 0 &&
+                                <p className='add_product_error'>{priceError}</p>
+                            }
                         </div>
                         <div className='add_product_item add_product_img_input'>
                             <label>image principale</label>
@@ -209,18 +249,26 @@ const AddProduct = () => {
                             <label>autres images</label>
                             <input type="file" name="images[]" onChange={handleImagesChange} multiple /> 
                         </div>
-                    </div>
+                        <div className='add_product_btn_container'>
+                            <input type='submit' className='btn_new_product_add' value='ajouter'/>
+                        </div>
+                    </form>
                 </div>
                 <div className='add_product_images_secondaire_container'>
                     <p>Aperçu des images secondaire</p>
-                    <ImagesDisplay images={product.images} imageRef={imagesDisplayContainerRef} deleteImage={deleteImage} product={product} />
-                </div>
-                <div className='add_product_btn_container'>
-                    <button className='btn_new_product_add' onClick={handleSubmit}>ajouter</button>
+                    <div className="add_product_image_container" ref={imagesContainerRef}>
+                        {imagesUrl.length > 0 && (
+                            imagesUrl.map((image, index) => (
+                                <div className="add_product_images_container" key={index}>
+                                    <i className="fa-solid fa-circle-xmark" id='add_product_images_close_icon' onClick={() => deleteImage(index)}></i>
+                                    <div className="add_product_images" style={{backgroundImage: `url('${image}')`}}></div>
+                                </div>
+                            ))
+                        )}
+                    </div>
                 </div>
             </div>
-        </div>
-        
+        </div>   
     )
 }
 

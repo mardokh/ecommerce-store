@@ -17,6 +17,7 @@
 
 .user_inscription_form_title {
     margin: 20px;
+    font-weight: bold;
 }
 
 .user_inscription_form_container {
@@ -50,7 +51,7 @@
     margin-top: 30px;
 }
 
-.user_inscription_submit_btn input {
+.user_inscription_submit_btn input[type = 'submit'] {
     background-color: #498703;
     color: white;
     font-size: 14px;
@@ -62,6 +63,10 @@
     padding: 0;
     width: 200px;
     height: 40px;
+}
+
+.user_inscription_submit_btn input[type = 'submit']:hover {
+    background-color: green;
 }
 
 
@@ -78,12 +83,6 @@
     transition: 0.5s;
 }
 
-.user_inscription_email_exist {
-    margin-top: 10px;
-    color: rgb(203, 46, 46);
-    font-size: 12px;
-}
-
 .user_inscription_connect {
     text-align: center;
     font-size: 13px;
@@ -98,6 +97,12 @@
 
 .user_inscription_submit_btn span a {
     color: green;
+}
+
+.error-message {
+    font-size: 12px;
+    color: red;
+    margin-top: 8px;
 }
 
 /* MEDIA QUERY */
