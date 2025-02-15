@@ -19,29 +19,31 @@ const validateGetUser = [
 // VALIDATE CREATE USER //
 const validateCreateUser = [
     body('lastName')
-        .notEmpty().withMessage('Le champ Nom est requis').bail()
-        .isLength({ max: 20 }).withMessage('Votre Nom ne doit pas excéder 20 caractères').bail()
-        .isAlpha().withMessage('Votre Nom doit contenir seulment des lettres').bail()
-        .trim().escape(),
+        .notEmpty().withMessage('Votre Nom est requis').bail()
+        .isLength({max: 50}).withMessage('Votre Nom ne doit pas dépasser 50 caractères').bail()
+        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/).withMessage('Votre Nom doit contenir seulement des lettres et des espaces').bail()
+        .trim(),
 
     body('firstName')
-        .notEmpty().withMessage('Le champ Prenom est requis').bail()
-        .isLength({ max: 20 }).withMessage('Votre Prenom ne doit pas excéder 20 caractères').bail()
-        .isAlpha().withMessage('Votre Prenom doit contenir seulment des lettres').bail()
-        .trim().escape(),
+        .notEmpty().withMessage('Votre prenom est requis').bail()
+        .isLength({ max: 50 }).withMessage('Votre prenom ne doit pas dépasser 50 caractères').bail()
+        .matches(/^[A-Za-zÀ-ÖØ-öø-ÿ\s]+$/).withMessage('Votre Prenom doit contenir seulement des lettres et des espaces').bail()
+        .trim(),
 
     body('email')
-        .notEmpty().withMessage('Le champ Email est requis').bail()
-        .isEmail().withMessage('Vote Email doit etre une adresse valide').bail(),
+        .notEmpty().withMessage('Une adresse e-mail est requise').bail()
+        .isLength({max: 50}).withMessage('Votre adresse e-mail ne doit pas dépasser 50 caractères').bail()
+        .isEmail().withMessage('Votre e-mail doit etre une adresse valide').bail()
+        .trim(),
 
     body('password')
-        .notEmpty().withMessage('Le champ Mot de passe est requis').bail()
-        .isLength({ min: 8, max: 12 }).withMessage('Le Mot de passe doit contenir entre 8 et 12 caractères').bail()
-        .matches(/\d/).withMessage('Le Mot de passe doit contenir au moins un chiffre').bail()
-        .matches(/[A-Z]/).withMessage('Le Mot de passe doit contenir au moins une lettre majuscule').bail()
-        .matches(/[a-z]/).withMessage('Le Mot de passe doit contenir au moins une lettre minuscule').bail()
-        .isAlphanumeric().withMessage('Le Mot de passe doit contenir uniquement des lettres et des chiffres').bail()
-        .trim().escape(),
+        .notEmpty().withMessage('Un mot de passe est requis').bail()
+        .isLength({min: 8, max: 20}).withMessage('Votre mot de passe doit contenir entre 8 et 20 caractères').bail()
+        .matches(/\d/).withMessage('Votre mot de passe doit contenir au moins un chiffre').bail()
+        .matches(/[A-Z]/).withMessage('Votre mot de passe doit contenir au moins une lettre majuscule').bail()
+        .matches(/[a-z]/).withMessage('Votre mot de passe doit contenir au moins une lettre minuscule').bail()
+        .matches(/^[A-Za-z0-9!@#$%^&*()_+={}\[\]:;"',.?/\\|-]*$/).withMessage('Votre mot de passe contien des caractères invalides')
+        .trim(),
 
     (req, res, next) => {
         const errors = validationResult(req);
