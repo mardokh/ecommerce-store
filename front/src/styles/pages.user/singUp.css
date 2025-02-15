@@ -99,14 +99,14 @@
     color: green;
 }
 
-.error-message {
+.user_inscription_error {
     font-size: 12px;
     color: red;
     margin-top: 8px;
 }
 
-/* MEDIA QUERY */
 
+/* MEDIA QUERY */
 @media only screen and (max-width: 850px) {
 
     .user_inscription_form_global_container {

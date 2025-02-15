@@ -3,7 +3,7 @@ import React, {useState, useRef, useEffect} from 'react'
 import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import {NmeMaxLength, NameAllowedChar, DetailsMaxLength, DetailsAllowedChar, PriceAllowedNumb} from '../../_utils/regex/addProduct.regex'
+import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, PriceForbidden} from '../../_utils/regex/addProduct.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
@@ -145,9 +145,9 @@ const AddProduct = () => {
         if (name === 'name') {
             if (!value) {
                 setNameError("Le nom du produit est requis")
-            } else if (!NmeMaxLength.test(value)) {
+            } else if (!NameMaxLength.test(value)) {
                 setNameError("Le nom du produit ne doit pas dépasser 100 caractères")
-            } else if (!NameAllowedChar.test(value)) {
+            } else if (!NameForbidden.test(value)) {
                 setNameError("Le nom du produit contient des caractères invalides")
             } else {
                 setNameError("")
@@ -159,7 +159,7 @@ const AddProduct = () => {
                 setDetailsError("Les détails du produit sont requis")
             } else if (!DetailsMaxLength.test(value)) {
                 setDetailsError("Les détails du produit ne doivent pas dépasser 500 caractères")
-            } else if (!DetailsAllowedChar.test(value)) {
+            } else if (!DetailsForbidden.test(value)) {
                 setDetailsError("Les détails du produit contiennent des caractères invalides")
             } else {
                 setDetailsError("")
@@ -169,7 +169,7 @@ const AddProduct = () => {
         if (name === 'price') {
             if (!value)  {
                 setPriceError("Le prix du produit est requis")
-            } else if (!PriceAllowedNumb.test(value)) {
+            } else if (!PriceForbidden.test(value)) {
                 setPriceError("Le prix doit etre un nombre positif")
             } else {
                 setPriceError("")
@@ -213,6 +213,7 @@ const AddProduct = () => {
                                 type='text' 
                                 name='name' 
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                             />
                             {nameError.length > 0 &&
                                 <p className='add_product_error'>{nameError}</p>
@@ -223,6 +224,7 @@ const AddProduct = () => {
                             <textarea
                                 name='details'
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                             >
                             </textarea>
                             {detailsError.length > 0 &&
@@ -236,6 +238,7 @@ const AddProduct = () => {
                                 name='price' 
                                 ref={priceInputRef}
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                             />
                             {priceError.length > 0 &&
                                 <p className='add_product_error'>{priceError}</p>

@@ -1,12 +1,12 @@
 
 // name //
-export const NmeMaxLength = /^.{1,100}$/;
-export const NameAllowedChar = /^[^<>]*$/
+export const NameMaxLength = /^.{1,100}$/;
+export const NameForbidden  = /^[^<>]*$/
 
 // details //
 export const DetailsMaxLength = /^.{1,500}$/;
-export const DetailsAllowedChar = /^[^<>]*$/
+export const DetailsForbidden = /^[^<>]*$/
 
 // Price //
-export const PriceAllowedNumb = /^(?!0(\.0+)?$)(\d+(\.\d+)?|\.\d+)$/
+export const PriceForbidden = /^(?!0(\.0+)?$)(\d+(\.\d+)?|\.\d+)$/
 
