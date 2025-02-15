@@ -6,7 +6,7 @@ import Cookies from 'js-cookie'
 import {lastFirstMaxLength, lastFirstFormatAccept, emailMaxLength, 
     emailFormatAccept, passwordMaxLength, passwordDigit, passwordForbidden,
     passwordUppercase, passwordLowercase
-} from '../../_utils/regex/SingUp.regex'
+} from '../../_utils/regex/user/SingUp.regex'
 
 
 const SingUp = () => {
@@ -168,9 +168,9 @@ const SingUp = () => {
                     }
                 </div>
                 <div className="user_inscription_inputs">
-                    <input 
+                    <input
                         type="password" 
-                        name="password" 
+                        name="password"
                         placeholder="Mot de passe" 
                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
