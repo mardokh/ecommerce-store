@@ -3,7 +3,8 @@ import React, {useState, useRef, useEffect} from 'react'
 import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, PriceForbidden} from '../../_utils/regex/addProduct.regex'
+import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
+        PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS} from '../../_utils/regex/addProduct.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
@@ -20,6 +21,8 @@ const AddProduct = () => {
     const [nameError, setNameError] = useState("")
     const [detailsError, setDetailsError] = useState("")
     const [priceError, setPriceError] = useState("")
+    const [imageError,setImageError] = useState("")
+    const [imagesError,setImagesError] = useState("")
 
 
     // REFERENCES //
@@ -63,6 +66,7 @@ const AddProduct = () => {
             if (!product.name) setNameError("Le nom du produit est requis");
             if (!product.details) setDetailsError("Les détails du produit sont requis");
             if (!product.price) setPriceError("Le prix du produit est requis");
+            if (!product.image) setImageError("Une image principale est requise");
             return;
         }        
         try {
@@ -117,8 +121,7 @@ const AddProduct = () => {
 
 
     // IMAGES FIELDS HANDLER //
-    const handleImagesChange = (e) => {
-        const images = Array.from(e.target.files)
+    const handleImagesChange = (images) => {
         setProduct({
             ...product,
             images: [...product.images, ...images]
@@ -175,6 +178,33 @@ const AddProduct = () => {
                 setPriceError("")
                 handleInputChange(name, value)
             }
+        }
+        if (name === 'image') {
+            if (!value)  {
+                setImageError("Une image principale est requise")
+            } else if (!SUPPORTED_FORMATS.includes(value.type)) {
+                setImageError("Format invalide, (png, jpg, jpeg) seulement")
+            } else if (value.size > MAX_FILE_SIZE) {
+                setImageError("Votre image ne doit pas depassé 2MB")
+            } else {
+                setImageError("")
+                handleImageChange(value)
+            }
+        }
+        if (name === 'images[]') {
+            const images =  Array.from(value)
+            images.map(image => {
+                if (!SUPPORTED_FORMATS.includes(image.type)) {
+                    setImagesError("Format invalide, (png, jpg, jpeg) seulement")
+                } else if (image.size > MAX_FILE_SIZE) {
+                    setImagesError("Votre image ne doit pas depassé 2MB")
+                } else if (images.length > 10 || product.images.length > 10) {
+                    setImagesError("Nombre d'image depassé (maximum 10 images)")
+                } else {
+                    setImagesError("")
+                    handleImagesChange(images)
+                }
+            })
         }
     }
 
@@ -246,11 +276,26 @@ const AddProduct = () => {
                         </div>
                         <div className='add_product_item add_product_img_input'>
                             <label>image principale</label>
-                            <input type='file' name='image' onChange={(e) => handleImageChange(e.target.files[0])} />
+                            <input 
+                                type='file' 
+                                name='image'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
+                            />
+                            {imageError.length > 0 &&
+                                <p className='add_product_error'>{imageError}</p>
+                            }
                         </div>
                         <div className='add_product_item add_product_imgs_input'>
                             <label>autres images</label>
-                            <input type="file" name="images[]" onChange={handleImagesChange} multiple /> 
+                            <input 
+                                type="file" 
+                                name="images[]"
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.files)} multiple
+                            />
+                            {imagesError.length > 0 &&
+                                <p className='add_product_error'>{imagesError}</p>
+                            }
                         </div>
                         <div className='add_product_btn_container'>
                             <input type='submit' className='btn_new_product_add' value='ajouter'/>
