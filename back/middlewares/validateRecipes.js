@@ -3,7 +3,7 @@ const fs = require('fs');
 const path = require('path');
 
 
-const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-%]+$/;
+const safeTextRegex = /^[^<>]*$/;
 
 // Function to save files to disk
 const saveFiles = (req) => {
@@ -42,22 +42,22 @@ const validateGetRecipe = [
 // VALIDATE CREATE RECIPE //
 const validateCreateRecipe = [
     body('name')
-        .notEmpty().withMessage('Le champ du nom de produit est requis')
-        .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
-        .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Le nom de la recette est requis').bail()
+        .isLength({ max: 100 }).withMessage('Le nom de la recette ne doit pas dépasser 100 caractères').bail()
+        .matches(safeTextRegex).withMessage('Le nom de la recette contient des caractères invalides').bail()
+        .trim(),
 
     body('ingredients')
-        .notEmpty().withMessage('Le champ ingredients est requis')
-        .isLength({ max: 500 }).withMessage('Le champ ingredients ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ ingredients contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Les ingredients de la recette sont requis').bail()
+        .isLength({ max: 800 }).withMessage('Les ingredients de la recette ne doivent pas dépasse 800 caractères').bail()
+        .matches(safeTextRegex).withMessage('Les ingredients de la recette contiennent des caractères invalides').bail()
+        .trim(),
 
     body('directions')
-        .notEmpty().withMessage('Le champ directions est requis')
-        .isLength({ max: 500 }).withMessage('Le champ directions ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ directions contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Les directions de recette sont est requises').bail()
+        .isLength({ max: 800 }).withMessage('Les directions de recette ne doivent pas dépasse 800 caractères').bail()
+        .matches(safeTextRegex).withMessage('Les directions de recette contiennent des caractères invalides').bail()
+        .trim(),
 
     body('image')
         .custom((value, { req }) => {
