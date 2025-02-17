@@ -194,11 +194,7 @@ const ProductDetails = () => {
                             <p className="details_description_title">Description</p>
                         </div>
                         <div className="details_product_details_parent_container">
-                            <p>{product.details} To start the day right, Jardin BiO étic has selected this delicious muesli made with no added sugar, a blend of 4 seeds (linseed, sunflower, sesame and pumpkin) and tasty fruits (raisins and figs).
-
-                            High in fibre and minerals and a source of omega-3, this muesli is both delicious and nutritiou
-                            Cereal flakes* 67% (rye*, wheat*, barley*, oat*, corn*)
-                            </p>
+                            <p>{product.details}</p>
                         </div>
                     </div>
                     <div className="details_shopping_add_favorite_container">

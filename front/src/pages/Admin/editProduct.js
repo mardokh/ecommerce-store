@@ -3,18 +3,26 @@ import '../../styles/pages.admin/editProduct.css'
 import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useParams } from "react-router-dom"
-
+import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
+    PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
+} from '../../_utils/regex/addProduct.regex'
 
 
 const EditProduct = () => {
 
     // STATES //
-    const [product, setProduct] = useState({id: null, name: "", price: "", details: "", image: "", images: []})
+    const [product, setProduct] = useState({id: null, name: "", price: "", details: "", image: null, images: []})
     const [imageUrl, setImageUrl] = useState()
     const [isLoading, setIsLoading] = useState(false)
     const [loader, setLoader] = useState(false)
     const [onLoader, setOnLoader] = useState(false)
-    const [imageFlag, setImageFlag] = useState(false)
+    const [imageUploaded, setImageUploaded] = useState(false)
+    const [imagesUrl, setImagesUrl] = useState([])
+    const [nameError, setNameError] = useState("")
+    const [detailsError, setDetailsError] = useState("")
+    const [priceError, setPriceError] = useState("")
+    const [imageError,setImageError] = useState("")
+    const [imagesError,setImagesError] = useState("")
 
 
     // REFERENCE //
@@ -28,24 +36,26 @@ const EditProduct = () => {
 
     // API CALL FOR GET PRODUCT //
     useEffect(() => {
-
-        if (effectFlag.current === false) {
+        if (!effectFlag.current) {
             productService.getOneProduct(id)
                 .then(res => {
+                    const existingImages = res.data.data.product_images.map(item => item); // Extract URLs from DB
                     setProduct({
                         id: res.data.data.id,
                         name: res.data.data.name, 
                         price: res.data.data.price, 
                         details: res.data.data.details, 
                         image: res.data.data.image, 
-                        images: res.data.data.product_images.map(item => item)
-                    })
-                    setIsLoading(true)
+                        images: res.data.data.product_images
+                    });
+                    setImagesUrl(existingImages); // Initialize imagesUrl with DB images
+                    setIsLoading(true);
                 })
-                .catch(err => console.error('Error on useEffect getOneProduct : ', err))
+                .catch(err => console.error('Error on useEffect getOneProduct : ', err));
         }
-        return () => effectFlag.current = true
-    }, [])
+        return () => effectFlag.current = true;
+    }, []);
+    
 
 
     // IMAGES CONTAINER SCROLL //
@@ -61,34 +71,24 @@ const EditProduct = () => {
 
     // FORM SUBMIT //
     const handleSubmit = async (e) => {
+        e.preventDefault()
         try {
-            // Load data
             setOnLoader(true)
             setLoader(true)
-
-            // Create form
             const formData = new FormData()
             formData.append('name', product.name)
             formData.append('price', product.price)
             formData.append('details', product.details)
             formData.append('image', product.image)
             formData.append('id', id)
-
             for (const file of product.images) {
                 if (file instanceof File) {
                     formData.append('images', file)
                 }
             }
-    
-            // Api call for update product
             await productService.updateProcut(formData)
-    
-            // Update loader
             setLoader(false)
-    
-            // Close windows
             setTimeout(() => setOnLoader(false), 2000)
-
         }
         catch (error) {
             console.error('Error on handleSubmit : ', error)
@@ -107,40 +107,40 @@ const EditProduct = () => {
 
     // UPDATE IMAGE STATE //
     const handleImageChange = (image) => {
-        
         setProduct({
             ...product,
             image: image
         })
-
-        if (image) {
-            const urlImage = URL.createObjectURL(image)
-            setImageUrl(urlImage)
-            setImageFlag(true)
-        }
+        const urlImage = URL.createObjectURL(image)
+        setImageUrl(urlImage)
+        setImageUploaded(true)
     }
 
 
     // UPDATE IMAGES STATE //
-    const handleImagesChange = (e) => {
-        const newImages = Array.from(e.target.files).map(image => image)
-        setProduct(prevProduct => ({
-            ...prevProduct,
-            images: [...prevProduct.images, ...newImages]
-        }))
+    const handleImagesChange = (images) => {
+        setProduct({
+            ...product,
+            images: [...product.images, ...images]
+        })
+        const newUrls = images.map(image => URL.createObjectURL(image))
+        setImagesUrl([...imagesUrl, ...newUrls])
     }
+    
 
-
-    // SECONDARYS IMAGES LOCAL DELETE //
+    // SECONDARYS IMAGES DELETE //
     const deleteImage = async (index, imageId) => {
-
         try {
             setProduct(prevImages => {
                 const updatedImages = [...prevImages.images]
                 updatedImages.splice(index, 1)
                 return { ...prevImages, images: updatedImages }
             })
-    
+            setImagesUrl(prevUrls => {
+                const updatedUrls = [...prevUrls]
+                updatedUrls.splice(index, 1)
+                return updatedUrls
+            })            
             if (imageId) {
                 await productService.deleteSecondaryImage(imageId)
             }
@@ -151,15 +151,80 @@ const EditProduct = () => {
     }
 
 
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'name') {
+            if (!value) {
+                setNameError("Le nom du produit est requis")
+            } else if (!NameMaxLength.test(value)) {
+                setNameError("Le nom du produit ne doit pas dépasser 100 caractères")
+            } else if (!NameForbidden.test(value)) {
+                setNameError("Le nom du produit contient des caractères invalides")
+            } else {
+                setNameError("")
+            }
+            handleInputChange(name, value)
+        }
+        if (name === 'details') {
+            if (!value) {
+                setDetailsError("Les détails du produit sont requis")
+            } else if (!DetailsMaxLength.test(value)) {
+                setDetailsError("Les détails du produit ne doivent pas dépasser 500 caractères")
+            } else if (!DetailsForbidden.test(value)) {
+                setDetailsError("Les détails du produit contiennent des caractères invalides")
+            } else {
+                setDetailsError("")
+            }
+            handleInputChange(name, value)
+        }
+        if (name === 'price') {
+            if (!value)  {
+                setPriceError("Le prix du produit est requis")
+            } else if (!PriceForbidden.test(value)) {
+                setPriceError("Le prix doit etre un nombre positif")
+            } else {
+                setPriceError("")
+            }
+            handleInputChange(name, value)
+        }
+        if (name === 'image') {
+            if (!value)  {
+                setImageError("Une image principale est requise")
+            } else if (!SUPPORTED_FORMATS.includes(value.type)) {
+                setImageError("Format invalide, (png, jpg, jpeg) seulement")
+            } else if (value.size > MAX_FILE_SIZE) {
+                setImageError("Votre image ne doit pas depassé 2MB")
+            } else {
+                setImageError("")
+                handleImageChange(value)
+            }
+        }
+        if (name === 'images[]') {
+            const images =  Array.from(value)
+            images.map(image => {
+                if (!SUPPORTED_FORMATS.includes(image.type)) {
+                    setImagesError("Format invalide, (png, jpg, jpeg) seulement")
+                } else if (image.size > MAX_FILE_SIZE) {
+                    setImagesError("Votre image ne doit pas depassé 2MB")
+                } else if (images.length > 10 || product.images.length > 10) {
+                    setImagesError("Nombre d'image depassé (maximum 10 images)")
+                } else {
+                    setImagesError("")
+                    handleImagesChange(images)
+                }
+            })
+        }
+    }
+
+
     // LOADING HANDLER
     if (!isLoading) {
         return <CustomLoader/>
     }
 
-    
+
     // MAIN RENDERING //
     return (
-
         <div className="edit_product_global_container">
             {onLoader &&
                 <div className='edit_product_load_success_global_container'>
@@ -183,30 +248,70 @@ const EditProduct = () => {
                 <div className='edit_product_form_container'>
                     <div className='edit_product_principale_image_container'>
                         <p>Aperçu image principale</p>
-                        <div className="edit_product_image" style={{backgroundImage: `url('${!imageFlag ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${product.image}` : imageUrl}')`}}></div>
+                        <div className="edit_product_image" style={{backgroundImage: `url('${imageUploaded ? imageUrl : `${process.env.REACT_APP_SERVER_HOST}/uploads/${product.image}`}')`}}></div>
                     </div>
-                    <div className='edit_product_container'>
+                    <form className='edit_product_container' onSubmit={handleSubmit}>
                         <div className='edit_product_item'>
                             <label>Name</label>
-                            <input type='text' name='name' value={product.name} onChange={(e) => handleInputChange(e.target.name, e.target.value)}/>
+                            <input 
+                                type='text' 
+                                name='name' 
+                                value={product.name}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            />
+                            {nameError.length > 0 &&
+                                <p className='add_product_error'>{nameError}</p>
+                            }
                         </div>
                         <div className='edit_product_item'>
                             <label>Details</label>
-                            <textarea name='details' value={product.details} onChange={(e) => handleInputChange(e.target.name, e.target.value)}></textarea>
+                            <textarea 
+                                name='details' 
+                                value={product.details}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}>
+                            </textarea>
+                            {detailsError.length > 0 &&
+                                <p className='add_product_error'>{detailsError}</p>
+                            }
                         </div>
                         <div className='edit_product_item'>
                             <label>Price</label>
-                            <input type='number' name='price' value={product.price} onChange={(e) => handleInputChange(e.target.name, e.target.value)}></input>
+                            <input 
+                                type='number' 
+                                name='price' 
+                                value={product.price}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            />
+                            {priceError.length > 0 &&
+                                <p className='add_product_error'>{priceError}</p>
+                            }
                         </div>
                         <div className='edit_product_item edit_product_img_input'>
                             <label>image principale</label>
-                            <input type='file' name='image' onChange={(e) => handleImageChange(e.target.files[0])} />
+                            <input 
+                                type='file' 
+                                name='image'
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
+                            />
+                            {imageError.length > 0 &&
+                                <p className='add_product_error'>{imageError}</p>
+                            }
                         </div>
                         <div className='edit_product_item edit_product_imgs_input'>
                             <label>autres images</label>
-                            <input type="file" name="images[]" onChange={handleImagesChange} multiple />
+                            <input 
+                                type="file" 
+                                name="images[]" 
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.files)} multiple
+                            />
+                            {imagesError.length > 0 &&
+                                <p className='add_product_error'>{imagesError}</p>
+                            }
                         </div>
-                    </div>
+                        <div className='edit_product_btn_container'>
+                            <input type='submit' className='btn_new_product_edit' value='confirmer'/>
+                        </div>
+                    </form>
                 </div>
                 <div className='edit_product_images_secondaire_container'>
                     <p>Aperçu des images secondaire</p>
@@ -214,17 +319,13 @@ const EditProduct = () => {
                         {product.images.map((image, index) => (
                             <div className="edit_product_images_container" key={index}>
                                 <i class="fa-solid fa-circle-xmark" id='edit_product_images_close_icon' onClick={() => deleteImage(index, image.id)}></i>
-                                <div className="edit_product_images" style={{backgroundImage: `url('${image.images ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${image.images}` : URL.createObjectURL(image)}')`}}></div>
+                                <div className="edit_product_images" style={{backgroundImage: `url('${image.images ? `${process.env.REACT_APP_SERVER_HOST}/uploads/${image.images}` : imagesUrl[index]}')`}}></div>
                             </div>
                         ))}
                     </div>
                 </div>
-                <div className='edit_product_btn_container'>
-                    <button className='btn_new_product_edit' onClick={handleSubmit}>confirmer</button>
-                </div>
             </div>
         </div>
-        
     )
 }
 
