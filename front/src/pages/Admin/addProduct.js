@@ -4,7 +4,8 @@ import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
-        PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS} from '../../_utils/regex/addProduct.regex'
+        PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
+} from '../../_utils/regex/addProduct.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
@@ -81,7 +82,6 @@ const AddProduct = () => {
                 formData.append('images', file)
             }
             await productService.createProduct(formData)
-            setProduct({ name: "", price: "", details: "", image: null, images: [] })
             formRef.current.reset()
             setImageUrl("")
             setImagesUrl([])

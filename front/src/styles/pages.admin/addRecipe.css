@@ -199,3 +199,8 @@ SVG img icons - svgicons.sparkk.fr
     stroke: rgb(164, 164, 164);
     stroke-width: 1;
 }
+
+.add_recipe_error {
+    font-size: 12px;
+    color: red;
+}

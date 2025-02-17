@@ -2,6 +2,9 @@ import React, { useRef, useState } from "react"
 import "../../styles/pages.admin/addRecipe.css"
 import { recipeService } from '../../_services/recipes.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
+import {NameMaxLength, NameForbidden, IngredientsMaxLength, IngredientsForbidden,
+        DirectionsMaxLength, DirectionsForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
+} from '../../_utils/regex/addRecipe.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
@@ -12,40 +15,40 @@ const AddRecipe = () => {
     const [imageUrl, setImageUrl] = useState()
     const [loader, setLoader] = useState(false)
     const [onLoader, setOnLoader] = useState(false)
+    const [nameError, setNameError] = useState("")
+    const [ingredientsError, setIngredientsError] = useState("")
+    const [directionsError,setDirectionsError] = useState("")
+    const [imageError, setImageError] = useState("")
+    const [imageUploaded, setImageUploaded] = useState(false)
 
 
-    // REFERENCE //
-    const imageFlag = useRef(false)
+    // REFERENCES //
+    const formRef = useRef()
 
 
     // SUBMIT FROM //
     const handleSubmit = async (e) => {
         e.preventDefault()
-
+        if (!recipe.name || !recipe.ingredients || !recipe.directions || !recipe.image) {
+            if (!recipe.name) setNameError("Le nom du produit est requis");
+            if (!recipe.ingredients) setIngredientsError("Les détails du produit sont requis");
+            if (!recipe.directions) setDirectionsError("Le prix du produit est requis");
+            if (!recipe.image) setImageError("Une image principale est requise");
+            return;
+        }  
         try {
-            //Load data
             setOnLoader(true)
             setLoader(true)
-
             const formData = new FormData()
             formData.append('name', recipe.name)
             formData.append('ingredients', recipe.ingredients)
             formData.append('directions', recipe.directions)
             formData.append('image', recipe.image)
-
-            // Api call for add recipe
             await recipeService.createRecipe(formData)
-
-            setRecipe({name: "", ingredients: "", directions: "", image: ""})
-
+            formRef.current.reset()
             setImageUrl("")
-
-            imageFlag.current = false
-
-            // Update loader
+            setImageUploaded(false)
             setLoader(false)
-    
-            // Close windows
             setTimeout(() => setOnLoader(false), 2000)
         }
         catch (err) {
@@ -65,23 +68,71 @@ const AddRecipe = () => {
 
     // UPDATE IMAGE STATE //
     const handleImageChange = (image) => {
-        
         setRecipe({
             ...recipe,
             image: image
         })
+        const newUrl = URL.createObjectURL(image)
+        setImageUrl(newUrl)
+        setImageUploaded(true)
+    }
 
-        if (image) {
-            const urlImage = URL.createObjectURL(image)
-            setImageUrl(urlImage)
-            imageFlag.current = true
+
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'name') {
+            if (!value) {
+                setNameError("Le nom de la recette est requis")
+            } else if (!NameMaxLength.test(value)) {
+                setNameError("Le nom de la recette ne doit pas dépasser 100 caractères")
+            } else if (!NameForbidden.test(value)) {
+                setNameError("Le nom de la recette contient des caractères invalides")
+            } else {
+                setNameError("")
+                handleInputChange(name, value)
+            }
+        }
+        if (name === 'ingredients') {
+            if (!value) {
+                setIngredientsError("Les ingredients de la recette sont requis")
+            } else if (!IngredientsMaxLength.test(value)) {
+                setIngredientsError("Les ingredients de la recette ne doivent pas dépasse 800 caractères")
+            } else if (!IngredientsForbidden.test(value)) {
+                setIngredientsError("Les ingredients de la recette contiennent des caractères invalides")
+            } else {
+                setIngredientsError("")
+                handleInputChange(name, value)
+            }
+        }
+        if (name === 'directions') {
+            if (!value) {
+                setDirectionsError("Les directions de recette sont est requises")
+            } else if (!DirectionsMaxLength.test(value)) {
+                setDirectionsError("Les directions de recette ne doivent pas dépasse 800 caractères")
+            } else if (!DirectionsForbidden.test(value)) {
+                setDirectionsError("Les directions de recette contiennent des caractères invalides")
+            } else {
+                setDirectionsError("")
+                handleInputChange(name, value)
+            }
+        }
+        if (name === 'image') {
+            if (!value)  {
+                setImageError("Une image principale est requise")
+            } else if (!SUPPORTED_FORMATS.includes(value.type)) {
+                setImageError("Format invalide, (png, jpg, jpeg) seulement")
+            } else if (value.size > MAX_FILE_SIZE) {
+                setImageError("Votre image ne doit pas depassé 2MB")
+            } else {
+                setImageError("")
+                handleImageChange(value)
+            }
         }
     }
 
 
     // MAIN RENDERING //
     return (
-
         <div className="add_recipe_global_container">
             {onLoader &&
                 <div className='add_recipe_load_success_global_container'>
@@ -105,34 +156,66 @@ const AddRecipe = () => {
                 <div className='add_recipe_form_container'>
                     <div className='add_recipe_principale_image_container'>
                         <p>Aperçu image principale</p>
-                        <div className="add_recipe_image" style={{backgroundImage: `url('${!imageFlag.current ? AddImage : imageUrl}')`}}></div>
+                        <div className="add_recipe_image" style={{backgroundImage: `url('${!imageUploaded ? AddImage : imageUrl}')`}}></div>
                     </div>
-                    <div className='add_recipe_container'>
+                    <form className='add_recipe_container' onSubmit={handleSubmit} ref={formRef}>
                         <div className='add_recipe_item'>
                             <label>Name</label>
-                            <input type='text' name='name' value={recipe.name} onChange={(e) => handleInputChange(e.target.name, e.target.value)}/>
+                            <input 
+                                type='text' 
+                                name='name'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            />
+                            {nameError.length > 0 &&
+                                <p className='add_recipe_error'>{nameError}</p>
+                            }
                         </div>
                         <div className='add_recipe_item'>
                             <label>Ingredients</label>
-                            <textarea name='ingredients' value={recipe.ingredients} onChange={(e) => handleInputChange(e.target.name, e.target.value)}></textarea>
+                            <textarea 
+                                name='ingredients'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            >
+                            </textarea>
+                            {ingredientsError.length > 0 &&
+                                <p className='add_recipe_error'>{ingredientsError}</p>
+                            }
                         </div>
                         <div className='add_recipe_item'>
                             <label>Directions</label>
-                            <textarea name='directions' value={recipe.directions} onChange={(e) => handleInputChange(e.target.name, e.target.value)}></textarea>
+                            <textarea 
+                                name='directions'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                            >
+                            </textarea>
+                            {directionsError.length > 0 &&
+                                <p className='add_recipe_error'>{directionsError}</p>
+                            }
                         </div>
                         <div className='add_recipe_item add_recipe_img_input'>
                             <label>image principale</label>
-                            <input type='file' name='image' onChange={(e) => handleImageChange(e.target.files[0])} />
+                            <input 
+                                type='file' 
+                                name='image'
+                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
+                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.files[0])} 
+                            />
+                            {imageError.length > 0 &&
+                                <p className='add_recipe_error'>{imageError}</p>
+                            }
                         </div>
-                    </div>
-                </div>
-                <div className='add_recipe_btn_container'>
-                    <button className='btn_new_recipe_add' onClick={handleSubmit}>ajouter</button>
+                        <div className='add_recipe_btn_container'>
+                            <input type='submit' className='btn_new_recipe_add' value='ajouter'/>
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
-        
     )
 }
+
 
 export default AddRecipe
