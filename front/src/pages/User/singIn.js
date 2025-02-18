@@ -81,7 +81,7 @@ const SingIn = () => {
                     <input 
                         type="email" 
                         name="email" 
-                        placeholder="votre adresse e-mail" 
+                        placeholder="Adresse e-mail" 
                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         required
@@ -94,7 +94,7 @@ const SingIn = () => {
                     <input 
                         type="password" 
                         name="password" 
-                        placeholder="mot de passe" 
+                        placeholder="Mot de passe" 
                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         required

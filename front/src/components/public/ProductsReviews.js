@@ -9,6 +9,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
 import { updateHavePrdComment } from '../../redux/reducers/havePrdCommentSlice'
+import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/ProductsReviews.regex'
 
 
 const ProductsReviews = ({ productId }) => {
@@ -25,6 +26,7 @@ const ProductsReviews = ({ productId }) => {
     const [commentEdit, setCommentEdit] = useState(false)
     const [editCommentId, setEditCommentId] = useState(null) // New state to track the comment being edited
     const [submitLoader, setSubmitLoader] = useState(false)
+    const [commentError, setCommentError] = useState("")
     
 
     // REDUX //
@@ -43,10 +45,12 @@ const ProductsReviews = ({ productId }) => {
     // REVIEWS FORM SUBMIT //
     const submitForm = async (e) => {
         e.preventDefault()
+        if (!commentClone) {
+            setCommentError("Un commentaire est requis")
+            return;
+        }
         setSubmitLoader(true)
-
         try {
-            // Create a new review object
             const newReview = {
                 user_name: user.firstName + " " + user.lastName,
                 user_id: parseInt(user_id),
@@ -54,22 +58,12 @@ const ProductsReviews = ({ productId }) => {
                 note: rating,
                 comment: commentClone
             };
-
-            // Send form to endPoint
             await productsReviewsService.createProductReview(newReview)
-
-            // Reset form fields
             setRating(0)
             setComment("")
-
             getCommentsNotes()
-
-            // Close component
             dispatch(updatePrdReveiwDisplay({status: false}))
-
-            // Set loader
             setSubmitLoader(true)
-
         } catch (err) {
             console.error('Error', err)
         }
@@ -206,7 +200,7 @@ const ProductsReviews = ({ productId }) => {
 
 
     // COMMENT INPUT HANDLING //
-    const inputChange = (comment) => {
+    const handleInputChange = (comment) => {
         setComment(comment)
     }
 
@@ -289,13 +283,31 @@ const ProductsReviews = ({ productId }) => {
             </div>
         )
     }
-    
+
+
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'comment') {
+            if (!value) {
+                setCommentError("Un commentaire est requis")
+            } else if (!CommentMaxLength.test(value)) {
+                setCommentError("Votre commentaire ne doit pas dépasser 500 caractères")
+            } else if (!CommentForbidden.test(value)) {
+                setCommentError("Votre commentaire contient des caractères invalides")
+            } else {
+                setCommentError("")
+                handleInputChange(value)
+            }
+        }
+    }
+
 
     // LOADER //
     if (!isLoad) {
         return <CustomLoader />
     }
     
+
     return (
         <div>
             <div className="details_comment_and_notes_totale">
@@ -348,7 +360,15 @@ const ProductsReviews = ({ productId }) => {
                                                         </div>
                                                         <div className="details_form_your_comment">
                                                             <label>Votre commentaire</label>
-                                                            <textarea onChange={(e) => inputChange(e.target.value)} value={commentClone}></textarea>
+                                                            <textarea 
+                                                                name='comment'
+                                                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                            >
+                                                            </textarea>
+                                                            {commentError.length > 0 &&
+                                                                <p className='add_product_error'>{commentError}</p>
+                                                            }
                                                         </div>
                                                         <div className="details_form_button_send">
                                                             <input type="submit" value="Poster" />
@@ -380,7 +400,15 @@ const ProductsReviews = ({ productId }) => {
                                                                                 </div>
                                                                                 <div className="details_form_your_comment">
                                                                                     <label>Votre commentaire</label>
-                                                                                    <textarea onChange={(e) => inputChange(e.target.value)} value={commentClone}></textarea>
+                                                                                    <textarea
+                                                                                        name='comment'
+                                                                                        onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                                        onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                                    >
+                                                                                    </textarea>
+                                                                                    {commentError.length > 0 &&
+                                                                                        <p className='add_product_error'>{commentError}</p>
+                                                                                    }
                                                                                 </div>
                                                                                 <div className="details_form_button_send">
                                                                                     <input type="submit" value="Poster" />
@@ -464,5 +492,6 @@ const ProductsReviews = ({ productId }) => {
         </div>
     );
 };
+
 
 export default ProductsReviews

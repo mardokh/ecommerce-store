@@ -1,7 +1,7 @@
 const { body, param, validationResult } = require('express-validator')
 
 
-const safeTextRegex = /^[a-zA-Z0-9\s.,!?'\-%]+$/;
+const safeTextRegex = /^[^<>]*$/;
 
 // VALIDATE GET PRODUCT REVIEWS //
 const validateGetPrdReviews = [
@@ -29,10 +29,10 @@ const validateCreatePrdReviews = [
         .withMessage('Product ID must be a positive integer'),
 
     body('comment')
-        .notEmpty().withMessage('Le champ details est requis')
-        .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Un commentaire est requis')
+        .isLength({ max: 500 }).withMessage('Votre commentaire ne doit pas dépasser 500 caractères')
+        .matches(safeTextRegex).withMessage('Votre commentaire contient des caractères invalides')
+        .trim(),
 
     body('note')
         .isInt({ min: 1 })
@@ -58,10 +58,10 @@ const validateUpdatePrdReviews = [
         .withMessage('Product ID must be a positive integer'),
 
     body('comment')
-        .notEmpty().withMessage('Le champ commentaire est requis')
-        .isLength({ max: 500 }).withMessage('Le champ commentaire ne doit pas dépasse 500 caractères')
-        .matches(safeTextRegex).withMessage('Le champ commentaire contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .notEmpty().withMessage('Un commentaire est requis')
+        .isLength({ max: 500 }).withMessage('Votre commentaire ne doit pas dépasser 500 caractères')
+        .matches(safeTextRegex).withMessage('Votre commentaire contient des caractères invalides')
+        .trim(),
 
     body('note')
         .isInt({ min: 1 })

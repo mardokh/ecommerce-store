@@ -19,3 +19,9 @@
     background-color: #74ad02;
     color: white;
 }
+
+.addAdmin_inscription_error {
+    font-size: 12px;
+    color: red;
+    margin-top: 8px;
+}

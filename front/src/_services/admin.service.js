@@ -3,6 +3,11 @@ import Axios from "./caller.service"
 import { tokenService } from "./token.service"
 
 
+// ADMIN CREATE //
+let adminCreate = (credentials) => {
+    return Axios.put('/admin/create', credentials)
+}
+
 
 // ADMIN AUTH //
 let adminLogin = (credentials) => {
@@ -49,5 +54,5 @@ let logout = () => {
 
 
 export const AdminService = {
-    adminLogin, saveToken, isLogged, logout
+    adminLogin, saveToken, isLogged, logout, adminCreate
 }

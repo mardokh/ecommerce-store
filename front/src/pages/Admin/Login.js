@@ -35,8 +35,9 @@ const AdminLogin = () => {
         setLoader(true)
         try {
             const res = await AdminService.adminLogin(credentials)
+            console.log('from login : ', res)
             AdminService.saveToken(res.data.data.access_token)
-            navigate("/admin")
+            navigate('/admin')
         }
         catch (err) {
             if (err.response && err.response.status === 401) {

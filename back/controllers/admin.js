@@ -14,17 +14,23 @@ exports.createAdmin = async (req, res) => {
         // Check if admin exist
         const admin = await Admin.findOne({where: {email}})
         if (admin !== null) {
-            return res.status(409).json({data: [], message: 'This admin already exist', type: "Failed"})
+            return res.status(409).json({data: [], message: 'Un compte est déjà associé à cet e-email veuillez saisir une autres adresse', type: "Failed"})
         }
 
         // Password hash
         const hashedPass = await bcrypt.hash(password, parseInt(process.env.BCRYPT_SALT))
 
         // Create admin
-        await Admin.create({lastName, firstName, email, password: hashedPass})
+        const newAdmin = await Admin.create({lastName, firstName, email, password: hashedPass})
+
+        // Generate json web token
+        const token = jwt.sign({
+            id: newAdmin.id,
+            email: newAdmin.email
+        }, process.env.JWT_SECRET, {expiresIn: "24h"})
 
         // Success response
-        return res.json({data: [], message: 'Admin created', type: "Success"})
+        return res.status(200).json({data: {access_token : token}, message: "Admin logged", type: "Success"})
     }
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})

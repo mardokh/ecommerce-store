@@ -69,7 +69,7 @@ const AddProduct = () => {
             if (!product.price) setPriceError("Le prix du produit est requis");
             if (!product.image) setImageError("Une image principale est requise");
             return;
-        }        
+        }
         try {
             setOnLoader(true)
             setLoader(true)

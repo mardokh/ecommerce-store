@@ -156,7 +156,7 @@ const SingUp = () => {
                     <input 
                         type="email" 
                         name="email" 
-                        placeholder="Email" 
+                        placeholder="E-mail" 
                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                     />
