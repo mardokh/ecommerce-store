@@ -5,7 +5,7 @@ import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { useParams } from "react-router-dom"
 import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
     PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
-} from '../../_utils/regex/addProduct.regex'
+} from '../../_utils/regex/addEdditProduct.regex'
 
 
 const EditProduct = () => {
@@ -27,7 +27,6 @@ const EditProduct = () => {
 
 
     // REFERENCE //
-    const effectFlag = useRef(false)
     const imagesDisplayContainerRef = useRef()
 
 
@@ -37,24 +36,21 @@ const EditProduct = () => {
 
     // API CALL FOR GET PRODUCT //
     useEffect(() => {
-        if (!effectFlag.current) {
-            productService.getOneProduct(id)
-                .then(res => {
-                    const existingImages = res.data.data.product_images.map(item => item); // Extract URLs from DB
-                    setProduct({
-                        id: res.data.data.id,
-                        name: res.data.data.name, 
-                        price: res.data.data.price, 
-                        details: res.data.data.details, 
-                        image: res.data.data.image, 
-                        images: res.data.data.product_images
-                    });
-                    setImagesUrl(existingImages); // Initialize imagesUrl with DB images
-                    setIsLoading(true);
-                })
-                .catch(err => console.error('Error on useEffect getOneProduct : ', err));
-        }
-        return () => effectFlag.current = true;
+        productService.getOneProduct(id)
+        .then(res => {
+            const existingImages = res.data.data.product_images.map(item => item); // Extract URLs from DB
+            setProduct({
+                id: res.data.data.id,
+                name: res.data.data.name, 
+                price: res.data.data.price, 
+                details: res.data.data.details, 
+                image: res.data.data.image, 
+                images: res.data.data.product_images
+            });
+            setImagesUrl(existingImages); // Initialize imagesUrl with DB images
+            setIsLoading(true);
+        })
+        .catch(err => console.error('Error on useEffect getOneProduct : ', err));
     }, []);
     
 
@@ -88,6 +84,7 @@ const EditProduct = () => {
                 }
             }
             await productService.updateProcut(formData)
+            setImageUploaded(false)
             setLoader(false)
             setTimeout(() => setOnLoader(false), 2000)
         }
@@ -266,7 +263,7 @@ const EditProduct = () => {
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                             />
                             {nameError.length > 0 &&
-                                <p className='add_product_error'>{nameError}</p>
+                                <p className='edit_product_error'>{nameError}</p>
                             }
                         </div>
                         <div className='edit_product_item'>
@@ -277,7 +274,7 @@ const EditProduct = () => {
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}>
                             </textarea>
                             {detailsError.length > 0 &&
-                                <p className='add_product_error'>{detailsError}</p>
+                                <p className='edit_product_error'>{detailsError}</p>
                             }
                         </div>
                         <div className='edit_product_item'>
@@ -289,7 +286,7 @@ const EditProduct = () => {
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                             />
                             {priceError.length > 0 &&
-                                <p className='add_product_error'>{priceError}</p>
+                                <p className='edit_product_error'>{priceError}</p>
                             }
                         </div>
                         <div className='edit_product_item edit_product_img_input'>
@@ -300,7 +297,7 @@ const EditProduct = () => {
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
                             />
                             {imageError.length > 0 &&
-                                <p className='add_product_error'>{imageError}</p>
+                                <p className='edit_product_error'>{imageError}</p>
                             }
                         </div>
                         <div className='edit_product_item edit_product_imgs_input'>
@@ -311,7 +308,7 @@ const EditProduct = () => {
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.files)} multiple
                             />
                             {imagesError.length > 0 &&
-                                <p className='add_product_error'>{imagesError}</p>
+                                <p className='edit_product_error'>{imagesError}</p>
                             }
                         </div>
                         <div className='edit_product_btn_container'>

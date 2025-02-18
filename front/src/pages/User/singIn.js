@@ -34,12 +34,6 @@ const SingIn = () => {
     const submitFrom = async (e) => {
         e.preventDefault()
         setLoader(true)
-        if (!credentials.email || !credentials.password) {
-            if (!credentials.email) setEmailError("Une adresse e-mail est requise");
-            if (!credentials.password) setPasswordError("Un mot de passe est requis");
-            setLoader(false)
-            return;
-        } 
         try {
             const res = await UserService.userLogin(credentials)
             UserService.saveToken(res.data.data.access_token)

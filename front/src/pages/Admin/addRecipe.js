@@ -4,14 +4,14 @@ import { recipeService } from '../../_services/recipes.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import {NameMaxLength, NameForbidden, IngredientsMaxLength, IngredientsForbidden,
         DirectionsMaxLength, DirectionsForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
-} from '../../_utils/regex/addRecipe.regex'
+} from '../../_utils/regex/addEditRecipe.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
 const AddRecipe = () => {
 
     // STATES //
-    const [recipe, setRecipe] = useState({name: "", ingredients: "", directions: "", image: ""})
+    const [recipe, setRecipe] = useState({name: "", ingredients: "", directions: "", image: null})
     const [imageUrl, setImageUrl] = useState()
     const [loader, setLoader] = useState(false)
     const [onLoader, setOnLoader] = useState(false)
@@ -30,12 +30,12 @@ const AddRecipe = () => {
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!recipe.name || !recipe.ingredients || !recipe.directions || !recipe.image) {
-            if (!recipe.name) setNameError("Le nom du produit est requis");
-            if (!recipe.ingredients) setIngredientsError("Les détails du produit sont requis");
-            if (!recipe.directions) setDirectionsError("Le prix du produit est requis");
+            if (!recipe.name) setNameError("Le nom de la recette est requis");
+            if (!recipe.ingredients) setIngredientsError("Les ingredients de la recette sont requis");
+            if (!recipe.directions) setDirectionsError("Les directions de recette sont est requises");
             if (!recipe.image) setImageError("Une image principale est requise");
             return;
-        }  
+        } 
         try {
             setOnLoader(true)
             setLoader(true)

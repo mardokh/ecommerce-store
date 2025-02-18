@@ -5,7 +5,7 @@ import { productService } from '../../_services/products.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
         PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
-} from '../../_utils/regex/addProduct.regex'
+} from '../../_utils/regex/addEdditProduct.regex'
 const AddImage = require('../../images/AddImage.jpg')
 
 
