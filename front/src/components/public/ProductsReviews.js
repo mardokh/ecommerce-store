@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
 import { updateHavePrdComment } from '../../redux/reducers/havePrdCommentSlice'
-import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/ProductsReviews.regex'
+import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/reviews.regex'
 
 
 const ProductsReviews = ({ productId }) => {
@@ -47,7 +47,7 @@ const ProductsReviews = ({ productId }) => {
         e.preventDefault()
         if (!commentClone) {
             setCommentError("Un commentaire est requis")
-            return;
+            return
         }
         setSubmitLoader(true)
         try {
@@ -73,30 +73,24 @@ const ProductsReviews = ({ productId }) => {
     // REVIEWS EDIT FORM SUBMIT //
     const submitEditForm = async (e) => {
         e.preventDefault()
+        if (!commentClone) {
+            setCommentError("Un commentaire est requis")
+            return
+        }
         setSubmitLoader(true)
-        
         try {
-            // Create a new review object
             const newReview = {
                 user_id: user_id,
                 product_id: prodId,
                 note: rating,
                 comment: commentClone
             }
-
-            // Send form to endPoint
             await productsReviewsService.updateProductReview(newReview)
-
-            // Reset form fields
             setRating(0)
             setComment("")
-            setEditCommentId(null) // Reset edit comment ID
-
+            setEditCommentId(null)
             getCommentsNotes()
-
-            // Close component
             dispatch(updatePrdReveiwDisplay({status: false}))
-
         } catch (err) {
             console.error('Error', err)
         }
@@ -252,6 +246,23 @@ const ProductsReviews = ({ productId }) => {
     }
     
 
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'comment') {
+            if (!value) {
+                setCommentError("Un commentaire est requis")
+            } else if (!CommentMaxLength.test(value)) {
+                setCommentError("Votre commentaire ne doit pas dépasser 500 caractères")
+            } else if (!CommentForbidden.test(value)) {
+                setCommentError("Votre commentaire contient des caractères invalides")
+            } else {
+                setCommentError("")
+                handleInputChange(value)
+            }
+        }
+    }
+    
+
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating)
          const halfStar = rating % 1 > 0
@@ -282,23 +293,6 @@ const ProductsReviews = ({ productId }) => {
                 ))}
             </div>
         )
-    }
-
-
-    // INPUTS ERRORS HANDLER //
-    const handleFieldsErrors = (name, value) => {
-        if (name === 'comment') {
-            if (!value) {
-                setCommentError("Un commentaire est requis")
-            } else if (!CommentMaxLength.test(value)) {
-                setCommentError("Votre commentaire ne doit pas dépasser 500 caractères")
-            } else if (!CommentForbidden.test(value)) {
-                setCommentError("Votre commentaire contient des caractères invalides")
-            } else {
-                setCommentError("")
-                handleInputChange(value)
-            }
-        }
     }
 
 
@@ -367,7 +361,7 @@ const ProductsReviews = ({ productId }) => {
                                                             >
                                                             </textarea>
                                                             {commentError.length > 0 &&
-                                                                <p className='add_product_error'>{commentError}</p>
+                                                                <p className='details_form_comment_error'>{commentError}</p>
                                                             }
                                                         </div>
                                                         <div className="details_form_button_send">
@@ -407,7 +401,7 @@ const ProductsReviews = ({ productId }) => {
                                                                                     >
                                                                                     </textarea>
                                                                                     {commentError.length > 0 &&
-                                                                                        <p className='add_product_error'>{commentError}</p>
+                                                                                        <p className='details_form_comment_error'>{commentError}</p>
                                                                                     }
                                                                                 </div>
                                                                                 <div className="details_form_button_send">
