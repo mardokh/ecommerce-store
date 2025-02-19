@@ -6,7 +6,7 @@ import Cookies from 'js-cookie'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import MyContext from "../../_utils/contexts"
 import { UserService } from "../../_services/user.service"
-
+import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/reviews.regex'
 
 
 const RecipesReviews = ({ recipeId }) => {
@@ -23,6 +23,7 @@ const RecipesReviews = ({ recipeId }) => {
     const [commentEdit, setCommentEdit] = useState(false)
     const [editCommentId, setEditCommentId] = useState(null) // New state to track the comment being edited
     const [submitLoader, setSubmitLoader] = useState(false)
+    const [commentError, setCommentError] = useState("")
 
 
     // CONTEXTS //
@@ -40,10 +41,12 @@ const RecipesReviews = ({ recipeId }) => {
     // REVIEWS FORM SUBMIT //
     const submitForm = async (e) => {
         e.preventDefault()
+        if (!commentClone) {
+            setCommentError("Un commentaire est requis")
+            return
+        }
         setSubmitLoader(true)
-
         try {
-            // Create a new review object
             const newReview = {
                 user_name: user.firstName + " " + user.lastName,
                 user_id: parseInt(user_id),
@@ -51,22 +54,12 @@ const RecipesReviews = ({ recipeId }) => {
                 note: rating,
                 comment: commentClone
             };
-
-            // Send form to endPoint
             await recipesReviewsService.createRecipesReviews(newReview)
-
-            // Reset form fields
             setRating(0)
             setComment("")
-
             getCommentsNotes()
-
-            // Close component
             updateRecipeReviewsOnDisplay(false)
-
-            // Set loader
             setSubmitLoader(true)
-
         } catch (err) {
             console.error('Error', err)
         }
@@ -76,30 +69,24 @@ const RecipesReviews = ({ recipeId }) => {
     // REVIEWS EDIT FORM SUBMIT //
     const submitEditForm = async (e) => {
         e.preventDefault()
+        if (!commentClone) {
+            setCommentError("Un commentaire est requis")
+            return
+        }
         setSubmitLoader(true)
-        
         try {
-            // Create a new review object
             const newReview = {
                 user_id: user_id,
                 recipe_id: rcpId,
                 note: rating,
                 comment: commentClone
             }
-
-            // Send form to endPoint
             await recipesReviewsService.updateRecipesReviews(newReview)
-
-            // Reset form fields
             setRating(0)
             setComment("")
-            setEditCommentId(null) // Reset edit comment ID
-
+            setEditCommentId(null)
             getCommentsNotes()
-
-            // Close component
             updateRecipeReviewsOnDisplay(false)
-
         } catch (err) {
             console.error('Error', err)
         }
@@ -208,7 +195,7 @@ const RecipesReviews = ({ recipeId }) => {
 
 
     // COMMENT INPUT HANDLING //
-    const inputChange = (comment) => {
+    const handleInputChange = (comment) => {
         setComment(comment)
     }
 
@@ -257,7 +244,24 @@ const RecipesReviews = ({ recipeId }) => {
         setRating(commentRating) // Initialize the rating state with the current rating
         setRcpId(recipe_id)
         updateRecipeReviewsOnDisplay(true)
-    };
+    }
+
+
+    // INPUTS ERRORS HANDLER //
+    const handleFieldsErrors = (name, value) => {
+        if (name === 'comment') {
+            if (!value) {
+                setCommentError("Un commentaire est requis")
+            } else if (!CommentMaxLength.test(value)) {
+                setCommentError("Votre commentaire ne doit pas dépasser 500 caractères")
+            } else if (!CommentForbidden.test(value)) {
+                setCommentError("Votre commentaire contient des caractères invalides")
+            } else {
+                setCommentError("")
+                handleInputChange(value)
+            }
+        }
+    }
     
 
     const renderStars = (rating) => {
@@ -350,7 +354,15 @@ const RecipesReviews = ({ recipeId }) => {
                                                         </div>
                                                         <div className="details_recipe_form_your_comment">
                                                             <label>Votre commentaire</label>
-                                                            <textarea onChange={(e) => inputChange(e.target.value)} value={commentClone}></textarea>
+                                                            <textarea 
+                                                                name='comment'
+                                                                onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                            >
+                                                            </textarea>
+                                                            {commentError.length > 0 &&
+                                                                <p className='details_recipe_comment_error'>{commentError}</p>
+                                                            }
                                                         </div>
                                                         <div className="details_recipe_form_button_send">
                                                             <input type="submit" value="Poster" />
@@ -382,7 +394,15 @@ const RecipesReviews = ({ recipeId }) => {
                                                                                 </div>
                                                                                 <div className="details_recipe_form_your_comment">
                                                                                     <label>Votre commentaire</label>
-                                                                                    <textarea onChange={(e) => inputChange(e.target.value)} value={commentClone}></textarea>
+                                                                                    <textarea 
+                                                                                        name='comment'
+                                                                                        onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                                        onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
+                                                                                    >
+                                                                                    </textarea>
+                                                                                    {commentError.length > 0 &&
+                                                                                        <p className='details_recipe_comment_error'>{commentError}</p>
+                                                                                    }
                                                                                 </div>
                                                                                 <div className="details_recipe_form_button_send">
                                                                                     <input type="submit" value="Poster" />
