@@ -301,6 +301,10 @@ SVG Icons - svgicons.sparkk.fr
     font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
+.details_form_comment_error {
+    font-size: 12px;
+    color: red;
+}
 
 /* MEDIA QUERY */
 
