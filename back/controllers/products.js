@@ -39,7 +39,7 @@ exports.getOneProduct = async (req, res) => {
         
         // Check if product exist
         if (product === null) {
-            return res.status(404).json({data: [], message: 'This product do not exist', type: "Failed"})
+            return res.status(404).json({data: [], message: "Se produit n'existe pas", type: "Failed"})
         }
 
         // Success response
@@ -62,7 +62,7 @@ exports.createProduct = async (req, res) => {
         // Check if product exists
         const product = await Product.findOne({ where: { name } });
         if (product !== null) {
-            return res.status(409).json({ data: [], message: "This product already exists", type: "Failed" });
+            return res.status(409).json({ data: [], message: "Se produit exist deja", type: "Failed" });
         }
 
         // Create product
