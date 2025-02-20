@@ -24,6 +24,7 @@ const AddProduct = () => {
     const [priceError, setPriceError] = useState("")
     const [imageError,setImageError] = useState("")
     const [imagesError,setImagesError] = useState("")
+    const [productExist, setProductExist] = useState("")
 
 
     // REFERENCES //
@@ -91,8 +92,22 @@ const AddProduct = () => {
         }
         catch (err) {
             if (err.response?.status === 409) {
-                alert("Se produit exist deja dans les favoris")
-                window.location.reload(true)
+                console.log(err.response)
+                setProductExist(err.response.data.message)
+            } else if (err.response?.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'name') {
+                        setNameError(message)
+                    } else if (field === 'details') {
+                        setDetailsError(message)
+                    } else if (field === 'price') {
+                        setPriceError(message)
+                    } else if (field === 'image') {
+                        setImageError(message)
+                    } else if (field === 'images') {
+                        setImagesError(message)
+                    }
+                })
             }
             console.error(err)
         }
@@ -190,6 +205,7 @@ const AddProduct = () => {
                 setImageError("")
                 handleImageChange(value)
             }
+        
         }
         if (name === 'images[]') {
             const images =  Array.from(value)
@@ -247,6 +263,9 @@ const AddProduct = () => {
                             />
                             {nameError.length > 0 &&
                                 <p className='add_product_error'>{nameError}</p>
+                            }
+                            {productExist.length > 0 &&
+                                <p className='add_product_error'>{productExist}</p>
                             }
                         </div>
                         <div className='add_product_item'>
