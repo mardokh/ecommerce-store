@@ -92,7 +92,6 @@ const AddProduct = () => {
         }
         catch (err) {
             if (err.response?.status === 409) {
-                console.log(err.response)
                 setProductExist(err.response.data.message)
             } else if (err.response?.status === 400) {
                 err.response.data.errors.map(({field, message}) => {

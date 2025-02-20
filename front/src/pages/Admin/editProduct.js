@@ -89,7 +89,21 @@ const EditProduct = () => {
             setTimeout(() => setOnLoader(false), 2000)
         }
         catch (error) {
-            console.error('Error on handleSubmit : ', error)
+            if (err.response?.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'name') {
+                        setNameError(message)
+                    } else if (field === 'details') {
+                        setDetailsError(message)
+                    } else if (field === 'price') {
+                        setPriceError(message)
+                    } else if (field === 'image') {
+                        setImageError(message)
+                    } else if (field === 'images') {
+                        setImagesError(message)
+                    }
+                })
+            }
         }
     }
 
