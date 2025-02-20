@@ -108,7 +108,7 @@ const AddProduct = () => {
                     }
                 })
             }
-            console.error(err)
+            console.error('Error : ', err)
         }
     }
     

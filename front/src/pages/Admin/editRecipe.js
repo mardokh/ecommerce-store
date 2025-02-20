@@ -69,6 +69,19 @@ const EditRecipe = () => {
             setTimeout(() => setOnLoader(false), 2000)
         }
         catch (err) {
+            if (err.response?.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'name') {
+                        setNameError(message)
+                    } else if (field === 'ingredients') {
+                        setIngredientsError(message)
+                    } else if (field === 'directions') {
+                        setDirectionsError(message)
+                    } else if (field === 'image') {
+                        setImageError(message)
+                    }
+                })
+            }
             console.error('Error: ', err)
         }
     }

@@ -104,6 +104,7 @@ const EditProduct = () => {
                     }
                 })
             }
+            console.error('Error : ', err)
         }
     }
 
