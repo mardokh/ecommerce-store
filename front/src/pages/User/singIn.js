@@ -33,6 +33,11 @@ const SingIn = () => {
     // ON FORM SUBMIT //
     const submitFrom = async (e) => {
         e.preventDefault()
+        if (!credentials.email || !credentials.password) {
+            if (!credentials.email) setEmailError("Une adresse e-mail est requise");
+            if (!credentials.password) setPasswordError("Un mot de passe est requis");
+            return;
+        } 
         setLoader(true)
         try {
             const res = await UserService.userLogin(credentials)
@@ -44,6 +49,14 @@ const SingIn = () => {
             if (err.response && err.response.status === 401) {
                 setLoader(false)
                 setLoginFailed(err.response.data.message)
+            } else if (err.response && err.response.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'email') {
+                        setEmailError(message)
+                    } else if (field === 'password') {
+                        setPasswordError(message)
+                    }
+                })
             } else {
                 setLoader(false)
                 console.log('Error:', err.message)
