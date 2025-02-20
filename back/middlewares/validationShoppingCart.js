@@ -49,7 +49,7 @@ const validateDeleteshoppingCarts = [
 
     param('limit')
         .matches('limit').withMessage('Filed should be matche with << limit >>')
-        .trim().escape().blacklist("<>'\""),
+        .trim(),
 
     (req, res, next) => {
         const errors = validationResult(req)

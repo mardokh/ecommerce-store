@@ -4,7 +4,9 @@ import favsProductsCountSlice from '../reducers/favPrdSlice';
 import favsRecipesCountSlice from '../reducers/favRcpSlice';
 import favsCartCountSlice from '../reducers/favCartSlice'
 import prdReveiwDisplaySlice from '../reducers/prdReveiwDisplaySlice'
+import rcpReveiwDisplaySlice from '../reducers/rcpReveiwDisplaySlice'
 import havePrdCommentSlice from '../reducers/havePrdCommentSlice'
+import haveRcpCommentSlice from '../reducers/haveRcpCommentSlice'
 import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 
@@ -39,7 +41,9 @@ export const store = configureStore({
     favRcpCount: persistedRecipesReducer,
     favCartCount: persistedCartsReducer,
     prdReveiwDisplay: prdReveiwDisplaySlice,
-    havePrdComment: havePrdCommentSlice
+    rcpReveiwDisplay: rcpReveiwDisplaySlice,
+    havePrdComment: havePrdCommentSlice,
+    haveRcpComment: haveRcpCommentSlice,
   },
 });
 

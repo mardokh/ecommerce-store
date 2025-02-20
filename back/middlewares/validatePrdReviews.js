@@ -1,7 +1,6 @@
 const { body, param, validationResult } = require('express-validator')
 
-
-const safeTextRegex = /^[^<>]*$/;
+const safeTextRegex = /^(?!.*[<>]).*$/u;
 
 // VALIDATE GET PRODUCT REVIEWS //
 const validateGetPrdReviews = [

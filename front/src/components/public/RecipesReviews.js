@@ -4,7 +4,9 @@ import "../../styles/components.public/recipeReviews.css"
 import { recipesReviewsService } from "../../_services/recipesReviews.service"
 import Cookies from 'js-cookie'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import MyContext from "../../_utils/contexts"
+import { updateRcpReveiwDisplay } from '../../redux/reducers/rcpReveiwDisplaySlice'
+import { updateHaveRcpComment } from '../../redux/reducers/haveRcpCommentSlice'
+import { useSelector, useDispatch } from 'react-redux'
 import { UserService } from "../../_services/user.service"
 import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/reviews.regex'
 
@@ -26,8 +28,9 @@ const RecipesReviews = ({ recipeId }) => {
     const [commentError, setCommentError] = useState("")
 
 
-    // CONTEXTS //
-    const { RecipeReviewsOnDisplay, updateRecipeReviewsOnDisplay, updateUserHaveRecipeComment } = useContext(MyContext)
+    // REDUX //
+    const dispatch = useDispatch()
+    const rcpReveiwdisplay = useSelector((state) => state.rcpReveiwDisplay.status)
 
 
     // GET LOGIN COOKIE //
@@ -58,7 +61,7 @@ const RecipesReviews = ({ recipeId }) => {
             setRating(0)
             setComment("")
             getCommentsNotes()
-            updateRecipeReviewsOnDisplay(false)
+            dispatch(updateRcpReveiwDisplay({status: false}))
             setSubmitLoader(true)
         } catch (err) {
             console.error('Error', err)
@@ -86,7 +89,7 @@ const RecipesReviews = ({ recipeId }) => {
             setComment("")
             setEditCommentId(null)
             getCommentsNotes()
-            updateRecipeReviewsOnDisplay(false)
+            dispatch(updateRcpReveiwDisplay({status: false}))
         } catch (err) {
             console.error('Error', err)
         }
@@ -182,9 +185,9 @@ const RecipesReviews = ({ recipeId }) => {
         const checkUserComment = () => {
             try {
                 if (reviewData.some(item => item.comments.some(comment => comment.user_id == user_id))) {
-                    updateUserHaveRecipeComment(true)
+                    dispatch(updateHaveRcpComment({status: true}))
                 } else {
-                    updateUserHaveRecipeComment(false)
+                    dispatch(updateHaveRcpComment({status: false}))
                 }
             } catch (err) {
                 console.error('checkUserComment Error : ', err)
@@ -225,7 +228,7 @@ const RecipesReviews = ({ recipeId }) => {
     useEffect(() => {
         const handleClickOutside = (event) => {
             if (parentNodeRef.current && !parentNodeRef.current.contains(event.target)) {
-                updateRecipeReviewsOnDisplay(false)
+                dispatch(updateRcpReveiwDisplay({status: false}))
             }
         }
 
@@ -233,7 +236,7 @@ const RecipesReviews = ({ recipeId }) => {
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
         }
-    }, [updateRecipeReviewsOnDisplay])
+    }, [rcpReveiwdisplay])
 
 
     // COMMENT EDIT HANDLING //
@@ -243,7 +246,7 @@ const RecipesReviews = ({ recipeId }) => {
         setComment(commentText) // Initialize the comment state with the current comment
         setRating(commentRating) // Initialize the rating state with the current rating
         setRcpId(recipe_id)
-        updateRecipeReviewsOnDisplay(true)
+        dispatch(updateRcpReveiwDisplay({status: true}))
     }
 
 
@@ -258,8 +261,8 @@ const RecipesReviews = ({ recipeId }) => {
                 setCommentError("Votre commentaire contient des caractères invalides")
             } else {
                 setCommentError("")
-                handleInputChange(value)
             }
+            handleInputChange(value)
         }
     }
     
@@ -329,7 +332,7 @@ const RecipesReviews = ({ recipeId }) => {
                     </div>
                 ))}
             </div>
-            {RecipeReviewsOnDisplay &&
+            {rcpReveiwdisplay &&
                 <section className="details_recipe_comment_and_notes_global_container">
                     <div className="details_recipe_comment_and_notes_parent_container" ref={parentNodeRef}>
                         {submitLoader ?
@@ -396,6 +399,7 @@ const RecipesReviews = ({ recipeId }) => {
                                                                                     <label>Votre commentaire</label>
                                                                                     <textarea 
                                                                                         name='comment'
+                                                                                        value={commentClone}
                                                                                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                                                                                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                                                                                     >

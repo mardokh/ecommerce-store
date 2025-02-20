@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState, useContext } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import { useParams, Link } from "react-router-dom"
 import { recipeService } from "../../_services/recipes.service"
 import "../../styles/pages.public/recipe_details.css"
 import RecipesReviews from "../../components/public/RecipesReviews"
 import CustomLoader from '../../_utils/customeLoader/customLoader'
-import MyContext from "../../_utils/contexts"
-
+import { useDispatch, useSelector } from "react-redux"
+import { updateRcpReveiwDisplay } from '../../redux/reducers/rcpReveiwDisplaySlice'
 
 
 const RecipeDetails = () => {
@@ -15,9 +15,9 @@ const RecipeDetails = () => {
     const [isLoad, setISload] = useState()
 
 
-    // CONTEXTS //
-    const { updateRecipeReviewsOnDisplay } = useContext(MyContext)
-    const { userHaveRecipeComment } = useContext(MyContext)
+    // REDUX //
+    const haveRcpComment = useSelector((state) => state.haveRcpComment.status)
+    const dispatch = useDispatch()
 
 
     // GET ID PARAMS //
@@ -44,7 +44,7 @@ const RecipeDetails = () => {
 
     // REVIWES FORM HANDLER //
     const dispRviewsForm = () => {
-        updateRecipeReviewsOnDisplay(true)
+        dispatch(updateRcpReveiwDisplay({status: true}))
     }
 
 
@@ -165,7 +165,7 @@ const RecipeDetails = () => {
             <div className="details_recipe_comments_write_reviews_button_global_container">
                 <div className="details_recipe_comments_write_reviews_button_parent_container">
                     <h1 className="details_recipe_comments_title">avis & notes</h1>
-                    {!userHaveRecipeComment &&
+                    {!haveRcpComment &&
                         <button className="details_recipe_write_reviews_btn" onClick={dispRviewsForm}>laisser un avis</button>
                     }
                 </div>

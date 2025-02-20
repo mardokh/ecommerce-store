@@ -5,8 +5,7 @@ import { productsReviewsService } from "../../_services/productsReviews.service"
 import Cookies from 'js-cookie'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import { UserService } from "../../_services/user.service"
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { updatePrdReveiwDisplay } from '../../redux/reducers/prdReveiwDisplaySlice'
 import { updateHavePrdComment } from '../../redux/reducers/havePrdCommentSlice'
 import { CommentMaxLength, CommentForbidden } from '../../_utils/regex/reviews.regex'
@@ -127,11 +126,8 @@ const ProductsReviews = ({ productId }) => {
 
     const getCommentsNotes = async () => {
         try {
-            // Get all comments
             const res = await productsReviewsService.getProductReview(productId)
-    
-            // Update state
-            const formattedData = res.data.data.map(item => {
+                const formattedData = res.data.data.map(item => {
                 const comments = item.productsReviews.map(subItem => ({
                     id: subItem.id,
                     user_name: `${subItem.user_profil.firstName} ${subItem.user_profil.lastName}`,
@@ -140,9 +136,7 @@ const ProductsReviews = ({ productId }) => {
                     note: subItem.note,
                     comment: subItem.comment,
                 }));
-    
                 const levels = item.ProductsNotesLevels[0] || {}
-    
                 return {
                     comments,
                     totale_note: levels.totale_note,
@@ -153,10 +147,8 @@ const ProductsReviews = ({ productId }) => {
                     level_5: levels.level_5 || 0,
                 }
             })
-    
             setReviewData(formattedData)
             setISload(true)
-    
         } catch (err) {
             if (err.response && err.response.status === 404) {
                 setReviewData([])
@@ -227,7 +219,6 @@ const ProductsReviews = ({ productId }) => {
                 dispatch(updatePrdReveiwDisplay({status: false}))
             }
         }
-
         document.addEventListener("mousedown", handleClickOutside)
         return () => {
             document.removeEventListener("mousedown", handleClickOutside)
@@ -257,17 +248,16 @@ const ProductsReviews = ({ productId }) => {
                 setCommentError("Votre commentaire contient des caractères invalides")
             } else {
                 setCommentError("")
-                handleInputChange(value)
             }
+            handleInputChange(value)
         }
     }
     
 
     const renderStars = (rating) => {
         const fullStars = Math.floor(rating)
-         const halfStar = rating % 1 > 0
+        const halfStar = rating % 1 > 0
         const emptyStars = 5 - fullStars - (halfStar ? 1 : 0)
-    
         return (
             <div className="details_rating_star_container">
                 {[...Array(fullStars)].map((_, index) => (
@@ -396,6 +386,7 @@ const ProductsReviews = ({ productId }) => {
                                                                                     <label>Votre commentaire</label>
                                                                                     <textarea
                                                                                         name='comment'
+                                                                                        value={commentClone}
                                                                                         onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                                                                                         onChange={(e) => handleFieldsErrors(e.target.name, e.target.value)}
                                                                                     >

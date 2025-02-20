@@ -59,6 +59,18 @@ const SingUp = () => {
             if (err.response && err.response.status === 409) {
                 setEmailExist(true);
                 setEmailExistMessage(err.response.data.message)
+            } else if (err.response && err.response.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'lastName') {
+                        setLastNameError(message)
+                    } else if (field === 'firstName') {
+                        setFirstNameError(message)
+                    } else if (field === 'email') {
+                        setEmailError(message)
+                    } else if (field === 'password') {
+                        setPasswordError(message)
+                    }
+                })
             } else {
                 console.log('Error:', err.message)
             }

@@ -87,19 +87,19 @@ const validateUpdateRecipe = [
         .notEmpty().withMessage('Le champ du nom de produit est requis')
         .isLength({ max: 100 }).withMessage('Le champ du nom de produit ne doit pas dépasse 100 caractères')
         .matches(safeTextRegex).withMessage('Le champ du nom de produit contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .trim(),
 
     body('ingredients')
         .notEmpty().withMessage('Le champ details est requis')
         .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
         .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .trim(),
 
     body('directions')
         .notEmpty().withMessage('Le champ details est requis')
         .isLength({ max: 500 }).withMessage('Le champ details ne doit pas dépasse 500 caractères')
         .matches(safeTextRegex).withMessage('Le champ details contient des caractères invalides')
-        .trim().escape().blacklist("<>'\""),
+        .trim(),
 
     body('image')
     .custom((value, { req }) => {
