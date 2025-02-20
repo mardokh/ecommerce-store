@@ -72,7 +72,7 @@ const validateCreateProduct = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => err.msg), type: 'Failed' })
+            return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => ({ field: err.path, message: err.msg })), type: 'Failed' })
         }
         req.savedFileNames = saveFiles(req);
         next();

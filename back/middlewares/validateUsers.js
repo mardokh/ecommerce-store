@@ -57,7 +57,7 @@ const validateCreateUser = [
 // VALIDATE LOGIN USER //
 const validateLoginUser = [
     body('email')
-        .notEmpty().withMessage('Une adresse email est requise').bail(),
+        .notEmpty().withMessage('Une adresse e-mail est requise').bail(),
 
     body('password')
         .notEmpty().withMessage('Un mot de passe est requis').bail(),
@@ -65,7 +65,7 @@ const validateLoginUser = [
     (req, res, next) => {
         const errors = validationResult(req);
         if (!errors.isEmpty()) {
-            return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => err.msg), type: 'Failed' })
+            return res.status(400).json({ data: [], message: 'Validation failed', errors: errors.array().map(err => ({ field: err.path, message: err.msg })), type: 'Failed' })
         }
         next();
     }
