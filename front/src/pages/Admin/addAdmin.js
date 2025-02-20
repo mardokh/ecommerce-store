@@ -53,6 +53,18 @@ const AddAdmin = () => {
             if (err.response && err.response.status === 409) {
                 setEmailExist(true);
                 setEmailExistMessage(err.response.data.message)
+            } else if (err.response && err.response.status === 400) {
+                err.response.data.errors.map(({field, message}) => {
+                    if (field === 'lastName') {
+                        setLastNameError(message)
+                    } else if (field === 'firstName') {
+                        setFirstNameError(message)
+                    } else if (field === 'email') {
+                        setEmailError(message)
+                    } else if (field === 'password') {
+                        setPasswordError(message)
+                    }
+                })
             } else {
                 console.log('Error:', err.message)
             }
@@ -155,7 +167,7 @@ const AddAdmin = () => {
                 {emailError.length > 0 &&
                         <p className='addAdmin_inscription_error'>{emailError}</p>
                 }
-                {emailExist &&
+                {emailExist.length > 0 &&
                         <p className="addAdmin_inscription_email_exist">{emailExistMessage}</p>
                 }
             </div>
