@@ -61,13 +61,19 @@ exports.createProduct = async (req, res) => {
         const images = req.savedFileNames.images || [];
 
         // Check if product exists
-        const product = await Product.findOne({ where: { name } });
+        const product = await Product.findOne({where: {name}});
         if (product !== null) {
             return res.status(409).json({ data: [], message: "Se produit exist deja", type: "Failed" });
         }
 
         // Create product
         const createProduct = await Product.create({ name, details, price, image });
+
+        // Check if category exist
+        const existCateg = await Categories.findOne({where: {category}})
+        if (existCateg !== null) {
+            return res.status(409).json({data: [], message: 'Cette categorie exist deja', type: "Failed"})
+        }
 
         // Create category
         await Categories.create({category})
