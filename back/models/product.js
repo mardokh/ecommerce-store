@@ -1,6 +1,5 @@
 // DEFINE MODEL  //
 
-
 module.exports = (sequelize, DataTypes) => {
     const product = sequelize.define('product', {
         id: {
