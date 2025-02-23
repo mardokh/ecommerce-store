@@ -16,6 +16,7 @@ const Admin = require('./routes/admin')
 const User = require('./routes/user')
 const SearchBar = require('./routes/searchBar')
 const JwtSession = require('./routes/check_jwt_session')
+const Categories = require('./routes/categories')
 
 
 // IMPORT DATABASE CONNECTER //
@@ -56,6 +57,7 @@ app.use('/favorites/products', FavoritesProducts)
 app.use('/favorites/recipes', FavoritesRecipes)
 app.use('/reviews/products', productsReviews)
 app.use('/reviews/recipes', recipesReviews)
+app.use('/categories', Categories)
 app.use('/search', SearchBar)
 app.use('/admin', Admin)
 app.use('/user', User)
