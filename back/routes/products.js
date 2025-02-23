@@ -16,9 +16,6 @@ router.get('', controller.getAllProducts)
 // GET PRODUCT //
 router.get('/:id', validateGetProduct, controller.getOneProduct)
 
-// GET CATEGORIES NAMES //
-router.get('/categories/names', controller.getCategoriesNames)
-
 // CREATE PRODUCT //
 router.put('/create', upload, validateCreateProduct, controller.createProduct)
 
