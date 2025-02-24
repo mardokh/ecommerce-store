@@ -9,6 +9,9 @@ let router = express.Router()
 // GET CATEGORIES NAMES //
 router.get('/names', controller.getCategoriesNames)
 
+// CREATE CATEGORY //
+router.put('/category', controller.createCategorie)
+
 
 // EXPORT MODULES
 module.exports = router
