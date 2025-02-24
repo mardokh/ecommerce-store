@@ -10,7 +10,7 @@ exports.getCategoriesNames = async (req, res) => {
 
         // Check if categories exist
         if (categ.length === 0) {
-            return res.status(404).json({data: [], message: "No categories found", type: "Failed"})
+            return res.status(404).json({data: [], message: "Aucune categorie dans la liste", type: "Failed"})
         }
 
         // Success response
@@ -39,6 +39,25 @@ exports.createCategorie = async (req, res) => {
         // Success response
         return res.status(201).json({data: [], message: 'Categorie cree avec success', type: "Success"})
     }
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
+
+// GET CATEGORIES BY FILTER //
+exports.getCategoriesFilter = async (req, res) => {
+    try {
+        // Extract category name
+        const category = req.query.category
+
+        // Get category
+        const categ = await Categories.findAll({where: {category}})
+
+        // Check if category exist
+        if (!categ) {
+            return res.status(404).json({data: [], message: "Aucun produits pour cette categorie", type: "Failed"})
+        }
+    } 
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
     }
