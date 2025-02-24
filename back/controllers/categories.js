@@ -8,12 +8,36 @@ exports.getCategoriesNames = async (req, res) => {
         // Get categories
         const categ = await Categories.findAll()
 
+        // Check if categories exist
         if (categ.length === 0) {
             return res.status(404).json({data: [], message: "No categories found", type: "Failed"})
         }
 
         // Success response
-        return res.status(200).json({data: categ, message: "categories obtained", type: "Success"})
+        return res.status(200).json({data: categ, message: "Categories obtained", type: "Success"})
+    }
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
+
+// CREATE CATEGORY //
+exports.createCategorie = async (req, res) => {
+    try {
+        // Extract input
+        const category = req.body.category
+
+        // Check if category exist
+        const categExist = await Categories.findOne({where: {category}})
+        if (categExist !== null) {
+            return res.status(409).json({data: [], message: 'Cette categorie exist deja', type: "Failed"})
+        }
+
+        // Create category
+        await Categories.create({category})
+
+        // Success response
+        return res.status(201).json({data: [], message: 'Categorie cree avec success', type: "Success"})
     }
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
