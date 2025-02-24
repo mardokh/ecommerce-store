@@ -9,6 +9,9 @@ let router = express.Router()
 // GET CATEGORIES NAMES //
 router.get('/names', controller.getCategoriesNames)
 
+// GET CATEGORIES BY FILTER //
+router.get('', controller.getCategoriesFilter)
+
 // CREATE CATEGORY //
 router.put('/category', controller.createCategorie)
 
