@@ -25,5 +25,16 @@ module.exports = (sequelize, DataTypes) => {
         freezeTableName: true
     })
 
+    // Define associations
+    categories.associate = (models) => {
+        models.product.belongsTo(categories, {
+            foreignKey: 'category_id',
+            as: 'category_product',
+        })
+        categories.hasMany(models.product, {
+            foreignKey: 'category_id',
+        })
+    }
+
     return categories
 }
