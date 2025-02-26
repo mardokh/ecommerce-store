@@ -21,25 +21,6 @@ exports.getCategoriesNames = async (req, res) => {
     }
 }
 
-// GET CATEGORIES BY FILTER //
-exports.getCategoriesFilter = async (req, res) => {
-    try {
-        // Extract category name
-        const category = req.query.category
-
-        // Get category
-        const categ = await Categories.findAll({where: {category}})
-
-        // Check if category exist
-        if (!categ) {
-            return res.status(404).json({data: [], message: "Aucun produits pour cette categorie", type: "Failed"})
-        }
-    } 
-    catch (err) {
-        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
-    }
-}
-
 // CREATE CATEGORY //
 exports.createCategorie = async (req, res) => {
     try {

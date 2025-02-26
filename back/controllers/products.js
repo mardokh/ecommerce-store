@@ -51,10 +51,29 @@ exports.getOneProduct = async (req, res) => {
     }
 }
 
+// GET PRODUCTS BY CATEGORIES //
+exports.getProductBYCateg = async (req, res) => {
+    try {
+        // Extract category name
+        const category = req.query.category
+
+        // Get category
+        const products = await Product.findAll({where: {category}})
+
+        // Check if category exist
+        if (!products) {
+            return res.status(404).json({data: [], message: "Aucun produits pour cette categorie", type: "Failed"})
+        }
+    } 
+    catch (err) {
+        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
+    }
+}
+
 // CREATE PRODUCT //
 exports.createProduct = async (req, res) => {
     try {
-        const { name, details, price, category } = req.body;
+        const { name, details, price } = req.body;
 
         // Retrieve assigned filenames
         const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null;
@@ -69,14 +88,6 @@ exports.createProduct = async (req, res) => {
         // Create product
         const createProduct = await Product.create({ name, details, price, image });
 
-        // Check if category exist
-        const existCateg = await Categories.findOne({where: {category}})
-        if (existCateg !== null) {
-            return res.status(409).json({data: [], message: 'Cette categorie exist deja', type: "Failed"})
-        }
-
-        // Create category
-        await Categories.create({category})
 
         // Save additional images
         for (const fileName of images) {
@@ -84,7 +95,8 @@ exports.createProduct = async (req, res) => {
         }
 
         return res.status(201).json({ data: [], message: "Product created", type: "Success" });
-    } catch (err) {
+    } 
+    catch (err) {
         return res.status(500).json({ data: [], message: "Database error", error: err.message, stack: err.stack, type: "Failed" });
     }
 };
