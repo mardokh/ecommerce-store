@@ -25,7 +25,7 @@
     justify-content: space-between;
     align-items:flex-end;
     width: 600px;
-    height: 500px;
+    height: 600px;
     text-align: left;
 }
 
@@ -53,7 +53,7 @@
     height: 45px;
 }
 
-.add_product_item label {
+.add_product_label {
     margin-bottom: 10px;
 }
 
@@ -152,8 +152,13 @@
     margin-top: 10px;
 }
 
-.add_product_global_container input, 
 .add_product_global_container textarea {
+    border-radius: 20px;
+    padding: 15px;
+    border: 1px solid rgb(164, 164, 164);
+}
+
+.add_product_input {
     border-radius: 20px;
     padding: 15px;
     border: 1px solid rgb(164, 164, 164);
@@ -176,12 +181,28 @@
     width: 350px;
     height: 300px;
     background-color: white;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 2px 1px;
+}
+
+.add_product_add_categ_container {
+    width: 400px;
+    height: 200px;
+    background-color: white;
     display: flex;
     justify-content: center;
     align-items: center;
     box-shadow: 0px 0px 2px 1px;
 }
 
+.add_product_categr_form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: 100px;
+    width: 70%;
+}
 
 .add_product_success_container {
     height: 80px;
@@ -237,4 +258,36 @@ SVG img icons - svgicons.sparkk.fr
 .add_product_error {
     font-size: 12px;
     color: red;
+}
+
+.add_product_categ_container {
+    width: 100%;
+    display: flex;
+}
+
+.add_product_categ_select {
+    height: 40px;
+    width: 550px;
+    margin-top: 10px;
+    background-color: white;
+    border: 1px solid rgb(164, 164, 164);
+}
+
+.add_product_categ_input {
+    height: 40px;
+    width: 100%;
+    border-radius: 5px;
+    padding: 10px;
+    border: 1px solid rgb(164, 164, 164);
+}
+
+.add_product_categ_btn_container {
+    display: flex;
+    justify-content: space-between;
+}
+
+.add_product_categ_btn {
+    width: 130px;
+    height: 40px;
+    cursor: pointer;
 }

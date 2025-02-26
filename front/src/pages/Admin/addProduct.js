@@ -2,6 +2,7 @@
 import React, {useState, useRef, useEffect} from 'react'
 import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
+import { categoriesService } from '../../_services/categories.service'
 import CustomLoader from '../../_utils/customeLoader/customLoader'
 import {NameMaxLength, NameForbidden, DetailsMaxLength, DetailsForbidden, 
         PriceForbidden, MAX_FILE_SIZE, SUPPORTED_FORMATS
@@ -17,7 +18,7 @@ const AddProduct = () => {
     const [imageUrl, setImageUrl] = useState()
     const [imagesUrl, setImagesUrl] = useState([])
     const [loader, setLoader] = useState(false)
-    const [onLoader, setOnLoader] = useState(false)
+    const [onPrdSubmit, setOnPrdSubmit] = useState(false)
     const [imageUploaded, setImageUploaded] = useState(false)
     const [nameError, setNameError] = useState("")
     const [detailsError, setDetailsError] = useState("")
@@ -25,12 +26,24 @@ const AddProduct = () => {
     const [imageError,setImageError] = useState("")
     const [imagesError,setImagesError] = useState("")
     const [productExist, setProductExist] = useState("")
+    const [categoriesNames, setcategoriesNames] = useState([])
 
 
     // REFERENCES //
     const imagesContainerRef = useRef()
     const priceInputRef = useRef()
     const formRef = useRef()
+
+
+    const getCategoriesNames = async () => {
+        try {
+            const categNames = await categoriesService.categoriesNamesGet()
+            setcategoriesNames([...categNames.data.data])
+        }
+        catch (err) {
+            console.error(err)
+        }
+    }
 
 
     // IMAGES CONTAINER HORIZONTAL SCROLL //
@@ -59,6 +72,12 @@ const AddProduct = () => {
             priceInput.removeEventListener('keydown', handleKeyDown);
         };
     }, []);
+
+
+    // Get categories names
+    useEffect(() => {
+        getCategoriesNames()
+    }, [])
     
 
     // FORM SUBMIT HANDLER //
@@ -72,7 +91,7 @@ const AddProduct = () => {
             return;
         }
         try {
-            setOnLoader(true)
+            setOnPrdSubmit(true)
             setLoader(true)
             const formData = new FormData()
             formData.append('name', product.name)
@@ -88,7 +107,7 @@ const AddProduct = () => {
             setImagesUrl([])
             setImageUploaded(false)
             setLoader(false)
-            setTimeout(() => setOnLoader(false), 2000)
+            setTimeout(() => setOnPrdSubmit(false), 1000)
         }
         catch (err) {
             if (err.response?.status === 409) {
@@ -111,8 +130,8 @@ const AddProduct = () => {
             console.error('Error : ', err)
         }
     }
-    
 
+    
     // NAME_DETAILS_PRICE FIELDS HANDLER //
     const handleInputChange = (name, value) => {
         setProduct({
@@ -227,7 +246,7 @@ const AddProduct = () => {
     // MAIN RENDERING //
     return (
         <div className="add_product_global_container">
-            {onLoader &&
+            {onPrdSubmit &&
                 <div className='add_product_load_success_global_container'>
                     <div className='add_product_load_success_container'>
                         {loader ?
@@ -253,8 +272,9 @@ const AddProduct = () => {
                     </div>
                     <form className='add_product_container' onSubmit={handleSubmit} ref={formRef}>
                         <div className='add_product_item'>
-                            <label>Name</label>
+                            <label className='add_product_label'>Name</label>
                             <input
+                                className='add_product_input'
                                 type='text' 
                                 name='name' 
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
@@ -268,7 +288,7 @@ const AddProduct = () => {
                             }
                         </div>
                         <div className='add_product_item'>
-                            <label>Details</label>
+                            <label className='add_product_label'>Details</label>
                             <textarea
                                 name='details'
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.value)}
@@ -280,8 +300,9 @@ const AddProduct = () => {
                             }
                         </div>
                         <div className='add_product_item'>
-                            <label>Price</label>
+                            <label className='add_product_label'>Price</label>
                             <input
+                                className='add_product_input'
                                 type='number' 
                                 name='price' 
                                 ref={priceInputRef}
@@ -292,10 +313,23 @@ const AddProduct = () => {
                                 <p className='add_product_error'>{priceError}</p>
                             }
                         </div>
+                        <div className='add_product_item_categ_list'>
+                            <label className='add_product_label'>Categories</label>
+                            <div className='add_product_categ_container'>
+                                <select className='add_product_categ_select'>
+                                    <option value="">Select Category</option>
+                                    {categoriesNames.map((item, index) => (
+                                        <option key={index} value={item.name}>{item.name}</option>
+                                    ))}
+                                    <option value="">AJOUTER UNE CATEGORIE</option>
+                                </select>
+                            </div>
+                        </div>
                         <div className='add_product_item add_product_img_input'>
-                            <label>image principale</label>
-                            <input 
-                                type='file' 
+                            <label className='add_product_label'>image principale</label>
+                            <input
+                                className='add_product_input'
+                                type='file'
                                 name='image'
                                 onBlur={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.files[0])}
@@ -305,8 +339,9 @@ const AddProduct = () => {
                             }
                         </div>
                         <div className='add_product_item add_product_imgs_input'>
-                            <label>autres images</label>
-                            <input 
+                            <label className='add_product_label'>autres images</label>
+                            <input
+                                className='add_product_input'
                                 type="file" 
                                 name="images[]"
                                 onChange={(e) => handleFieldsErrors(e.target.name, e.target.files)} multiple

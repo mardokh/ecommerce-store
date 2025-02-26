@@ -13,8 +13,9 @@ let categoriesFilterGet = () => {
 }
 
 // CREATE CATEGORY //
-let categorieCreate = () => {
-    return Axios.put('/categories/category')
+let categorieCreate = (category) => {
+    console.log(category)
+    return Axios.put('/categories/category', {category})
 }
 
 

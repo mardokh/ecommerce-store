@@ -1,6 +1,5 @@
 .admin_sideMenu_global_container {
     width: 210px;
-    height: 400px;
     position: relative;
     display: flex;
     flex-direction: column;
@@ -22,6 +21,10 @@
 
 .admin_sideMenu_item_container {
     width: 180px;
+    height: 500px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .admin_sideMenu a {

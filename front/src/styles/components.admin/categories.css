@@ -1,0 +1,121 @@
+.categories_manage_global_container {
+    padding: 10px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    margin-bottom: 100px;
+}
+
+.categories_manage_sub_container {
+    display: flex;
+    flex-direction: column;
+}
+
+.categories_manage_addBtn_adminWelcom {
+    display: flex;
+    justify-content: end; 
+}
+
+.categories_manage_table_container {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 15px;
+    margin: 0px auto;
+}
+
+.categories_manage_table_container th {
+    padding: 10px;
+    background-color: rgb(241, 241, 251);
+}
+
+.categories_manage_table_container td {
+    background-color: rgb(241, 241, 251);
+}
+
+.categories_manage_img_container {
+    width: 100px;
+    height: 100px;
+    background-position: center;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.categories_manage_btn_edit {
+    display: block;
+    cursor: pointer;
+    margin: 0 auto;
+    width: 100px;
+    margin-bottom: 20px;
+}
+
+.categories_manage_btn_delete {
+    display: block;
+    cursor: pointer;
+    margin: 0 auto;
+    width: 100px;
+    background-color: rgb(180, 59, 59);
+    color: white;
+}
+
+.categories_manage_btn_add_categories {
+    width: 200px;
+    height: 40px;
+    cursor: pointer;
+    border: 2px solid gainsboro;
+    background-color: rgba(10, 127, 10, 0.576);
+    color: white;
+}
+
+.categories_manage_btn_add_categories:hover {
+    background-color: rgb(111, 200, 111);
+}
+
+a {
+    text-decoration: none;
+}
+
+
+#fa_caret_left {
+    cursor: pointer;
+}
+
+#fa_caret_right {
+    cursor: pointer;
+}
+
+.items-center {
+    margin-top: 0 auto;
+    width: 300px;
+    display: flex;
+    justify-content: space-around;
+    list-style-type: none;
+}
+
+.pagination-button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    margin: 0 4px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pagination-button.current-page {
+    background-color: #28a745; /* Green background color for current page */
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+}
+
+.pagination-bar {
+    justify-content: center;
+}
+
+.categories_manage_kpi_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

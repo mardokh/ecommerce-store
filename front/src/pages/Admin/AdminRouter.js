@@ -1,6 +1,6 @@
 import React from 'react'
 import { Routes, Route } from 'react-router-dom'
-import { Layout, ProductsManage, AddProdut, EditProdut, CommandesManage, RecipeManage, AddReipe, EditRecipe, LoginRegister } from '../Admin'
+import { Layout, ProductsManage, AddProdut, EditProdut, CommandesManage, RecipeManage, AddReipe, EditRecipe, LoginRegister, CategoriesManage } from '../Admin'
 import Error from '../../_utils/error' 
 
 
@@ -11,6 +11,7 @@ const AdminRouter = () => {
             <Route element={<Layout/>}>
                 <Route index element={<ProductsManage/>} />
                 <Route path='/products_manage' element={<ProductsManage/>} />
+                <Route path='/categories_manage' element={<CategoriesManage/>} />
                 <Route path='/add_product' element={<AddProdut/>} />
                 <Route path='/edit_produt/:id' element={<EditProdut/>} />
                 <Route path='/commandes_manage' element={<CommandesManage/>} />

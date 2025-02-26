@@ -1,5 +1,6 @@
 export { default as Layout } from './Layout'
 export { default as ProductsManage } from './ProductsManage'
+export { default as CategoriesManage } from './categoriesManage'
 export { default as AddProdut } from './addProduct'
 export { default as EditProdut } from './editProduct'
 export { default as CommandesManage }  from './CommandesManage'
