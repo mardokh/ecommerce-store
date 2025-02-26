@@ -66,7 +66,7 @@ exports.getProductBYCateg = async (req, res) => {
         }
 
         // Success response
-        return res.status(200).json({data: products, message: "products obtained", type: "Success"})
+        return res.status(200).json({data: products, message: "Products obtained", type: "Success"})
     } 
     catch (err) {
         return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
