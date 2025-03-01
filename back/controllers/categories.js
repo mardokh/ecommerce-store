@@ -66,35 +66,6 @@ exports.deleteCategory = async (req, res) => {
         // Extract category id
         const category_id = parseInt(req.params.id)
 
-        // Check if category exist
-        const category = await Categories.findOne({where: {id: category_id}})
-        if (!category) {
-            return res.status(404).json({data: [], message: "This category do not exist", type: "Failed"})
-        }
-
-        // Check if category is associated with any product
-        const productCount = await Product.count({where: {category_id}});
-        if (productCount > 0) {
-            return res.status(400).json({ data: [], message: "Suppression non autorisé, cette categorie est associer a un ou a plusieurs produits", type: "Failed"});
-        }
-
-        // Delete category
-        await Categories.destroy({where: {id: category_id}, force: true})
-
-        // Success response
-        return res.status(201).json({data: [], message: "Category deleted", type: "Success"})
-    }
-    catch (err) {
-        return res.status(500).json({data: [], message: 'Database error', error: err.message, stack: err.stack, type: "Failed"})
-    }
-}
-
-// DELETE CATEGORY //
-exports.deleteCategory = async (req, res) => {
-    try {
-        // Extract category id
-        const category_id = parseInt(req.params.id)
-
         // Check if category exists
         const category = await Categories.findOne({where: { id: category_id }});
         if (!category) {
