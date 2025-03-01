@@ -1,3 +1,4 @@
+
 .categories_manage_global_container {
     padding: 10px;
     width: 100%;
@@ -10,6 +11,31 @@
 .categories_manage_sub_container {
     display: flex;
     flex-direction: column;
+}
+
+.categories_manage_load_submit_global_container {
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.186);
+    z-index: 1;
+    position: fixed;
+}
+
+.categories_manage_load_submit_container {
+    width: 400px;
+    height: 200px;
+    display: flex;
+    position: relative;
+    background-color: white;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0px 0px 2px 1px;
+    padding: 20px;
 }
 
 .categories_manage_addBtn_adminWelcom {
@@ -75,7 +101,6 @@ a {
     text-decoration: none;
 }
 
-
 #fa_caret_left {
     cursor: pointer;
 }
@@ -118,4 +143,114 @@ a {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.categories_manage_categ_form_container {
+    text-align: right;
+    width: 80%;
+    display: flex;
+}
+
+.categories_manage_categ_input {
+    height: 40px;
+    width: 70%;
+    padding: 5px;
+}
+
+.categories_manage_categ_btn {
+    width: 30%;
+    height: 40px;
+    cursor: pointer;
+    margin-left: 5px;
+}
+
+.categories_manage_success_icon {
+    width: 2em;
+    height: 2em;
+}
+
+.categories_manage_close_icon {
+    width: 2em;
+    height: 2em;
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.categories_manage_close_icon:hover {
+    transform: scale(1.2);
+}
+  
+.categories_manage_icon path {
+    fill: #4691f6;
+}
+
+
+.categories_manage_forbid_delete {
+    font-size: 12px;
+    color: red;
+}
+
+.categories_manage_categ_delete_container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 150px;
+}
+
+.categories_manage_categ_delete_btn_container {
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 120px;
+}
+
+.categories_manage_categ_delete_btn_msg {
+    font-size: 14px;
+}
+
+.categories_manage_categ_delete_btn {
+    width: 120px;
+    height: 40px;
+    margin: 8px;
+    cursor: pointer;
+}
+
+.categories_manage_categ_add_btn_container {
+    text-align: right;
+}
+
+.categories_manage_categ_add_btn {
+    width: 150px;
+    height: 40px;
+    cursor: pointer;
+}
+
+
+/* -----
+SVG Icons - svgicons.sparkk.fr
+----- */
+
+.svg-icon {
+    width: 1.1em;
+    height: 1.1em;
+    margin-left: 20px;
+    cursor: pointer;
+  }
+  
+  .svg-icon path,
+  .svg-icon polygon,
+  .svg-icon rect {
+    fill: #4691f6;
+  }
+  
+  .svg-icon circle {
+    stroke: #4691f6;
+    stroke-width: 1;
+  }
+
+
+.categories_manage_icons_container {
+    height: 40px;
 }

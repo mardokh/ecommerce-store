@@ -1,5 +1,6 @@
 // MODULES IMPORTS //
 import React, {useState, useRef, useEffect} from 'react'
+import { Link } from "react-router-dom"
 import '../../styles/pages.admin/addProduct.css'
 import { productService } from '../../_services/products.service'
 import { categoriesService } from '../../_services/categories.service'
@@ -14,7 +15,7 @@ const AddImage = require('../../images/AddImage.jpg')
 const AddProduct = () => {
 
     // STATES //
-    const [product, setProduct] = useState({name: "", price: "", details: "", image: null, images: []})
+    const [product, setProduct] = useState({name: "", price: "", details: "", category_id: null, image: null, images: []})
     const [imageUrl, setImageUrl] = useState()
     const [imagesUrl, setImagesUrl] = useState([])
     const [loader, setLoader] = useState(false)
@@ -97,6 +98,7 @@ const AddProduct = () => {
             formData.append('name', product.name)
             formData.append('price', product.price)
             formData.append('details', product.details)
+            formData.append('category_id', product.category_id)
             formData.append('image', product.image)
             for (const file of product.images) {
                 formData.append('images', file)
@@ -319,10 +321,22 @@ const AddProduct = () => {
                                 <select className='add_product_categ_select'>
                                     <option value="">Select Category</option>
                                     {categoriesNames.map((item, index) => (
-                                        <option key={index} value={item.name}>{item.name}</option>
+                                        <option
+                                            key={index}
+                                            value={item.name}
+                                            onClick={() => handleInputChange('category_id', item.id)}
+                                        >
+                                            {item.name}
+                                        </option>
                                     ))}
-                                    <option value="">AJOUTER UNE CATEGORIE</option>
                                 </select>
+                                <div className='add_product_categ_add_more_container' title='add more actegories'>
+                                    <Link to='../categories_manage'>
+                                        <svg className="add_product_success_icon" viewBox="0 0 20 20" >
+                                            <path d="M14.613,10c0,0.23-0.188,0.419-0.419,0.419H10.42v3.774c0,0.23-0.189,0.42-0.42,0.42s-0.419-0.189-0.419-0.42v-3.774H5.806c-0.23,0-0.419-0.189-0.419-0.419s0.189-0.419,0.419-0.419h3.775V5.806c0-0.23,0.189-0.419,0.419-0.419s0.42,0.189,0.42,0.419v3.775h3.774C14.425,9.581,14.613,9.77,14.613,10 M17.969,10c0,4.401-3.567,7.969-7.969,7.969c-4.402,0-7.969-3.567-7.969-7.969c0-4.402,3.567-7.969,7.969-7.969C14.401,2.031,17.969,5.598,17.969,10 M17.13,10c0-3.932-3.198-7.13-7.13-7.13S2.87,6.068,2.87,10c0,3.933,3.198,7.13,7.13,7.13S17.13,13.933,17.13,10"></path>
+                                        </svg>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                         <div className='add_product_item add_product_img_input'>

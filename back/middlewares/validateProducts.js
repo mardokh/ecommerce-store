@@ -58,11 +58,9 @@ const validateCreateProduct = [
         .isFloat({ min: 0.01 }).withMessage('Le prix doit etre un nombre positif').bail()
         .trim(),
 
-    body('category')
-        .notEmpty().withMessage('Un nom de categorie est requis').bail()
-        .isLength({ max: 100 }).withMessage('Le nom de categorie ne doit pas dépasser 100 caractères').bail()
-        .matches(safeTextRegex).withMessage('Le nom de categorie contient des caractères invalides').bail()
-        .trim(),
+    body('category_id')
+        .isInt({ min: 1 })
+        .withMessage('Product ID must be a positive integer'),
 
     body('image')
         .custom((value, { req }) => {
@@ -104,11 +102,9 @@ const validateUpdateProduct = [
         .isFloat({ min: 0.01 }).withMessage('Le champ prix doit contenir un nombre positif').bail()
         .trim(),
         
-    body('category')
-        .notEmpty().withMessage('Un nom de categorie est requis').bail()
-        .isLength({ max: 100 }).withMessage('Le nom de categorie ne doit pas dépasser 100 caractères').bail()
-        .matches(safeTextRegex).withMessage('Le nom de categorie contient des caractères invalides').bail()
-        .trim(),
+    body('category_id')
+        .isInt({ min: 1 })
+        .withMessage('Product ID must be a positive integer'),
 
     body('image')
     .custom((value, { req }) => {

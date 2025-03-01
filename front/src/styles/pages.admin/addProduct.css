@@ -220,14 +220,14 @@ SVG success icons - svgicons.sparkk.fr
 ----- */
 
 .add_product_success_icon {
-    width: 2em;
-    height: 2em;
+    width: 1.5em;
+    height: 1.5em;
 }
   
 .add_product_success_icon path,
 .add_product_success_icon polygon,
 .add_product_success_icon rect {
-    fill: #4691f6;
+    fill: rgb(164, 164, 164);
 }
   
 .add_product_success_icon circle {
@@ -267,7 +267,7 @@ SVG img icons - svgicons.sparkk.fr
 
 .add_product_categ_select {
     height: 40px;
-    width: 550px;
+    width: 500px;
     margin-top: 10px;
     background-color: white;
     border: 1px solid rgb(164, 164, 164);
@@ -290,4 +290,25 @@ SVG img icons - svgicons.sparkk.fr
     width: 130px;
     height: 40px;
     cursor: pointer;
+}
+
+.add_product_categ_add_more_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid rgb(164, 164, 164);
+    height: 40px;
+    width: 40px;
+    margin-left: 3px;
+    margin-top: 10px;
+
+}
+
+.add_product_categ_add_more {
+    font-size: 12px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
 }

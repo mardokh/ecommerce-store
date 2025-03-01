@@ -1,7 +1,6 @@
 // MODULES IMPORTS // 
 const db = require('../models')
 const Product = db.product
-const Categories = db.categories
 const productImages = db.productImages
 const fs = require('fs')
 const path = require('path')
@@ -76,7 +75,7 @@ exports.getProductBYCateg = async (req, res) => {
 // CREATE PRODUCT //
 exports.createProduct = async (req, res) => {
     try {
-        const { name, details, price } = req.body;
+        const { name, details, price, category_id } = req.body;
 
         // Retrieve assigned filenames
         const image = req.savedFileNames.image ? req.savedFileNames.image[0] : null;
@@ -89,7 +88,7 @@ exports.createProduct = async (req, res) => {
         }
 
         // Create product
-        const createProduct = await Product.create({ name, details, price, image });
+        const createProduct = await Product.create({ name, details, price, category_id, image });
 
 
         // Save additional images

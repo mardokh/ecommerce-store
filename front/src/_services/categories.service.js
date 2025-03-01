@@ -7,19 +7,18 @@ let categoriesNamesGet = () => {
     return Axios.get('/categories/names')
 }
 
-// GET CATEGORIES BY FILTER //
-let categoriesFilterGet = () => {
-    return Axios.get('/categories')
-}
-
 // CREATE CATEGORY //
 let categorieCreate = (category) => {
-    console.log(category)
     return Axios.put('/categories/category', {category})
+}
+
+// DELETE CATEGORY //
+let categoryDelete = (categoryId) => {
+    return Axios.delete(`/categories/category/${categoryId}`)
 }
 
 
 // EXPORTS //
 export const categoriesService = {
-    categoriesNamesGet, categoriesFilterGet, categorieCreate
+    categoriesNamesGet, categorieCreate, categoryDelete
 }

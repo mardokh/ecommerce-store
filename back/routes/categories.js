@@ -9,11 +9,11 @@ let router = express.Router()
 // GET CATEGORIES NAMES //
 router.get('/names', controller.getCategoriesNames)
 
-// GET CATEGORIES BY FILTER //
-router.get('', controller.getCategoriesFilter)
-
 // CREATE CATEGORY //
-router.put('/category', controller.createCategorie)
+router.put('/category', controller.createCategory)
+
+// DELETE CATEGORY //
+router.delete('/category/:id', controller.deleteCategory)
 
 
 // EXPORT MODULES
